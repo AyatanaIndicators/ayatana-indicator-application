@@ -1,6 +1,5 @@
 SUBDIRS = data		\
           src		\
-	  example	\
 	  tests
 
 EXTRA_DIST = \
