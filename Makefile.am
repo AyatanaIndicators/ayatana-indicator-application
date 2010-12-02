@@ -1,6 +1,5 @@
 SUBDIRS = data		\
           src		\
-	  bindings	\
 	  example	\
 	  tests
 
