@@ -3,8 +3,6 @@ SUBDIRS = data		\
 	  tests
 
 EXTRA_DIST = \
-	omf.make \
-	autogen.sh \
 	ChangeLog
 
 DISTCHECK_CONFIGURE_FLAGS = --enable-localinstall
