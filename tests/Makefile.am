@@ -7,6 +7,8 @@ DISTCLEANFILES = $(TESTS)
 
 EXTRA_DIST = run-xvfb.sh
 
+DBUS_RUNNER=dbus-test-runner --dbus-config /usr/share/dbus-test-runner/session.conf
+
 #########################################
 ##  test-approver
 #########################################
@@ -23,8 +25,7 @@ test_approver_CFLAGS = \
 
 test_approver_LDADD = \
 	$(INDICATOR_LIBS) \
-	$(TEST_LIBS) \
-	$(top_builddir)/src/libappindicator.la
+	$(TEST_LIBS)
 
 test-approver-tester: test-approver Makefile.am
 	@echo "#!/bin/bash" > $@
