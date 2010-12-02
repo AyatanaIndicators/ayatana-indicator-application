@@ -54,20 +54,20 @@ indicator_application_service_SOURCES = \
 
 indicator_application_service_CFLAGS = \
 	$(INDICATOR_CFLAGS) \
+	-I$(APP_INDICATOR_INCLUDE) \
 	-DDATADIR="\"$(pkgdatadir)\"" \
 	-Wall -Werror \
 	-DG_LOG_DOMAIN=\"indicator-application-service\"
 
 indicator_application_service_LDADD = \
-	$(INDICATOR_LIBS) \
-	libappindicator.la
+	$(INDICATOR_LIBS)
 
 glib_marshal_list = application-service-marshal.list
 glib_marshal_prefix = _application_service_marshal
 
 glib_enum_h = app-indicator-enum-types.h
 glib_enum_c = app-indicator-enum-types.c
-glib_enum_headers = $(addprefix $(srcdir)/, $(libappindicator_headers))
+glib_enum_headers = $(wildcard $(APP_INDICATOR_INCLUDE)/libappindicator/*.h)
 
 DISTCLEANFILES += app-indicator-enum-types.c
 
