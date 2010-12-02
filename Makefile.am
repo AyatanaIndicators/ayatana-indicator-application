@@ -8,7 +8,7 @@ EXTRA_DIST = \
 	autogen.sh \
 	ChangeLog
 
-DISTCHECK_CONFIGURE_FLAGS = --enable-gtk-doc --enable-localinstall --enable-introspection
+DISTCHECK_CONFIGURE_FLAGS = --enable-localinstall
 
 dist-hook:
 	@if test -d "$(top_srcdir)/.bzr"; \
