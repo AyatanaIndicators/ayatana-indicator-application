@@ -9,8 +9,6 @@ EXTRA_DIST = \
 	omf.make \
 	xmldocs.make \
 	autogen.sh \
-	COPYING.LGPL.2.1 \
-	COPYING.LGPL.3 \
 	ChangeLog
 
 DISTCHECK_CONFIGURE_FLAGS = --enable-gtk-doc --enable-localinstall --enable-introspection
