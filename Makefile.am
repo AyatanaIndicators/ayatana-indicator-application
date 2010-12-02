@@ -2,8 +2,7 @@ SUBDIRS = data		\
           src		\
 	  bindings	\
 	  example	\
-	  tests		\
-	  docs
+	  tests
 
 EXTRA_DIST = \
 	m4/introspection.m4 \
