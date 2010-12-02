@@ -4,10 +4,7 @@ SUBDIRS = data		\
 	  tests
 
 EXTRA_DIST = \
-	m4/introspection.m4 \
-	gtk-doc.make \
 	omf.make \
-	xmldocs.make \
 	autogen.sh \
 	ChangeLog
 
