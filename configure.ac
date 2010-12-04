@@ -29,20 +29,40 @@ PKG_PROG_PKG_CONFIG
 # Dependencies
 ###########################
 
-GTK_REQUIRED_VERSION=2.12
+GTK_REQUIRED_VERSION=2.18
+GTK3_REQUIRED_VERSION=2.91
 INDICATOR_REQUIRED_VERSION=0.3.5
 DBUSMENUGTK_REQUIRED_VERSION=0.2.2
 JSON_GLIB_REQUIRED_VERSION=0.7.6
 DBUS_GLIB_REQUIRED_VERSION=0.82
 
-PKG_CHECK_MODULES(INDICATOR, gtk+-2.0 >= $GTK_REQUIRED_VERSION
-                             indicator >= $INDICATOR_REQUIRED_VERSION
-                             json-glib-1.0 >= $JSON_GLIB_REQUIRED_VERSION
-                             dbus-glib-1 >= $DBUS_GLIB_REQUIRED_VERSION
-                             dbusmenu-gtk >= $DBUSMENUGTK_REQUIRED_VERSION)
-
-AC_SUBST(INDICATOR_CFLAGS)
-AC_SUBST(INDICATOR_LIBS)
+AC_ARG_WITH([gtk],
+  [AS_HELP_STRING([--with-gtk],
+    [Which version of gtk to use @<:@default=2@:>@])],
+  [],
+  [with_gtk=2])
+AS_IF([test "x$with_gtk" = x3],
+        [PKG_CHECK_MODULES(INDICATOR,  gtk+-3.0 >= $GTK3_REQUIRED_VERSION
+                                       indicator3 >= $INDICATOR_REQUIRED_VERSION
+                                       json-glib-1.0 >= $JSON_GLIB_REQUIRED_VERSION
+                                       dbus-glib-1 >= $DBUS_GLIB_REQUIRED_VERSION
+                                       dbusmenu-gtk3 >= $DBUSMENUGTK_REQUIRED_VERSION)
+         AC_SUBST(INDICATOR_CFLAGS)
+         AC_SUBST(INDICATOR_LIBS)
+         AC_DEFINE(HAVE_GTK3, 1, [whether gtk3 is available])
+        ],
+      [test "x$with_gtk" = x2],
+        [PKG_CHECK_MODULES(INDICATOR,  gtk+-2.0 >= $GTK_REQUIRED_VERSION
+                                       indicator >= $INDICATOR_REQUIRED_VERSION 
+                                       json-glib-1.0 >= $JSON_GLIB_REQUIRED_VERSION
+                                       dbus-glib-1 >= $DBUS_GLIB_REQUIRED_VERSION
+                                       dbusmenu-gtk >= $DBUSMENUGTK_REQUIRED_VERSION)
+         AC_SUBST(INDICATOR_CFLAGS)
+         AC_SUBST(INDICATOR_LIBS)
+        ],
+      [AC_MSG_FAILURE([Value for --with-gtk was neither 2 nor 3])]
+)
+AM_CONDITIONAL(USE_GTK3, [test "x$with_gtk" = x3])
 
 LIBAPPINDICATOR_REQUIRED_VERSION=0.2.9
 
@@ -109,4 +129,5 @@ Application Indicator Configuration:
 
 	Prefix:        $prefix
 	Indicator Dir: $INDICATORDIR
+	GTK+ Version:  $with_gtk
 ])
