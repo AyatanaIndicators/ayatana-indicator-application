@@ -5,7 +5,7 @@
 
 #include "notification-watcher-client.h"
 #include "dbus-shared.h"
-#include "app-indicator.h"
+#include "libappindicator/app-indicator.h"
 
 #define APPROVER_PATH  "/my/approver"
 
