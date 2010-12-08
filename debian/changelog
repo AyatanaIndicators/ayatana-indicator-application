@@ -1,11 +1,11 @@
-indicator-application (0.2.90-0ubuntu4~ppa1) UNRELEASED; urgency=low
+indicator-application (0.2.90-0ubuntu4~ppa1) natty; urgency=low
 
   * Upstream Merge
     * Removing libappindicator from the tarball
   * Autogen
   * debian/control: Removing all libappindicator packages
 
- -- Ted Gould <ted@ubuntu.com>  Wed, 08 Dec 2010 14:10:22 -0600
+ -- Ted Gould <ted@ubuntu.com>  Wed, 08 Dec 2010 14:26:42 -0600
 
 indicator-application (0.2.90-0ubuntu3) UNRELEASED; urgency=low
 
