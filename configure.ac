@@ -46,7 +46,7 @@ AS_IF([test "x$with_gtk" = x3],
                                        indicator3 >= $INDICATOR_REQUIRED_VERSION
                                        json-glib-1.0 >= $JSON_GLIB_REQUIRED_VERSION
                                        dbus-glib-1 >= $DBUS_GLIB_REQUIRED_VERSION
-                                       dbusmenu-gtk3 >= $DBUSMENUGTK_REQUIRED_VERSION)
+                                       dbusmenu-gtk3-0.4 >= $DBUSMENUGTK_REQUIRED_VERSION)
          AC_SUBST(INDICATOR_CFLAGS)
          AC_SUBST(INDICATOR_LIBS)
          AC_DEFINE(HAVE_GTK3, 1, [whether gtk3 is available])
@@ -56,7 +56,7 @@ AS_IF([test "x$with_gtk" = x3],
                                        indicator >= $INDICATOR_REQUIRED_VERSION 
                                        json-glib-1.0 >= $JSON_GLIB_REQUIRED_VERSION
                                        dbus-glib-1 >= $DBUS_GLIB_REQUIRED_VERSION
-                                       dbusmenu-gtk >= $DBUSMENUGTK_REQUIRED_VERSION)
+                                       dbusmenu-gtk-0.4 >= $DBUSMENUGTK_REQUIRED_VERSION)
          AC_SUBST(INDICATOR_CFLAGS)
          AC_SUBST(INDICATOR_LIBS)
         ],
