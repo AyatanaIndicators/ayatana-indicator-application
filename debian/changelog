@@ -2,8 +2,9 @@ indicator-application (0.2.90-0ubuntu4~ppa1~nolib1) UNRELEASED; urgency=low
 
   * Upstream Merge
     * Removing libappindicator from the tarball
+  * Autogen
 
- -- Ted Gould <ted@ubuntu.com>  Wed, 08 Dec 2010 13:13:21 -0600
+ -- Ted Gould <ted@ubuntu.com>  Wed, 08 Dec 2010 13:17:23 -0600
 
 indicator-application (0.2.90-0ubuntu3) UNRELEASED; urgency=low
 
