@@ -10,8 +10,8 @@ Build-Depends: debhelper (>= 5.0),
                libjson-glib-dev,
                intltool,
                libindicator-dev (>= 0.3.14),
-               libdbusmenu-gtk-dev (>= 0.3.90+r175),
-               libdbusmenu-glib-dev (>= 0.3.90+r175),
+               libdbusmenu-gtk-dev (>= 0.3.90),
+               libdbusmenu-glib-dev (>= 0.3.90),
                libappindicator-dev (>= 0.2.90+r170)
 Standards-Version: 3.8.4
 Homepage: https://launchpad.net/indicator-application
