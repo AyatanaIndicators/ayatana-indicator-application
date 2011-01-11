@@ -1,8 +1,6 @@
 #include <glib.h>
 #include <glib-object.h>
 
-#include <dbus/dbus-glib-bindings.h>
-
 #include "notification-watcher-client.h"
 #include "dbus-shared.h"
 #include "libappindicator/app-indicator.h"
@@ -37,11 +35,9 @@ static void test_approver_class_init (TestApproverClass *klass);
 static void test_approver_init       (TestApprover *self);
 static gboolean _notification_approver_server_approve_item (TestApprover * ta, const gchar * id, const gchar * category, guint pid, const gchar * address, const gchar * path, gboolean * approved, GError ** error);
 
-#include "../src/notification-approver-server.h"
-
 GMainLoop * main_loop = NULL;
-DBusGConnection * session_bus = NULL;
-DBusGProxy * bus_proxy = NULL;
+GDBusConnection * session_bus = NULL;
+GDBusProxy * bus_proxy = NULL;
 AppIndicator * app_indicator = NULL;
 gboolean passed = FALSE;
 

@@ -4,8 +4,6 @@ m4/
 src/indicator-application-service
 src/libappindicator.la
 src/libappindicator_la-indicator-application.lo
-src/notification-item-client.h
-src/notification-item-server.h
 src/notification-watcher-client.h
 src/notification-watcher-server.h
 src/libappindicator.la
@@ -23,13 +21,12 @@ tests/test-libappindicator-dbus-client
 tests/test-libappindicator-dbus-server
 tests/libappindicator-tests
 tests/test-libappindicator-dbus
-src/application-service-client.h
+src/gen-application-service.xml.c
+src/gen-application-service.xml.h
 src/application-service-server.h
 src/application-service-marshal.c
 src/application-service-marshal.h
 src/stamp-marshal
-src/dbus-properties-client.h
-src/dbus-properties-server.h
 tests/test-simple-app
 example/.deps
 example/.libs
