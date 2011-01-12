@@ -102,6 +102,7 @@ struct _Application {
 	guint ordering_index;
 	GList * approved_by;
 	visible_state_t visible_state;
+	guint name_watcher;
 };
 
 #define APPLICATION_SERVICE_APPSTORE_GET_PRIVATE(o) \
@@ -572,6 +573,11 @@ application_free (Application * app)
 	if (app->currently_free) return;
 	app->currently_free = TRUE;
 	
+	if (app->name_watcher != 0) {
+		g_dbus_connection_signal_unsubscribe(g_dbus_proxy_get_connection(app->dbus_proxy), app->name_watcher);
+		app->name_watcher = 0;
+	}
+
 	if (app->dbus_proxy) {
 		g_object_unref(app->dbus_proxy);
 	}
@@ -623,21 +629,8 @@ application_free (Application * app)
 /* Gets called when the proxy changes owners, which is usually when it
    drops off of the bus. */
 static void
-application_owner_changed (GObject * gobject, GParamSpec * pspec,
-                           gpointer user_data)
+application_died (Application * app)
 {
-	Application * app = (Application *)user_data;
-	GDBusProxy * proxy = G_DBUS_PROXY(gobject);
-
-	if (proxy != NULL) { /* else if NULL, assume dead */
-		gchar * owner = g_dbus_proxy_get_name_owner(proxy);
-		if (owner != NULL) {
-			get_all_properties(app); /* Regrab properties for new owner */
-			g_free (owner);
-			return;
-		}
-	}
-
 	/* Application died */
 	g_debug("Application proxy destroyed '%s'", app->id);
 
@@ -925,6 +918,7 @@ application_service_appstore_application_add (ApplicationServiceAppstore * appst
 	app->ordering_index = 0;
 	app->approved_by = NULL;
 	app->visible_state = VISIBLE_STATE_HIDDEN;
+	app->name_watcher = 0;
 
 	/* Get the DBus proxy for the NotificationItem interface */
 	app->dbus_proxy_cancel = g_cancellable_new();
@@ -941,6 +935,21 @@ application_service_appstore_application_add (ApplicationServiceAppstore * appst
 	/* We're returning, nothing is yet added until the properties
 	   come back and give us more info. */
 	return;
+}
+
+static void
+name_changed (GDBusConnection * connection, const gchar * sender_name,
+              const gchar * object_path, const gchar * interface_name,
+              const gchar * signal_name, GVariant * parameters,
+              gpointer user_data)
+{
+	Application * app = (Application *)user_data;
+
+	const gchar * new_name;
+	g_variant_get(parameters, "(&s&s&s)", NULL, NULL, &new_name);
+
+	if (new_name == NULL || new_name[0] == 0)
+		application_died(app);
 }
 
 /* Callback from trying to create the proxy for the app. */
@@ -970,8 +979,18 @@ dbus_proxy_cb (GObject * object, GAsyncResult * res, gpointer user_data)
 	app->dbus_proxy = proxy;
 
 	/* We've got it, let's watch it for destruction */
-	g_signal_connect(proxy, "notify::g-name-owner",
-	                 G_CALLBACK(application_owner_changed), app);
+	app->name_watcher = g_dbus_connection_signal_subscribe(
+	                                   g_dbus_proxy_get_connection(proxy),
+	                                   "org.freedesktop.DBus",
+	                                   "org.freedesktop.DBus",
+	                                   "NameOwnerChanged",
+	                                   "/org/freedesktop/DBus",
+	                                   g_dbus_proxy_get_name(proxy),
+	                                   G_DBUS_SIGNAL_FLAGS_NONE,
+	                                   name_changed,
+	                                   app,
+	                                   NULL);
+
 	g_signal_connect(proxy, "g-signal", G_CALLBACK(app_receive_signal), app);
 
 	get_all_properties(app);
@@ -1054,7 +1073,7 @@ application_service_appstore_application_remove (ApplicationServiceAppstore * ap
 
 	Application * app = find_application(appstore, dbus_name, dbus_object);
 	if (app != NULL) {
-		application_owner_changed(NULL, NULL, app);
+		application_died(app);
 	} else {
 		g_warning("Unable to find application %s:%s", dbus_name, dbus_object);
 	}
