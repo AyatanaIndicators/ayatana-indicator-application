@@ -80,10 +80,10 @@ DISTCLEANFILES += app-indicator-enum-types.c
 ##################################
 
 GDBUS_SPECS = \
-	application-service.xml
+	application-service.xml \
+	notification-approver.xml
 
 DBUS_SPECS = \
-	notification-approver.xml \
 	notification-watcher.xml
 
 %-client.h: %.xml
@@ -114,7 +114,9 @@ BUILT_SOURCES += \
 	$(DBUS_SPECS:.xml=-client.h) \
 	$(DBUS_SPECS:.xml=-server.h) \
 	gen-application-service.xml.c \
-	gen-application-service.xml.h
+	gen-application-service.xml.h \
+	gen-notification-approver.xml.c \
+	gen-notification-approver.xml.h
 
 CLEANFILES += $(BUILT_SOURCES)
 

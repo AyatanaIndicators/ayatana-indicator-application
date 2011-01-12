@@ -772,7 +772,7 @@ get_applications (GObject * obj, GAsyncResult * res, gpointer user_data)
 		return;
 	}
 
-	g_variant_get(result, "a(sisosss)", &iter);
+	g_variant_get(result, "(a(sisosss))", &iter);
 	while ((child = g_variant_iter_next_value (iter)))
 		get_applications_helper(self, child);
 	g_variant_iter_free (iter);
