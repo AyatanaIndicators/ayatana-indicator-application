@@ -448,8 +448,6 @@ got_all_properties (GObject * source_object, GAsyncResult * res,
 		app->icon = g_variant_dup_string(icon_name, NULL);
 		app->menu = g_variant_dup_string(menu, NULL);
 
-		g_debug("Changing app '%s' icon to %s", app->id, app->icon);
-
 		/* Now the optional properties */
 
 		if (aicon_name != NULL) {
@@ -770,7 +768,9 @@ apply_status (Application * app)
 		return;
 	}
 
-	g_debug("Changing app '%s' state from %s to %s", app->id, STATE2STRING(app->visible_state), STATE2STRING(goal_state));
+	if (app->visible_state != goal_state) {
+		g_debug("Changing app '%s' state from %s to %s", app->id, STATE2STRING(app->visible_state), STATE2STRING(goal_state));
+	}
 
 	/* This means we're going off line */
 	if (goal_state == VISIBLE_STATE_HIDDEN) {
