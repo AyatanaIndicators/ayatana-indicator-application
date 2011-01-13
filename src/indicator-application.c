@@ -381,22 +381,6 @@ get_location (IndicatorObject * io, IndicatorObjectEntry * entry)
 	return g_list_index(priv->applications, entry);
 }
 
-/* Searching for ApplicationEntries where the dbusobject and
-   address are the same. */
-static gint
-application_added_search (gconstpointer a, gconstpointer b)
-{
-	ApplicationEntry * appa = (ApplicationEntry *)a;
-	ApplicationEntry * appb = (ApplicationEntry *)b;
-
-	if (g_strcmp0(appa->dbusaddress, appb->dbusaddress) == 0 &&
-			g_strcmp0(appa->dbusobject, appb->dbusobject) == 0) {
-		return 0;
-	}
-
-	return -1;
-}
-
 /* Does a quick meausre of how big the string is in
    pixels with a Pango layout */
 static gint
@@ -444,21 +428,8 @@ static void
 application_added (IndicatorApplication * application, const gchar * iconname, gint position, const gchar * dbusaddress, const gchar * dbusobject, const gchar * icon_theme_path, const gchar * label, const gchar * guide)
 {
 	g_return_if_fail(IS_INDICATOR_APPLICATION(application));
-	g_debug("Building new application entry: %s  with icon: %s", dbusaddress, iconname);
+	g_debug("Building new application entry: %s  with icon: %s at position %i", dbusaddress, iconname, position);
 	IndicatorApplicationPrivate * priv = INDICATOR_APPLICATION_GET_PRIVATE(application);
-
-	/* First search to see if we already have this entry */
-	ApplicationEntry searchapp;
-	searchapp.dbusaddress = (gchar *)dbusaddress;  /* Casting off const, but it's okay, we're not changing it */
-	searchapp.dbusobject = (gchar *)dbusobject;    /* Casting off const, but it's okay, we're not changing it */
-
-	GList * searchpointer = g_list_find_custom(priv->applications, &searchapp, application_added_search);
-	if (searchpointer != NULL) {
-		g_debug("\t...Already have that one.");
-		ApplicationEntry * app = (ApplicationEntry *)searchpointer->data;
-		app->old_service = FALSE;
-		return;
-	}
 
 	ApplicationEntry * app = g_new(ApplicationEntry, 1);
 
