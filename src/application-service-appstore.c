@@ -79,6 +79,7 @@ struct _Approver {
 	ApplicationServiceAppstore * appstore; /* not ref'd */
 	GCancellable * proxy_cancel;
 	GDBusProxy * proxy;
+	guint name_watcher;
 };
 
 typedef struct _Application Application;
@@ -1155,6 +1156,11 @@ approver_free (gpointer papprover, gpointer user_data)
 	ApplicationServiceAppstore * appstore = APPLICATION_SERVICE_APPSTORE(user_data);
 	g_list_foreach(appstore->priv->applications, remove_approver, approver->proxy);
 	
+	if (approver->name_watcher != 0) {
+		g_dbus_connection_signal_unsubscribe(g_dbus_proxy_get_connection(approver->proxy), approver->name_watcher);
+		approver->name_watcher = 0;
+	}
+
 	if (approver->proxy != NULL) {
 		g_object_unref(approver->proxy);
 		approver->proxy = NULL;
@@ -1216,31 +1222,6 @@ check_with_new_approver (gpointer papp, gpointer papprove)
 	return;
 }
 
-/* Tracks when a proxy gets destroyed so that we know that the
-   approver has dropped off the bus. */
-static void
-approver_owner_changed (GObject * gobject, GParamSpec * pspec,
-                        gpointer user_data)
-{
-	Approver * approver = (Approver *)user_data;
-	ApplicationServiceAppstore * appstore = approver->appstore;
-	GDBusProxy * proxy = G_DBUS_PROXY(gobject);
-
-	gchar * owner = g_dbus_proxy_get_name_owner(proxy);
-	if (owner != NULL) {
-		/* Reapprove everything with new owner */
-		g_list_foreach(appstore->priv->applications, check_with_new_approver, approver);
-		g_free (owner);
-		return;
-	}
-
-	/* Approver died */
-	appstore->priv->approvers = g_list_remove(appstore->priv->approvers, approver);
-	approver_free(approver, appstore);
-
-	return;
-}
-
 /* A signal when an approver changes the why that it thinks about
    a particular indicator. */
 void
@@ -1279,6 +1260,7 @@ application_service_appstore_approver_add (ApplicationServiceAppstore * appstore
 	approver->appstore = appstore;
 	approver->proxy_cancel = NULL;
 	approver->proxy = NULL;
+	approver->name_watcher = 0;
 
 	approver->proxy_cancel = g_cancellable_new();
 	g_dbus_proxy_new_for_bus(G_BUS_TYPE_SESSION,
@@ -1294,6 +1276,24 @@ application_service_appstore_approver_add (ApplicationServiceAppstore * appstore
 	priv->approvers = g_list_prepend(priv->approvers, approver);
 
 	return;
+}
+
+static void
+approver_name_changed (GDBusConnection * connection, const gchar * sender_name,
+                       const gchar * object_path, const gchar * interface_name,
+                       const gchar * signal_name, GVariant * parameters,
+                       gpointer user_data)
+{
+	Approver * approver = (Approver *)user_data;
+	ApplicationServiceAppstore * appstore = approver->appstore;
+
+	const gchar * new_name;
+	g_variant_get(parameters, "(&s&s&s)", NULL, NULL, &new_name);
+
+	if (new_name == NULL || new_name[0] == 0) {
+		appstore->priv->approvers = g_list_remove(appstore->priv->approvers, approver);
+		approver_free(approver, appstore);
+	}
 }
 
 /* Callback from trying to create the proxy for the approver. */
@@ -1324,8 +1324,18 @@ approver_proxy_cb (GObject * object, GAsyncResult * res, gpointer user_data)
 	approver->proxy = proxy;
 
 	/* We've got it, let's watch it for destruction */
-	g_signal_connect(proxy, "notify::g-name-owner",
-	                 G_CALLBACK(approver_owner_changed), approver);
+	approver->name_watcher = g_dbus_connection_signal_subscribe(
+	                                   g_dbus_proxy_get_connection(proxy),
+	                                   "org.freedesktop.DBus",
+	                                   "org.freedesktop.DBus",
+	                                   "NameOwnerChanged",
+	                                   "/org/freedesktop/DBus",
+	                                   g_dbus_proxy_get_name(proxy),
+	                                   G_DBUS_SIGNAL_FLAGS_NONE,
+	                                   approver_name_changed,
+	                                   approver,
+	                                   NULL);
+
 	g_signal_connect(proxy, "g-signal", G_CALLBACK(approver_receive_signal),
 	                 approver);
 
