@@ -448,7 +448,7 @@ got_all_properties (GObject * source_object, GAsyncResult * res,
 		app->icon = g_variant_dup_string(icon_name, NULL);
 		app->menu = g_variant_dup_string(menu, NULL);
 
-		g_debug("Changing app '%s' icon from %s", app->id, app->icon);
+		g_debug("Changing app '%s' icon to %s", app->id, app->icon);
 
 		/* Now the optional properties */
 
@@ -811,62 +811,6 @@ apply_status (Application * app)
 }
 
 /* Called when the Notification Item signals that it
-   has a new icon. */
-static void
-new_icon (Application * app, const gchar * newicon)
-{
-	/* Grab the icon and make sure we have one */
-	if (newicon == NULL) {
-		g_warning("Bad new icon :(");
-		return;
-	}
-
-	if (g_strcmp0(newicon, app->icon)) {
-		/* If the new icon is actually a new icon */
-		if (app->icon != NULL) g_free(app->icon);
-		app->icon = g_strdup(newicon);
-
-		if (app->visible_state == VISIBLE_STATE_SHOWN && app->status == APP_INDICATOR_STATUS_ACTIVE) {
-			gint position = get_position(app);
-			if (position == -1) return;
-
-			emit_signal (app->appstore, "ApplicationIconChanged",
-				     g_variant_new ("(is)", position, newicon));
-		}
-	}
-
-	return;
-}
-
-/* Called when the Notification Item signals that it
-   has a new attention icon. */
-static void
-new_aicon (Application * app, const gchar * newicon)
-{
-	/* Grab the icon and make sure we have one */
-	if (newicon == NULL) {
-		g_warning("Bad new icon :(");
-		return;
-	}
-
-	if (g_strcmp0(newicon, app->aicon)) {
-		/* If the new icon is actually a new icon */
-		if (app->aicon != NULL) g_free(app->aicon);
-		app->aicon = g_strdup(newicon);
-
-		if (app->visible_state == VISIBLE_STATE_SHOWN && app->status == APP_INDICATOR_STATUS_ATTENTION) {
-			gint position = get_position(app);
-			if (position == -1) return;
-
-			emit_signal (app->appstore, "ApplicationIconChanged",
-				     g_variant_new ("(is)", position, newicon));
-		}
-	}
-
-	return;
-}
-
-/* Called when the Notification Item signals that it
    has a new status. */
 static void
 new_status (Application * app, const gchar * status)
@@ -1112,21 +1056,11 @@ app_receive_signal (GDBusProxy * proxy, gchar * sender_name, gchar * signal_name
 
 	if (g_strcmp0(signal_name, NOTIFICATION_ITEM_SIG_NEW_ICON) == 0) {
 		/* icon name isn't provided by signal, so look it up */
-		GVariant * icon_name = g_dbus_proxy_get_cached_property(app->dbus_proxy,
-	                                                                NOTIFICATION_ITEM_PROP_ICON_NAME);
-		if (icon_name) {
-			new_icon(app, g_variant_get_string(icon_name, NULL));
-			g_variant_unref(icon_name);
-		}
+		get_all_properties(app);
 	}
 	else if (g_strcmp0(signal_name, NOTIFICATION_ITEM_SIG_NEW_AICON) == 0) {
 		/* aicon name isn't provided by signal, so look it up */
-		GVariant * aicon_name = g_dbus_proxy_get_cached_property(app->dbus_proxy,
-	                                                                 NOTIFICATION_ITEM_PROP_AICON_NAME);
-		if (aicon_name) {
-			new_aicon(app, g_variant_get_string(aicon_name, NULL));
-			g_variant_unref(aicon_name);
-		}
+		get_all_properties(app);
 	}
 	else if (g_strcmp0(signal_name, NOTIFICATION_ITEM_SIG_NEW_STATUS) == 0) {
 		const gchar * status;
