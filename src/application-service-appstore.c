@@ -34,6 +34,7 @@ with this program.  If not, see <http://www.gnu.org/licenses/>.
 /* DBus Prototypes */
 static GVariant * get_applications (ApplicationServiceAppstore * appstore);
 static void bus_method_call (GDBusConnection * connection, const gchar * sender, const gchar * path, const gchar * interface, const gchar * method, GVariant * params, GDBusMethodInvocation * invocation, gpointer user_data);
+static void props_cb (GObject * object, GAsyncResult * res, gpointer user_data);
 
 #include "gen-application-service.xml.h"
 
@@ -91,6 +92,9 @@ struct _Application {
 	ApplicationServiceAppstore * appstore; /* not ref'd */
 	GCancellable * dbus_proxy_cancel;
 	GDBusProxy * dbus_proxy;
+	GCancellable * props_cancel;
+	gboolean queued_props;
+	GDBusProxy * props;
 	gboolean validated; /* Whether we've gotten all the parameters and they look good. */
 	AppIndicatorStatus status;
 	gchar * icon;
@@ -137,6 +141,7 @@ static void dbus_proxy_cb (GObject * object, GAsyncResult * res, gpointer user_d
 static void app_receive_signal (GDBusProxy * proxy, gchar * sender_name, gchar * signal_name, GVariant * parameters, gpointer user_data);
 static void approver_proxy_cb (GObject * object, GAsyncResult * res, gpointer user_data);
 static void approver_receive_signal (GDBusProxy * proxy, gchar * sender_name, gchar * signal_name, GVariant * parameters, gpointer user_data);
+static void get_all_properties (Application * app);
 
 G_DEFINE_TYPE (ApplicationServiceAppstore, application_service_appstore, G_TYPE_OBJECT);
 
@@ -370,104 +375,133 @@ load_override_file (GHashTable * hash, const gchar * filename)
 }
 
 /* Return from getting the properties from the item.  We're looking at those
-   and making sure we have everythign that we need.  If we do, then we'll
+   and making sure we have everything that we need.  If we do, then we'll
    move on up to sending this onto the indicator. */
 static void
-get_all_properties (Application * app)
+got_all_properties (GObject * source_object, GAsyncResult * res,
+                    gpointer user_data)
 {
-	ApplicationServiceAppstorePrivate * priv = app->appstore->priv;
-	GVariant * menu, * id, * category, * status, * icon_name;
+	Application * app = (Application *)user_data;
+	g_return_if_fail(app != NULL);
 
-	menu = g_dbus_proxy_get_cached_property(app->dbus_proxy,
-	                                        NOTIFICATION_ITEM_PROP_MENU);
-	id = g_dbus_proxy_get_cached_property(app->dbus_proxy,
-	                                      NOTIFICATION_ITEM_PROP_ID);
-	category = g_dbus_proxy_get_cached_property(app->dbus_proxy,
-	                                            NOTIFICATION_ITEM_PROP_CATEGORY);
-	status = g_dbus_proxy_get_cached_property(app->dbus_proxy,
-	                                          NOTIFICATION_ITEM_PROP_STATUS);
-	icon_name = g_dbus_proxy_get_cached_property(app->dbus_proxy,
-	                                             NOTIFICATION_ITEM_PROP_ICON_NAME);
+	GError * error = NULL;
+	ApplicationServiceAppstorePrivate * priv = app->appstore->priv;
+	GVariant * menu = NULL, * id = NULL, * category = NULL,
+	         * status = NULL, * icon_name = NULL, * aicon_name = NULL,
+	         * icon_theme_path = NULL, * index = NULL, * label = NULL,
+	         * guide = NULL;
+
+	GVariant * properties = g_dbus_proxy_call_finish(app->props, res, &error);
+
+	if (app->props_cancel != NULL) {
+		g_object_unref(app->props_cancel);
+		app->props_cancel = NULL;
+	}
+
+	if (error != NULL) {
+		g_error("Could not grab DBus properties for %s: %s", app->dbus_name, error->message);
+		g_error_free(error);
+		return;
+	}
+
+	/* Grab all properties from variant */
+	GVariantIter * iter = NULL;
+	const gchar * name = NULL;
+	GVariant * value = NULL;
+	g_variant_get(properties, "(a{sv})", &iter);
+	while (g_variant_iter_loop (iter, "{&sv}", &name, &value)) {
+		if (g_strcmp0(name, NOTIFICATION_ITEM_PROP_MENU) == 0) {
+			menu = g_variant_ref(value);
+		} else if (g_strcmp0(name, NOTIFICATION_ITEM_PROP_ID) == 0) {
+			id = g_variant_ref(value);
+		} else if (g_strcmp0(name, NOTIFICATION_ITEM_PROP_CATEGORY) == 0) {
+			category = g_variant_ref(value);
+		} else if (g_strcmp0(name, NOTIFICATION_ITEM_PROP_STATUS) == 0) {
+			status = g_variant_ref(value);
+		} else if (g_strcmp0(name, NOTIFICATION_ITEM_PROP_ICON_NAME) == 0) {
+			icon_name = g_variant_ref(value);
+		} else if (g_strcmp0(name, NOTIFICATION_ITEM_PROP_AICON_NAME) == 0) {
+			aicon_name = g_variant_ref(value);
+		} else if (g_strcmp0(name, NOTIFICATION_ITEM_PROP_ICON_THEME_PATH) == 0) {
+			icon_theme_path = g_variant_ref(value);
+		} else if (g_strcmp0(name, NOTIFICATION_ITEM_PROP_ORDERING_INDEX) == 0) {
+			index = g_variant_ref(value);
+		} else if (g_strcmp0(name, NOTIFICATION_ITEM_PROP_LABEL) == 0) {
+			label = g_variant_ref(value);
+		} else if (g_strcmp0(name, NOTIFICATION_ITEM_PROP_LABEL_GUIDE) == 0) {
+			guide = g_variant_ref(value);
+		} /* else ignore */
+	}
+	g_variant_iter_free (iter);
 
 	if (menu == NULL || id == NULL || category == NULL || status == NULL ||
 	    icon_name == NULL) {
 		g_warning("Notification Item on object %s of %s doesn't have enough properties.", app->dbus_object, app->dbus_name);
-		if (menu)      g_variant_unref (menu);
-		if (id)        g_variant_unref (id);
-		if (category)  g_variant_unref (category);
-		if (status)    g_variant_unref (status);
-		if (icon_name) g_variant_unref (icon_name);
 		g_free(app); // Need to do more than this, but it gives the idea of the flow we're going for.
-		return;
 	}
+	else {
+		app->validated = TRUE;
 
-	app->validated = TRUE;
+		app->id = g_variant_dup_string(id, NULL);
+		app->category = g_variant_dup_string(category, NULL);
+		app->status = string_to_status(g_variant_get_string(status, NULL));
+		app->icon = g_variant_dup_string(icon_name, NULL);
+		app->menu = g_variant_dup_string(menu, NULL);
 
-	app->id = g_variant_dup_string(id, NULL);
-	app->category = g_variant_dup_string(category, NULL);
-	app->status = string_to_status(g_variant_get_string(status, NULL));
-	app->icon = g_variant_dup_string(icon_name, NULL);
-	app->menu = g_variant_dup_string(menu, NULL);
+		g_debug("Changing app '%s' icon from %s", app->id, app->icon);
 
-	/* Now the optional properties */
+		/* Now the optional properties */
 
-	GVariant * aicon_name, * icon_theme_path, * index, * label, * guide;
-
-	aicon_name = g_dbus_proxy_get_cached_property(app->dbus_proxy,
-	                                              NOTIFICATION_ITEM_PROP_AICON_NAME);
-	icon_theme_path = g_dbus_proxy_get_cached_property(app->dbus_proxy,
-	                                                   NOTIFICATION_ITEM_PROP_ICON_THEME_PATH);
-	index = g_dbus_proxy_get_cached_property(app->dbus_proxy,
-	                                         NOTIFICATION_ITEM_PROP_ORDERING_INDEX);
-	label = g_dbus_proxy_get_cached_property(app->dbus_proxy,
-	                                         NOTIFICATION_ITEM_PROP_LABEL);
-	guide = g_dbus_proxy_get_cached_property(app->dbus_proxy,
-	                                         NOTIFICATION_ITEM_PROP_LABEL_GUIDE);
-
-	if (aicon_name != NULL) {
-		app->aicon = g_variant_dup_string(aicon_name, NULL);
-	}
-
-	if (icon_theme_path != NULL) {
-		app->icon_theme_path = g_variant_dup_string(icon_theme_path, NULL);
-	} else {
-		app->icon_theme_path = g_strdup("");
-	}
-
-	gpointer ordering_index_over = g_hash_table_lookup(priv->ordering_overrides, app->id);
-	if (ordering_index_over == NULL) {
-		if (index == NULL || g_variant_get_uint32(index) == 0) {
-			app->ordering_index = generate_id(string_to_cat(app->category), app->id);
-		} else {
-			app->ordering_index = g_variant_get_uint32(index);
+		if (aicon_name != NULL) {
+			app->aicon = g_variant_dup_string(aicon_name, NULL);
 		}
-	} else {
-		app->ordering_index = GPOINTER_TO_UINT(ordering_index_over);
+
+		if (icon_theme_path != NULL) {
+			app->icon_theme_path = g_variant_dup_string(icon_theme_path, NULL);
+		} else {
+			app->icon_theme_path = g_strdup("");
+		}
+
+		gpointer ordering_index_over = g_hash_table_lookup(priv->ordering_overrides, app->id);
+		if (ordering_index_over == NULL) {
+			if (index == NULL || g_variant_get_uint32(index) == 0) {
+				app->ordering_index = generate_id(string_to_cat(app->category), app->id);
+			} else {
+				app->ordering_index = g_variant_get_uint32(index);
+			}
+		} else {
+			app->ordering_index = GPOINTER_TO_UINT(ordering_index_over);
+		}
+		g_debug("'%s' ordering index is '%X'", app->id, app->ordering_index);
+
+		if (label != NULL) {
+			app->label = g_variant_dup_string(label, NULL);
+		} else {
+			app->label = g_strdup("");
+		}
+
+		if (guide != NULL) {
+			app->guide = g_variant_dup_string(guide, NULL);
+		} else {
+			app->guide = g_strdup("");
+		}
+
+		priv->applications = g_list_insert_sorted_with_data (priv->applications, app, app_sort_func, NULL);
+		g_list_foreach(priv->approvers, check_with_old_approver, app);
+
+		apply_status(app);
 	}
-	g_debug("'%s' ordering index is '%X'", app->id, app->ordering_index);
 
-	if (label != NULL) {
-		app->label = g_variant_dup_string(label, NULL);
-	} else {
-		app->label = g_strdup("");
+	if (app->queued_props) {
+		get_all_properties(app);
+		app->queued_props = FALSE;
 	}
 
-	if (guide != NULL) {
-		app->guide = g_variant_dup_string(guide, NULL);
-	} else {
-		app->guide = g_strdup("");
-	}
-
-	priv->applications = g_list_insert_sorted_with_data (priv->applications, app, app_sort_func, NULL);
-	g_list_foreach(priv->approvers, check_with_old_approver, app);
-
-	apply_status(app);
-
-	g_variant_unref (menu);
-	g_variant_unref (id);
-	g_variant_unref (category);
-	g_variant_unref (status);
-	g_variant_unref (icon_name);
+	if (menu)            g_variant_unref (menu);
+	if (id)              g_variant_unref (id);
+	if (category)        g_variant_unref (category);
+	if (status)          g_variant_unref (status);
+	if (icon_name)       g_variant_unref (icon_name);
 	if (aicon_name)      g_variant_unref (aicon_name);
 	if (icon_theme_path) g_variant_unref (icon_theme_path);
 	if (index)           g_variant_unref (index);
@@ -475,6 +509,21 @@ get_all_properties (Application * app)
 	if (guide)           g_variant_unref (guide);
 
 	return;
+}
+
+static void
+get_all_properties (Application * app)
+{
+	if (app->props != NULL && app->props_cancel == NULL) {
+		g_dbus_proxy_call(app->props, "GetAll",
+		                  g_variant_new("(s)", NOTIFICATION_ITEM_DBUS_IFACE),
+		                  G_DBUS_CALL_FLAGS_NONE, -1, app->props_cancel,
+		                  got_all_properties, app);
+	}
+	else {
+		g_debug("Queuing a properties check");
+		app->queued_props = TRUE;
+	}
 }
 
 /* Check the application against an approver */
@@ -577,6 +626,16 @@ application_free (Application * app)
 	if (app->name_watcher != 0) {
 		g_dbus_connection_signal_unsubscribe(g_dbus_proxy_get_connection(app->dbus_proxy), app->name_watcher);
 		app->name_watcher = 0;
+	}
+
+	if (app->props) {
+		g_object_unref(app->props);
+	}
+
+	if (app->props_cancel != NULL) {
+		g_cancellable_cancel(app->props_cancel);
+		g_object_unref(app->props_cancel);
+		app->props_cancel = NULL;
 	}
 
 	if (app->dbus_proxy) {
@@ -895,7 +954,7 @@ application_service_appstore_application_add (ApplicationServiceAppstore * appst
 	Application * app = find_application(appstore, dbus_name, dbus_object);
 
 	if (app != NULL) {
-		g_warning("Application already exists! Rerequesting properties.");
+		g_warning("Application already exists, re-requesting properties.");
 		get_all_properties(app);
 		return;
 	}
@@ -920,6 +979,9 @@ application_service_appstore_application_add (ApplicationServiceAppstore * appst
 	app->approved_by = NULL;
 	app->visible_state = VISIBLE_STATE_HIDDEN;
 	app->name_watcher = 0;
+	app->props_cancel = NULL;
+	app->props = NULL;
+	app->queued_props = FALSE;
 
 	/* Get the DBus proxy for the NotificationItem interface */
 	app->dbus_proxy_cancel = g_cancellable_new();
@@ -993,6 +1055,46 @@ dbus_proxy_cb (GObject * object, GAsyncResult * res, gpointer user_data)
 	                                   NULL);
 
 	g_signal_connect(proxy, "g-signal", G_CALLBACK(app_receive_signal), app);
+
+	app->props_cancel = g_cancellable_new();
+	g_dbus_proxy_new(g_dbus_proxy_get_connection(proxy),
+			              G_DBUS_PROXY_FLAGS_NONE,
+			              NULL,
+	                              app->dbus_name,
+	                              app->dbus_object,
+	                              "org.freedesktop.DBus.Properties",
+		                      app->props_cancel,
+		                      props_cb,
+		                      app);
+
+	return;
+}
+
+/* Callback from trying to create the proxy for the app. */
+static void
+props_cb (GObject * object, GAsyncResult * res, gpointer user_data)
+{
+	GError * error = NULL;
+
+	Application * app = (Application *)user_data;
+	g_return_if_fail(app != NULL);
+
+	GDBusProxy * proxy = g_dbus_proxy_new_for_bus_finish(res, &error);
+
+	if (app->props_cancel != NULL) {
+		g_object_unref(app->props_cancel);
+		app->props_cancel = NULL;
+	}
+
+	if (error != NULL) {
+		g_error("Could not grab Properties DBus proxy for %s: %s", app->dbus_name, error->message);
+		g_error_free(error);
+		return;
+	}
+
+	/* Okay, we're good to grab the proxy at this point, we're
+	sure that it's ours. */
+	app->props = proxy;
 
 	get_all_properties(app);
 
