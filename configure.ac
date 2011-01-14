@@ -5,7 +5,7 @@ AC_COPYRIGHT([Copyright 2009, 2010 Canonical])
 AC_PREREQ(2.53)
 
 AM_CONFIG_HEADER(config.h)
-AM_INIT_AUTOMAKE(indicator-application, 0.2.90)
+AM_INIT_AUTOMAKE(indicator-application, 0.2.91)
 
 AM_MAINTAINER_MODE
 
@@ -31,8 +31,9 @@ PKG_PROG_PKG_CONFIG
 
 GTK_REQUIRED_VERSION=2.18
 GTK3_REQUIRED_VERSION=2.91
+GIO_REQUIRED_VERSION=2.26
 INDICATOR_REQUIRED_VERSION=0.3.5
-DBUSMENUGTK_REQUIRED_VERSION=0.2.2
+DBUSMENUGTK_REQUIRED_VERSION=0.3.91
 JSON_GLIB_REQUIRED_VERSION=0.7.6
 DBUS_GLIB_REQUIRED_VERSION=0.82
 
@@ -43,6 +44,7 @@ AC_ARG_WITH([gtk],
   [with_gtk=2])
 AS_IF([test "x$with_gtk" = x3],
         [PKG_CHECK_MODULES(INDICATOR,  gtk+-3.0 >= $GTK3_REQUIRED_VERSION
+                                       gio-2.0 >= $GIO_REQUIRED_VERSION
                                        indicator3 >= $INDICATOR_REQUIRED_VERSION
                                        json-glib-1.0 >= $JSON_GLIB_REQUIRED_VERSION
                                        dbus-glib-1 >= $DBUS_GLIB_REQUIRED_VERSION
@@ -53,6 +55,7 @@ AS_IF([test "x$with_gtk" = x3],
         ],
       [test "x$with_gtk" = x2],
         [PKG_CHECK_MODULES(INDICATOR,  gtk+-2.0 >= $GTK_REQUIRED_VERSION
+                                       gio-2.0 >= $GIO_REQUIRED_VERSION
                                        indicator >= $INDICATOR_REQUIRED_VERSION 
                                        json-glib-1.0 >= $JSON_GLIB_REQUIRED_VERSION
                                        dbus-glib-1 >= $DBUS_GLIB_REQUIRED_VERSION

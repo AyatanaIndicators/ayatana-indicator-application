@@ -1,9 +1,24 @@
-indicator-application (0.2.90-0ubuntu3) UNRELEASED; urgency=low
+indicator-application (0.2.91-0ubuntu1) natty; urgency=low
 
+  [ Ted Gould ]
+  * Upstream Merge
+    * Removing libappindicator from the tarball
+  * debian/control: Removing all libappindicator packages
+
+  [ Ken VanDine ]
+  * New upstream release
+    - Ported to gdbus and dbusmenu 0.4
   * debian/control
-    - build depend on dbusmenu >= 0.3.90
+    - Bump build depends for dbusmenu to >= 0.3.91
+    - Bump build depends for libindicator-dev to >= 0.3.16
+    - Added build depends for libappindicator-dev >= 0.2.91
+  * debian/rules
+    - Removed all the extra build targets, we don't build those
+      packages anymore
+  * debian/copyright
+    - Removed references to LGPL sources, those moved to libappindicator
 
- -- Ken VanDine <ken.vandine@canonical.com>  Wed, 08 Dec 2010 13:32:07 -0500
+ -- Ken VanDine <ken.vandine@canonical.com>  Fri, 14 Jan 2011 10:25:42 -0600
 
 indicator-application (0.2.90-0ubuntu2) natty; urgency=low
 

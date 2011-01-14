@@ -47,7 +47,9 @@ mkinstalldirs = $(install_sh) -d
 CONFIG_HEADER = $(top_builddir)/config.h
 CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
-am_test_approver_OBJECTS = test_approver-test-approver.$(OBJEXT)
+am_test_approver_OBJECTS =  \
+	test_approver-gen-notification-approver.xml.$(OBJEXT) \
+	test_approver-test-approver.$(OBJEXT)
 test_approver_OBJECTS = $(am_test_approver_OBJECTS)
 am__DEPENDENCIES_1 =
 test_approver_DEPENDENCIES = $(am__DEPENDENCIES_1) \
@@ -225,6 +227,7 @@ DBUS_RUNNER = dbus-test-runner --dbus-config /usr/share/dbus-test-runner/session
 #########################################
 #########################################
 test_approver_SOURCES = \
+	$(top_srcdir)/src/gen-notification-approver.xml.c \
 	test-approver.c
 
 test_approver_CFLAGS = \
@@ -291,6 +294,7 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_approver-gen-notification-approver.xml.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_approver-test-approver.Po@am__quote@
 
 .c.o:
@@ -316,6 +320,22 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$<' object='$@' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(LTCOMPILE) -c -o $@ $<
+
+test_approver-gen-notification-approver.xml.o: $(top_srcdir)/src/gen-notification-approver.xml.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_approver_CFLAGS) $(CFLAGS) -MT test_approver-gen-notification-approver.xml.o -MD -MP -MF $(DEPDIR)/test_approver-gen-notification-approver.xml.Tpo -c -o test_approver-gen-notification-approver.xml.o `test -f '$(top_srcdir)/src/gen-notification-approver.xml.c' || echo '$(srcdir)/'`$(top_srcdir)/src/gen-notification-approver.xml.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/test_approver-gen-notification-approver.xml.Tpo $(DEPDIR)/test_approver-gen-notification-approver.xml.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/src/gen-notification-approver.xml.c' object='test_approver-gen-notification-approver.xml.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_approver_CFLAGS) $(CFLAGS) -c -o test_approver-gen-notification-approver.xml.o `test -f '$(top_srcdir)/src/gen-notification-approver.xml.c' || echo '$(srcdir)/'`$(top_srcdir)/src/gen-notification-approver.xml.c
+
+test_approver-gen-notification-approver.xml.obj: $(top_srcdir)/src/gen-notification-approver.xml.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_approver_CFLAGS) $(CFLAGS) -MT test_approver-gen-notification-approver.xml.obj -MD -MP -MF $(DEPDIR)/test_approver-gen-notification-approver.xml.Tpo -c -o test_approver-gen-notification-approver.xml.obj `if test -f '$(top_srcdir)/src/gen-notification-approver.xml.c'; then $(CYGPATH_W) '$(top_srcdir)/src/gen-notification-approver.xml.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/src/gen-notification-approver.xml.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/test_approver-gen-notification-approver.xml.Tpo $(DEPDIR)/test_approver-gen-notification-approver.xml.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/src/gen-notification-approver.xml.c' object='test_approver-gen-notification-approver.xml.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_approver_CFLAGS) $(CFLAGS) -c -o test_approver-gen-notification-approver.xml.obj `if test -f '$(top_srcdir)/src/gen-notification-approver.xml.c'; then $(CYGPATH_W) '$(top_srcdir)/src/gen-notification-approver.xml.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/src/gen-notification-approver.xml.c'; fi`
 
 test_approver-test-approver.o: test-approver.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_approver_CFLAGS) $(CFLAGS) -MT test_approver-test-approver.o -MD -MP -MF $(DEPDIR)/test_approver-test-approver.Tpo -c -o test_approver-test-approver.o `test -f 'test-approver.c' || echo '$(srcdir)/'`test-approver.c

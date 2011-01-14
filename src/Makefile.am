@@ -39,11 +39,8 @@ libapplication_la_LDFLAGS = -module -avoid-version
 libexec_PROGRAMS = indicator-application-service
 
 BUILT_SOURCES += \
-	application-service-server.h \
 	application-service-marshal.h \
 	application-service-marshal.c \
-	dbus-properties-client.h \
-	notification-item-client.h \
 	notification-watcher-server.h
 
 indicator_application_service_SOURCES = \
@@ -53,6 +50,7 @@ indicator_application_service_SOURCES = \
 	application-service-marshal.c \
 	application-service-watcher.h \
 	application-service-watcher.c \
+	gen-application-service.xml.c \
 	app-indicator-enum-types.c \
 	dbus-shared.h \
 	generate-id.h \
@@ -81,11 +79,11 @@ DISTCLEANFILES += app-indicator-enum-types.c
 # DBus Specs
 ##################################
 
-DBUS_SPECS = \
-	dbus-properties.xml \
+GDBUS_SPECS = \
 	application-service.xml \
-	notification-approver.xml \
-	notification-item.xml \
+	notification-approver.xml
+
+DBUS_SPECS = \
 	notification-watcher.xml
 
 %-client.h: %.xml
@@ -102,10 +100,24 @@ DBUS_SPECS = \
 		--output=$@ \
 		$<
 
+gen-%.xml.c: %.xml
+	@echo "Building $@ from $<"
+	@echo "const char * _$(notdir $(subst -,_,$(subst .,_,$(basename $<)))) = " > $@
+	@sed -e "s:\":\\\\\":g" -e s:^:\": -e s:\$$:\\\\n\": $< >> $@
+	@echo ";" >> $@
+
+gen-%.xml.h: %.xml
+	@echo "Building $@ from $<"
+	@echo "extern const char * _$(notdir $(subst -,_,$(subst .,_,$(basename $<))));" > $@
+
 BUILT_SOURCES += \
 	$(DBUS_SPECS:.xml=-client.h) \
-	$(DBUS_SPECS:.xml=-server.h)
+	$(DBUS_SPECS:.xml=-server.h) \
+	gen-application-service.xml.c \
+	gen-application-service.xml.h \
+	gen-notification-approver.xml.c \
+	gen-notification-approver.xml.h
 
 CLEANFILES += $(BUILT_SOURCES)
 
-EXTRA_DIST += $(DBUS_SPECS)
+EXTRA_DIST += $(DBUS_SPECS) $(GDBUS_SPECS)

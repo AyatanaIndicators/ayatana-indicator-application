@@ -20,7 +20,7 @@ You should have received a copy of the GNU General Public License along
 with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <node name="/">
-	<interface name="org.ayatana.indicator.application.service">
+	<interface name="com.canonical.indicator.application.service">
 <!-- Properties -->
 		<!-- None currently -->
 
