@@ -20,6 +20,20 @@ indicator-application (0.2.91-0ubuntu1) natty; urgency=low
 
  -- Ken VanDine <ken.vandine@canonical.com>  Fri, 14 Jan 2011 10:25:42 -0600
 
+indicator-application (0.2.90-0ubuntu4) natty; urgency=low
+
+  * Updated for the gir abi transition
+
+ -- Ken VanDine <ken.vandine@canonical.com>  Thu, 16 Dec 2010 10:05:55 -0500
+
+indicator-application (0.2.90-0ubuntu3) natty; urgency=low
+
+  * debian/control
+    - build depend on dbusmenu >= 0.3.90
+    - Fixes FTBFS (LP: #684949)
+
+ -- Ken VanDine <ken.vandine@canonical.com>  Wed, 08 Dec 2010 13:32:07 -0500
+
 indicator-application (0.2.90-0ubuntu2) natty; urgency=low
 
   * debian/rules
