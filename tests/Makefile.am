@@ -14,6 +14,7 @@ DBUS_RUNNER=dbus-test-runner --dbus-config /usr/share/dbus-test-runner/session.c
 #########################################
 
 test_approver_SOURCES = \
+	$(top_srcdir)/src/gen-notification-approver.xml.c \
 	test-approver.c
 
 test_approver_CFLAGS = \
