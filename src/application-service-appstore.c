@@ -142,6 +142,7 @@ static void app_receive_signal (GDBusProxy * proxy, gchar * sender_name, gchar *
 static void approver_proxy_cb (GObject * object, GAsyncResult * res, gpointer user_data);
 static void approver_receive_signal (GDBusProxy * proxy, gchar * sender_name, gchar * signal_name, GVariant * parameters, gpointer user_data);
 static void get_all_properties (Application * app);
+static void application_free (Application * app);
 
 G_DEFINE_TYPE (ApplicationServiceAppstore, application_service_appstore, G_TYPE_OBJECT);
 
@@ -401,6 +402,8 @@ got_all_properties (GObject * source_object, GAsyncResult * res,
 	if (error != NULL) {
 		g_error("Could not grab DBus properties for %s: %s", app->dbus_name, error->message);
 		g_error_free(error);
+		if (!app->validated)
+			application_free(app);
 		return;
 	}
 
@@ -484,15 +487,14 @@ got_all_properties (GObject * source_object, GAsyncResult * res,
 			app->guide = g_strdup("");
 		}
 
-		priv->applications = g_list_insert_sorted_with_data (priv->applications, app, app_sort_func, NULL);
 		g_list_foreach(priv->approvers, check_with_old_approver, app);
 
 		apply_status(app);
-	}
 
-	if (app->queued_props) {
-		get_all_properties(app);
-		app->queued_props = FALSE;
+		if (app->queued_props) {
+			get_all_properties(app);
+			app->queued_props = FALSE;
+		}
 	}
 
 	if (menu)            g_variant_unref (menu);
@@ -621,6 +623,9 @@ application_free (Application * app)
 	if (app->currently_free) return;
 	app->currently_free = TRUE;
 	
+	/* Remove from the application list */
+	app->appstore->priv->applications = g_list_remove(app->appstore->priv->applications, app);
+
 	if (app->name_watcher != 0) {
 		g_dbus_connection_signal_unsubscribe(g_dbus_proxy_get_connection(app->dbus_proxy), app->name_watcher);
 		app->name_watcher = 0;
@@ -695,9 +700,6 @@ application_died (Application * app)
 	/* Remove from the panel */
 	app->status = APP_INDICATOR_STATUS_PASSIVE;
 	apply_status(app);
-
-	/* Remove from the application list */
-	app->appstore->priv->applications = g_list_remove(app->appstore->priv->applications, app);
 
 	/* Destroy the data */
 	application_free(app);
@@ -939,6 +941,8 @@ application_service_appstore_application_add (ApplicationServiceAppstore * appst
 			         dbus_proxy_cb,
 		                 app);
 
+	appstore->priv->applications = g_list_insert_sorted_with_data (appstore->priv->applications, app, app_sort_func, NULL);
+
 	/* We're returning, nothing is yet added until the properties
 	   come back and give us more info. */
 	return;
@@ -978,6 +982,7 @@ dbus_proxy_cb (GObject * object, GAsyncResult * res, gpointer user_data)
 	if (error != NULL) {
 		g_error("Could not grab DBus proxy for %s: %s", app->dbus_name, error->message);
 		g_error_free(error);
+		application_free(app);
 		return;
 	}
 
@@ -1033,6 +1038,7 @@ props_cb (GObject * object, GAsyncResult * res, gpointer user_data)
 	if (error != NULL) {
 		g_error("Could not grab Properties DBus proxy for %s: %s", app->dbus_name, error->message);
 		g_error_free(error);
+		application_free(app);
 		return;
 	}
 
