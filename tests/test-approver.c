@@ -1,11 +1,10 @@
 #include <glib.h>
 #include <glib-object.h>
+#include <gio/gio.h>
 
-#include <dbus/dbus-glib-bindings.h>
-
-#include "notification-watcher-client.h"
 #include "dbus-shared.h"
-#include "app-indicator.h"
+#include "libappindicator/app-indicator.h"
+#include "gen-notification-approver.xml.h"
 
 #define APPROVER_PATH  "/my/approver"
 
@@ -35,13 +34,22 @@ GType test_approver_get_type (void);
 
 static void test_approver_class_init (TestApproverClass *klass);
 static void test_approver_init       (TestApprover *self);
-static gboolean _notification_approver_server_approve_item (TestApprover * ta, const gchar * id, const gchar * category, guint pid, const gchar * address, const gchar * path, gboolean * approved, GError ** error);
+static GVariant * approve_item (TestApprover * ta, const gchar * id);
+static void bus_method_call (GDBusConnection * connection, const gchar * sender, const gchar * path, const gchar * interface, const gchar * method, GVariant * params, GDBusMethodInvocation * invocation, gpointer user_data);
 
-#include "../src/notification-approver-server.h"
+/* GDBus Stuff */
+static GDBusNodeInfo *      node_info = NULL;
+static GDBusInterfaceInfo * interface_info = NULL;
+static GDBusInterfaceVTable interface_table = {
+       method_call:    bus_method_call,
+       get_property:   NULL, /* No properties */
+       set_property:   NULL  /* No properties */
+};
 
 GMainLoop * main_loop = NULL;
-DBusGConnection * session_bus = NULL;
-DBusGProxy * bus_proxy = NULL;
+GDBusConnection * session_bus = NULL;
+GDBusProxy * bus_proxy = NULL;
+GDBusProxy * watcher_proxy = NULL;
 AppIndicator * app_indicator = NULL;
 gboolean passed = FALSE;
 
@@ -50,8 +58,24 @@ G_DEFINE_TYPE (TestApprover, test_approver, G_TYPE_OBJECT);
 static void
 test_approver_class_init (TestApproverClass *klass)
 {
-	dbus_g_object_type_install_info(TEST_APPROVER_TYPE,
-	                                &dbus_glib__notification_approver_server_object_info);
+	/* Setting up the DBus interfaces */
+	if (node_info == NULL) {
+		GError * error = NULL;
+
+		node_info = g_dbus_node_info_new_for_xml(_notification_approver, &error);
+		if (error != NULL) {
+			g_error("Unable to parse Approver Service Interface description: %s", error->message);
+			g_error_free(error);
+		}
+	}
+
+	if (interface_info == NULL) {
+		interface_info = g_dbus_node_info_lookup_interface(node_info, NOTIFICATION_APPROVER_DBUS_IFACE);
+
+		if (interface_info == NULL) {
+			g_error("Unable to find interface '" NOTIFICATION_APPROVER_DBUS_IFACE "'");
+		}
+	}
 
 	return;
 }
@@ -59,17 +83,29 @@ test_approver_class_init (TestApproverClass *klass)
 static void
 test_approver_init (TestApprover *self)
 {
-	dbus_g_connection_register_g_object(session_bus,
-	                                    APPROVER_PATH,
-	                                    G_OBJECT(self));
+	GError * error = NULL;
+
+	/* Now register our object on our new connection */
+	g_dbus_connection_register_object(session_bus,
+	                                  APPROVER_PATH,
+	                                  interface_info,
+	                                  &interface_table,
+	                                  self,
+	                                  NULL,
+	                                  &error);
+
+	if (error != NULL) {
+		g_error("Unable to register the object to DBus: %s", error->message);
+		g_error_free(error);
+		return;
+	}
 
 	return;
 }
 
-static gboolean 
-_notification_approver_server_approve_item (TestApprover * ta, const gchar * id, const gchar * category, guint pid, const gchar * address, const gchar * path, gboolean * approved, GError ** error)
+static GVariant *
+approve_item (TestApprover * ta, const gchar * id)
 {
-	*approved = TRUE;
 	g_debug("Asked to approve indicator");
 
 	if (g_strcmp0(id, INDICATOR_ID) == 0) {
@@ -78,12 +114,41 @@ _notification_approver_server_approve_item (TestApprover * ta, const gchar * id,
 
 	g_main_loop_quit(main_loop);
 
-	return TRUE;
+	return g_variant_new("(b)", TRUE);
+}
+
+/* A method has been called from our dbus inteface.  Figure out what it
+   is and dispatch it. */
+static void
+bus_method_call (GDBusConnection * connection, const gchar * sender,
+                 const gchar * path, const gchar * interface,
+                 const gchar * method, GVariant * params,
+                 GDBusMethodInvocation * invocation, gpointer user_data)
+{
+	TestApprover * ta = (TestApprover *)user_data;
+	GVariant * retval = NULL;
+
+	if (g_strcmp0(method, "ApproveItem") == 0) {
+		const gchar * id;
+		g_variant_get(params, "(&ssuso)", &id, NULL, NULL, NULL, NULL);
+		retval = approve_item(ta, id);
+	} else {
+		g_warning("Calling method '%s' on the indicator service and it's unknown", method);
+	}
+
+	g_dbus_method_invocation_return_value(invocation, retval);
+	return;
 }
 
 static void
-register_cb (DBusGProxy * proxy, GError * error, gpointer user_data)
+register_cb (GObject *object, GAsyncResult *res, gpointer user_data)
 {
+	GDBusProxy * proxy = G_DBUS_PROXY(object);
+	GError * error = NULL;
+	GVariant * result;
+
+	result = g_dbus_proxy_call_finish(proxy, res, &error);
+
 	if (error != NULL) {
 		g_warning("Unable to register approver: %s", error->message);
 		g_error_free(error);
@@ -118,18 +183,17 @@ check_for_service (gpointer user_data)
 	owner_count++;
 
 	gboolean has_owner = FALSE;
-	org_freedesktop_DBus_name_has_owner(bus_proxy, NOTIFICATION_WATCHER_DBUS_ADDR, &has_owner, NULL);
+	gchar * owner = g_dbus_proxy_get_name_owner(bus_proxy);
+	has_owner = (owner != NULL);
+	g_free (owner);
 
 	if (has_owner) {
-		const char * cats = NULL;
-		DBusGProxy * proxy = dbus_g_proxy_new_for_name(session_bus,
-		                                               NOTIFICATION_WATCHER_DBUS_ADDR,
-		                                               NOTIFICATION_WATCHER_DBUS_OBJ,
-		                                               NOTIFICATION_WATCHER_DBUS_IFACE);
-
 		g_debug("Registering Approver");
-		org_kde_StatusNotifierWatcher_x_ayatana_register_notification_approver_async (proxy, APPROVER_PATH, &cats, register_cb, NULL);
-
+		GVariantBuilder * builder = g_variant_builder_new(G_VARIANT_TYPE("as"));
+		g_dbus_proxy_call(bus_proxy, "XAyatanaRegisterNotificationApprover",
+		                  g_variant_new("(oas)", APPROVER_PATH, builder),
+		                  G_DBUS_CALL_FLAGS_NONE, -1, NULL, register_cb,
+		                  NULL);
 		return FALSE;
 	}
 
@@ -152,16 +216,22 @@ main (int argc, char ** argv)
 	gtk_init(&argc, &argv);
 	g_debug("Initing");
 
-	session_bus = dbus_g_bus_get(DBUS_BUS_SESSION, &error);
+	session_bus = g_bus_get_sync(G_BUS_TYPE_SESSION, NULL, &error);
+	TestApprover * approver = g_object_new(TEST_APPROVER_TYPE, NULL);
+
+	bus_proxy = g_dbus_proxy_new_for_bus_sync(G_BUS_TYPE_SESSION, G_DBUS_PROXY_FLAGS_DO_NOT_AUTO_START, NULL, NOTIFICATION_WATCHER_DBUS_ADDR, NOTIFICATION_WATCHER_DBUS_OBJ, NOTIFICATION_WATCHER_DBUS_IFACE, NULL, &error);
 	if (error != NULL) {
-		g_warning("Unable to get session bus: %s", error->message);
+		g_warning("Unable to get bus proxy: %s", error->message);
 		g_error_free(error);
 		return -1;
 	}
 
-	TestApprover * approver = g_object_new(TEST_APPROVER_TYPE, NULL);
-
-	bus_proxy = dbus_g_proxy_new_for_name(session_bus, DBUS_SERVICE_DBUS, DBUS_PATH_DBUS, DBUS_INTERFACE_DBUS);
+	watcher_proxy = g_dbus_proxy_new_for_bus_sync(G_BUS_TYPE_SESSION, G_DBUS_PROXY_FLAGS_DO_NOT_AUTO_START, NULL, NOTIFICATION_WATCHER_DBUS_ADDR, NOTIFICATION_WATCHER_DBUS_OBJ, NOTIFICATION_WATCHER_DBUS_IFACE, NULL, &error);
+	if (error != NULL) {
+		g_warning("Unable to get watcher bus: %s", error->message);
+		g_error_free(error);
+		return -1;
+	}
 
 	g_timeout_add(100, check_for_service, NULL);
 	g_timeout_add_seconds(2, fail_timeout, NULL);

@@ -748,70 +748,16 @@ ac_subst_vars='am__EXEEXT_FALSE
 am__EXEEXT_TRUE
 LTLIBOBJS
 LIBOBJS
-PYGTK_CODEGEN
-PYGTK_DEFSDIR
-APPINDICATOR_PYTHON_LIBS
-APPINDICATOR_PYTHON_CFLAGS
-PYTHON_INCLUDES
-pkgpyexecdir
-pyexecdir
-pkgpythondir
-pythondir
-PYTHON_PLATFORM
-PYTHON_EXEC_PREFIX
-PYTHON_PREFIX
-PYTHON_VERSION
-PYTHON
 DBUSSERVICEDIR
 INDICATORICONSDIR
 INDICATORDIR
-NUNIT_LIBS
-NUNIT_CFLAGS
-GAPI_FIXUP
-GAPI_CODEGEN
-GAPI_PARSER
-GAPI_LIBS
-GAPI_CFLAGS
-GTK_SHARP_LIBS
-GTK_SHARP_CFLAGS
-GENERATED_SOURCES
-LIB_SUFFIX
-LIB_PREFIX
-GACUTIL
-CSC
-RUNTIME
-AL
-MONO_DEPENDENCY_LIBS
-MONO_DEPENDENCY_CFLAGS
-VALA_API_GEN
-HAVE_INTROSPECTION_FALSE
-HAVE_INTROSPECTION_TRUE
-INTROSPECTION_MAKEFILE
-INTROSPECTION_LIBS
-INTROSPECTION_CFLAGS
-INTROSPECTION_TYPELIBDIR
-INTROSPECTION_GIRDIR
-INTROSPECTION_GENERATE
-INTROSPECTION_COMPILER
-INTROSPECTION_SCANNER
+APP_INDICATOR_INCLUDE
+TEST_LIBS
+TEST_CFLAGS
 USE_GTK3_FALSE
 USE_GTK3_TRUE
 INDICATOR_LIBS
 INDICATOR_CFLAGS
-GTK_DOC_USE_REBASE_FALSE
-GTK_DOC_USE_REBASE_TRUE
-GTK_DOC_USE_LIBTOOL_FALSE
-GTK_DOC_USE_LIBTOOL_TRUE
-GTK_DOC_BUILD_PDF_FALSE
-GTK_DOC_BUILD_PDF_TRUE
-GTK_DOC_BUILD_HTML_FALSE
-GTK_DOC_BUILD_HTML_TRUE
-ENABLE_GTK_DOC_FALSE
-ENABLE_GTK_DOC_TRUE
-HTML_DIR
-GTKDOC_MKPDF
-GTKDOC_REBASE
-GTKDOC_CHECK
 PKG_CONFIG_LIBDIR
 PKG_CONFIG_PATH
 PKG_CONFIG
@@ -939,12 +885,7 @@ enable_fast_install
 with_gnu_ld
 enable_libtool_lock
 enable_silent_rules
-with_html_dir
-enable_gtk_doc
-enable_gtk_doc_html
-enable_gtk_doc_pdf
 with_gtk
-enable_introspection
 enable_localinstall
 '
       ac_precious_vars='build_alias
@@ -961,16 +902,8 @@ PKG_CONFIG_PATH
 PKG_CONFIG_LIBDIR
 INDICATOR_CFLAGS
 INDICATOR_LIBS
-MONO_DEPENDENCY_CFLAGS
-MONO_DEPENDENCY_LIBS
-GTK_SHARP_CFLAGS
-GTK_SHARP_LIBS
-GAPI_CFLAGS
-GAPI_LIBS
-NUNIT_CFLAGS
-NUNIT_LIBS
-APPINDICATOR_PYTHON_CFLAGS
-APPINDICATOR_PYTHON_LIBS'
+TEST_CFLAGS
+TEST_LIBS'
 
 
 # Initialize some variables set by options.
@@ -1603,11 +1536,6 @@ Optional Features:
   --disable-libtool-lock  avoid locking (might break parallel builds)
   --enable-silent-rules          less verbose build output (undo: `make V=1')
   --disable-silent-rules         verbose build output (undo: `make V=0')
-  --enable-gtk-doc        use gtk-doc to build documentation [[default=no]]
-  --enable-gtk-doc-html   build documentation in html format [[default=yes]]
-  --enable-gtk-doc-pdf    build documentation in pdf format [[default=no]]
-  --enable-introspection=[no/auto/yes]
-                          Enable introspection for this build
   --enable-localinstall   install all of the files localy instead of system
                           directories (for distcheck)
 
@@ -1617,7 +1545,6 @@ Optional Packages:
   --with-pic              try to use only PIC/non-PIC objects [default=use
                           both]
   --with-gnu-ld           assume the C compiler uses GNU ld [default=no]
-  --with-html-dir=PATH    path to installed docs
   --with-gtk              Which version of gtk to use [default=2]
 
 Some influential environment variables:
@@ -1638,23 +1565,8 @@ Some influential environment variables:
               C compiler flags for INDICATOR, overriding pkg-config
   INDICATOR_LIBS
               linker flags for INDICATOR, overriding pkg-config
-  MONO_DEPENDENCY_CFLAGS
-              C compiler flags for MONO_DEPENDENCY, overriding pkg-config
-  MONO_DEPENDENCY_LIBS
-              linker flags for MONO_DEPENDENCY, overriding pkg-config
-  GTK_SHARP_CFLAGS
-              C compiler flags for GTK_SHARP, overriding pkg-config
-  GTK_SHARP_LIBS
-              linker flags for GTK_SHARP, overriding pkg-config
-  GAPI_CFLAGS C compiler flags for GAPI, overriding pkg-config
-  GAPI_LIBS   linker flags for GAPI, overriding pkg-config
-  NUNIT_CFLAGS
-              C compiler flags for NUNIT, overriding pkg-config
-  NUNIT_LIBS  linker flags for NUNIT, overriding pkg-config
-  APPINDICATOR_PYTHON_CFLAGS
-              C compiler flags for APPINDICATOR_PYTHON, overriding pkg-config
-  APPINDICATOR_PYTHON_LIBS
-              linker flags for APPINDICATOR_PYTHON, overriding pkg-config
+  TEST_CFLAGS C compiler flags for TEST, overriding pkg-config
+  TEST_LIBS   linker flags for TEST, overriding pkg-config
 
 Use these variables to override the choices made by `configure' or to help
 it to find libraries and programs with nonstandard names/locations.
@@ -2823,7 +2735,7 @@ fi
 
 # Define the identity of the package.
  PACKAGE=indicator-application
- VERSION=0.2.90
+ VERSION=0.2.91
 
 
 cat >>confdefs.h <<_ACEOF
@@ -5647,13 +5559,13 @@ if test "${lt_cv_nm_interface+set}" = set; then :
 else
   lt_cv_nm_interface="BSD nm"
   echo "int some_variable = 0;" > conftest.$ac_ext
-  (eval echo "\"\$as_me:5650: $ac_compile\"" >&5)
+  (eval echo "\"\$as_me:5562: $ac_compile\"" >&5)
   (eval "$ac_compile" 2>conftest.err)
   cat conftest.err >&5
-  (eval echo "\"\$as_me:5653: $NM \\\"conftest.$ac_objext\\\"\"" >&5)
+  (eval echo "\"\$as_me:5565: $NM \\\"conftest.$ac_objext\\\"\"" >&5)
   (eval "$NM \"conftest.$ac_objext\"" 2>conftest.err > conftest.out)
   cat conftest.err >&5
-  (eval echo "\"\$as_me:5656: output\"" >&5)
+  (eval echo "\"\$as_me:5568: output\"" >&5)
   cat conftest.out >&5
   if $GREP 'External.*some_variable' conftest.out > /dev/null; then
     lt_cv_nm_interface="MS dumpbin"
@@ -6858,7 +6770,7 @@ ia64-*-hpux*)
   ;;
 *-*-irix6*)
   # Find out which ABI we are using.
-  echo '#line 6861 "configure"' > conftest.$ac_ext
+  echo '#line 6773 "configure"' > conftest.$ac_ext
   if { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_compile\""; } >&5
   (eval $ac_compile) 2>&5
   ac_status=$?
@@ -8137,11 +8049,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:8140: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:8052: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:8144: \$? = $ac_status" >&5
+   echo "$as_me:8056: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -8476,11 +8388,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:8479: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:8391: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:8483: \$? = $ac_status" >&5
+   echo "$as_me:8395: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -8581,11 +8493,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:8584: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:8496: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:8588: \$? = $ac_status" >&5
+   echo "$as_me:8500: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -8636,11 +8548,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:8639: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:8551: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:8643: \$? = $ac_status" >&5
+   echo "$as_me:8555: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -11020,7 +10932,7 @@ else
   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<_LT_EOF
-#line 11023 "configure"
+#line 10935 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -11116,7 +11028,7 @@ else
   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<_LT_EOF
-#line 11119 "configure"
+#line 11031 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -11562,247 +11474,14 @@ $as_echo "no" >&6; }
 fi
 
 ###########################
-# GTK Doc
-###########################
-
-
-
-    # Extract the first word of "gtkdoc-check", so it can be a program name with args.
-set dummy gtkdoc-check; ac_word=$2
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
-$as_echo_n "checking for $ac_word... " >&6; }
-if test "${ac_cv_path_GTKDOC_CHECK+set}" = set; then :
-  $as_echo_n "(cached) " >&6
-else
-  case $GTKDOC_CHECK in
-  [\\/]* | ?:[\\/]*)
-  ac_cv_path_GTKDOC_CHECK="$GTKDOC_CHECK" # Let the user override the test with a path.
-  ;;
-  *)
-  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
-for as_dir in $PATH
-do
-  IFS=$as_save_IFS
-  test -z "$as_dir" && as_dir=.
-    for ac_exec_ext in '' $ac_executable_extensions; do
-  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
-    ac_cv_path_GTKDOC_CHECK="$as_dir/$ac_word$ac_exec_ext"
-    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
-    break 2
-  fi
-done
-  done
-IFS=$as_save_IFS
-
-  ;;
-esac
-fi
-GTKDOC_CHECK=$ac_cv_path_GTKDOC_CHECK
-if test -n "$GTKDOC_CHECK"; then
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $GTKDOC_CHECK" >&5
-$as_echo "$GTKDOC_CHECK" >&6; }
-else
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-fi
-
-
-  for ac_prog in gtkdoc-rebase
-do
-  # Extract the first word of "$ac_prog", so it can be a program name with args.
-set dummy $ac_prog; ac_word=$2
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
-$as_echo_n "checking for $ac_word... " >&6; }
-if test "${ac_cv_path_GTKDOC_REBASE+set}" = set; then :
-  $as_echo_n "(cached) " >&6
-else
-  case $GTKDOC_REBASE in
-  [\\/]* | ?:[\\/]*)
-  ac_cv_path_GTKDOC_REBASE="$GTKDOC_REBASE" # Let the user override the test with a path.
-  ;;
-  *)
-  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
-for as_dir in $PATH
-do
-  IFS=$as_save_IFS
-  test -z "$as_dir" && as_dir=.
-    for ac_exec_ext in '' $ac_executable_extensions; do
-  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
-    ac_cv_path_GTKDOC_REBASE="$as_dir/$ac_word$ac_exec_ext"
-    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
-    break 2
-  fi
-done
-  done
-IFS=$as_save_IFS
-
-  ;;
-esac
-fi
-GTKDOC_REBASE=$ac_cv_path_GTKDOC_REBASE
-if test -n "$GTKDOC_REBASE"; then
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $GTKDOC_REBASE" >&5
-$as_echo "$GTKDOC_REBASE" >&6; }
-else
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-fi
-
-
-  test -n "$GTKDOC_REBASE" && break
-done
-test -n "$GTKDOC_REBASE" || GTKDOC_REBASE="true"
-
-  # Extract the first word of "gtkdoc-mkpdf", so it can be a program name with args.
-set dummy gtkdoc-mkpdf; ac_word=$2
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
-$as_echo_n "checking for $ac_word... " >&6; }
-if test "${ac_cv_path_GTKDOC_MKPDF+set}" = set; then :
-  $as_echo_n "(cached) " >&6
-else
-  case $GTKDOC_MKPDF in
-  [\\/]* | ?:[\\/]*)
-  ac_cv_path_GTKDOC_MKPDF="$GTKDOC_MKPDF" # Let the user override the test with a path.
-  ;;
-  *)
-  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
-for as_dir in $PATH
-do
-  IFS=$as_save_IFS
-  test -z "$as_dir" && as_dir=.
-    for ac_exec_ext in '' $ac_executable_extensions; do
-  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
-    ac_cv_path_GTKDOC_MKPDF="$as_dir/$ac_word$ac_exec_ext"
-    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
-    break 2
-  fi
-done
-  done
-IFS=$as_save_IFS
-
-  ;;
-esac
-fi
-GTKDOC_MKPDF=$ac_cv_path_GTKDOC_MKPDF
-if test -n "$GTKDOC_MKPDF"; then
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $GTKDOC_MKPDF" >&5
-$as_echo "$GTKDOC_MKPDF" >&6; }
-else
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-fi
-
-
-
-
-# Check whether --with-html-dir was given.
-if test "${with_html_dir+set}" = set; then :
-  withval=$with_html_dir;
-else
-  with_html_dir='${datadir}/gtk-doc/html'
-fi
-
-  HTML_DIR="$with_html_dir"
-
-
-    # Check whether --enable-gtk-doc was given.
-if test "${enable_gtk_doc+set}" = set; then :
-  enableval=$enable_gtk_doc;
-else
-  enable_gtk_doc=no
-fi
-
-
-  if test x$enable_gtk_doc = xyes; then
-    if test -n "$PKG_CONFIG" && \
-    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"gtk-doc >= 1.9\""; } >&5
-  ($PKG_CONFIG --exists --print-errors "gtk-doc >= 1.9") 2>&5
-  ac_status=$?
-  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
-  test $ac_status = 0; }; then
-  :
-else
-  as_fn_error $? "You need to have gtk-doc >= 1.9 installed to build $PACKAGE_NAME" "$LINENO" 5
-fi
-  fi
-
-  { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether to build gtk-doc documentation" >&5
-$as_echo_n "checking whether to build gtk-doc documentation... " >&6; }
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $enable_gtk_doc" >&5
-$as_echo "$enable_gtk_doc" >&6; }
-
-    # Check whether --enable-gtk-doc-html was given.
-if test "${enable_gtk_doc_html+set}" = set; then :
-  enableval=$enable_gtk_doc_html;
-else
-  enable_gtk_doc_html=yes
-fi
-
-    # Check whether --enable-gtk-doc-pdf was given.
-if test "${enable_gtk_doc_pdf+set}" = set; then :
-  enableval=$enable_gtk_doc_pdf;
-else
-  enable_gtk_doc_pdf=no
-fi
-
-
-  if test -z "$GTKDOC_MKPDF"; then
-    enable_gtk_doc_pdf=no
-  fi
-
-
-   if test x$enable_gtk_doc = xyes; then
-  ENABLE_GTK_DOC_TRUE=
-  ENABLE_GTK_DOC_FALSE='#'
-else
-  ENABLE_GTK_DOC_TRUE='#'
-  ENABLE_GTK_DOC_FALSE=
-fi
-
-   if test x$enable_gtk_doc_html = xyes; then
-  GTK_DOC_BUILD_HTML_TRUE=
-  GTK_DOC_BUILD_HTML_FALSE='#'
-else
-  GTK_DOC_BUILD_HTML_TRUE='#'
-  GTK_DOC_BUILD_HTML_FALSE=
-fi
-
-   if test x$enable_gtk_doc_pdf = xyes; then
-  GTK_DOC_BUILD_PDF_TRUE=
-  GTK_DOC_BUILD_PDF_FALSE='#'
-else
-  GTK_DOC_BUILD_PDF_TRUE='#'
-  GTK_DOC_BUILD_PDF_FALSE=
-fi
-
-   if test -n "$LIBTOOL"; then
-  GTK_DOC_USE_LIBTOOL_TRUE=
-  GTK_DOC_USE_LIBTOOL_FALSE='#'
-else
-  GTK_DOC_USE_LIBTOOL_TRUE='#'
-  GTK_DOC_USE_LIBTOOL_FALSE=
-fi
-
-   if test -n "$GTKDOC_REBASE"; then
-  GTK_DOC_USE_REBASE_TRUE=
-  GTK_DOC_USE_REBASE_FALSE='#'
-else
-  GTK_DOC_USE_REBASE_TRUE='#'
-  GTK_DOC_USE_REBASE_FALSE=
-fi
-
-
-
-
-
-###########################
 # Dependencies
 ###########################
 
 GTK_REQUIRED_VERSION=2.18
 GTK3_REQUIRED_VERSION=2.91
+GIO_REQUIRED_VERSION=2.26
 INDICATOR_REQUIRED_VERSION=0.3.5
-DBUSMENUGTK_REQUIRED_VERSION=0.2.2
+DBUSMENUGTK_REQUIRED_VERSION=0.3.91
 JSON_GLIB_REQUIRED_VERSION=0.7.6
 DBUS_GLIB_REQUIRED_VERSION=0.82
 
@@ -11825,23 +11504,26 @@ if test -n "$INDICATOR_CFLAGS"; then
  elif test -n "$PKG_CONFIG"; then
     if test -n "$PKG_CONFIG" && \
     { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"gtk+-3.0 >= \$GTK3_REQUIRED_VERSION
+                                       gio-2.0 >= \$GIO_REQUIRED_VERSION
                                        indicator3 >= \$INDICATOR_REQUIRED_VERSION
                                        json-glib-1.0 >= \$JSON_GLIB_REQUIRED_VERSION
                                        dbus-glib-1 >= \$DBUS_GLIB_REQUIRED_VERSION
-                                       dbusmenu-gtk3 >= \$DBUSMENUGTK_REQUIRED_VERSION\""; } >&5
+                                       dbusmenu-gtk3-0.4 >= \$DBUSMENUGTK_REQUIRED_VERSION\""; } >&5
   ($PKG_CONFIG --exists --print-errors "gtk+-3.0 >= $GTK3_REQUIRED_VERSION
+                                       gio-2.0 >= $GIO_REQUIRED_VERSION
                                        indicator3 >= $INDICATOR_REQUIRED_VERSION
                                        json-glib-1.0 >= $JSON_GLIB_REQUIRED_VERSION
                                        dbus-glib-1 >= $DBUS_GLIB_REQUIRED_VERSION
-                                       dbusmenu-gtk3 >= $DBUSMENUGTK_REQUIRED_VERSION") 2>&5
+                                       dbusmenu-gtk3-0.4 >= $DBUSMENUGTK_REQUIRED_VERSION") 2>&5
   ac_status=$?
   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; then
   pkg_cv_INDICATOR_CFLAGS=`$PKG_CONFIG --cflags "gtk+-3.0 >= $GTK3_REQUIRED_VERSION
+                                       gio-2.0 >= $GIO_REQUIRED_VERSION
                                        indicator3 >= $INDICATOR_REQUIRED_VERSION
                                        json-glib-1.0 >= $JSON_GLIB_REQUIRED_VERSION
                                        dbus-glib-1 >= $DBUS_GLIB_REQUIRED_VERSION
-                                       dbusmenu-gtk3 >= $DBUSMENUGTK_REQUIRED_VERSION" 2>/dev/null`
+                                       dbusmenu-gtk3-0.4 >= $DBUSMENUGTK_REQUIRED_VERSION" 2>/dev/null`
 else
   pkg_failed=yes
 fi
@@ -11853,23 +11535,26 @@ if test -n "$INDICATOR_LIBS"; then
  elif test -n "$PKG_CONFIG"; then
     if test -n "$PKG_CONFIG" && \
     { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"gtk+-3.0 >= \$GTK3_REQUIRED_VERSION
+                                       gio-2.0 >= \$GIO_REQUIRED_VERSION
                                        indicator3 >= \$INDICATOR_REQUIRED_VERSION
                                        json-glib-1.0 >= \$JSON_GLIB_REQUIRED_VERSION
                                        dbus-glib-1 >= \$DBUS_GLIB_REQUIRED_VERSION
-                                       dbusmenu-gtk3 >= \$DBUSMENUGTK_REQUIRED_VERSION\""; } >&5
+                                       dbusmenu-gtk3-0.4 >= \$DBUSMENUGTK_REQUIRED_VERSION\""; } >&5
   ($PKG_CONFIG --exists --print-errors "gtk+-3.0 >= $GTK3_REQUIRED_VERSION
+                                       gio-2.0 >= $GIO_REQUIRED_VERSION
                                        indicator3 >= $INDICATOR_REQUIRED_VERSION
                                        json-glib-1.0 >= $JSON_GLIB_REQUIRED_VERSION
                                        dbus-glib-1 >= $DBUS_GLIB_REQUIRED_VERSION
-                                       dbusmenu-gtk3 >= $DBUSMENUGTK_REQUIRED_VERSION") 2>&5
+                                       dbusmenu-gtk3-0.4 >= $DBUSMENUGTK_REQUIRED_VERSION") 2>&5
   ac_status=$?
   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; then
   pkg_cv_INDICATOR_LIBS=`$PKG_CONFIG --libs "gtk+-3.0 >= $GTK3_REQUIRED_VERSION
+                                       gio-2.0 >= $GIO_REQUIRED_VERSION
                                        indicator3 >= $INDICATOR_REQUIRED_VERSION
                                        json-glib-1.0 >= $JSON_GLIB_REQUIRED_VERSION
                                        dbus-glib-1 >= $DBUS_GLIB_REQUIRED_VERSION
-                                       dbusmenu-gtk3 >= $DBUSMENUGTK_REQUIRED_VERSION" 2>/dev/null`
+                                       dbusmenu-gtk3-0.4 >= $DBUSMENUGTK_REQUIRED_VERSION" 2>/dev/null`
 else
   pkg_failed=yes
 fi
@@ -11890,25 +11575,28 @@ else
 fi
         if test $_pkg_short_errors_supported = yes; then
 	        INDICATOR_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors "gtk+-3.0 >= $GTK3_REQUIRED_VERSION
+                                       gio-2.0 >= $GIO_REQUIRED_VERSION
                                        indicator3 >= $INDICATOR_REQUIRED_VERSION
                                        json-glib-1.0 >= $JSON_GLIB_REQUIRED_VERSION
                                        dbus-glib-1 >= $DBUS_GLIB_REQUIRED_VERSION
-                                       dbusmenu-gtk3 >= $DBUSMENUGTK_REQUIRED_VERSION" 2>&1`
+                                       dbusmenu-gtk3-0.4 >= $DBUSMENUGTK_REQUIRED_VERSION" 2>&1`
         else
 	        INDICATOR_PKG_ERRORS=`$PKG_CONFIG --print-errors "gtk+-3.0 >= $GTK3_REQUIRED_VERSION
+                                       gio-2.0 >= $GIO_REQUIRED_VERSION
                                        indicator3 >= $INDICATOR_REQUIRED_VERSION
                                        json-glib-1.0 >= $JSON_GLIB_REQUIRED_VERSION
                                        dbus-glib-1 >= $DBUS_GLIB_REQUIRED_VERSION
-                                       dbusmenu-gtk3 >= $DBUSMENUGTK_REQUIRED_VERSION" 2>&1`
+                                       dbusmenu-gtk3-0.4 >= $DBUSMENUGTK_REQUIRED_VERSION" 2>&1`
         fi
 	# Put the nasty error message in config.log where it belongs
 	echo "$INDICATOR_PKG_ERRORS" >&5
 
 	as_fn_error $? "Package requirements (gtk+-3.0 >= $GTK3_REQUIRED_VERSION
+                                       gio-2.0 >= $GIO_REQUIRED_VERSION
                                        indicator3 >= $INDICATOR_REQUIRED_VERSION
                                        json-glib-1.0 >= $JSON_GLIB_REQUIRED_VERSION
                                        dbus-glib-1 >= $DBUS_GLIB_REQUIRED_VERSION
-                                       dbusmenu-gtk3 >= $DBUSMENUGTK_REQUIRED_VERSION) were not met:
+                                       dbusmenu-gtk3-0.4 >= $DBUSMENUGTK_REQUIRED_VERSION) were not met:
 
 $INDICATOR_PKG_ERRORS
 
@@ -11957,23 +11645,26 @@ if test -n "$INDICATOR_CFLAGS"; then
  elif test -n "$PKG_CONFIG"; then
     if test -n "$PKG_CONFIG" && \
     { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"gtk+-2.0 >= \$GTK_REQUIRED_VERSION
+                                       gio-2.0 >= \$GIO_REQUIRED_VERSION
                                        indicator >= \$INDICATOR_REQUIRED_VERSION
                                        json-glib-1.0 >= \$JSON_GLIB_REQUIRED_VERSION
                                        dbus-glib-1 >= \$DBUS_GLIB_REQUIRED_VERSION
-                                       dbusmenu-gtk >= \$DBUSMENUGTK_REQUIRED_VERSION\""; } >&5
+                                       dbusmenu-gtk-0.4 >= \$DBUSMENUGTK_REQUIRED_VERSION\""; } >&5
   ($PKG_CONFIG --exists --print-errors "gtk+-2.0 >= $GTK_REQUIRED_VERSION
+                                       gio-2.0 >= $GIO_REQUIRED_VERSION
                                        indicator >= $INDICATOR_REQUIRED_VERSION
                                        json-glib-1.0 >= $JSON_GLIB_REQUIRED_VERSION
                                        dbus-glib-1 >= $DBUS_GLIB_REQUIRED_VERSION
-                                       dbusmenu-gtk >= $DBUSMENUGTK_REQUIRED_VERSION") 2>&5
+                                       dbusmenu-gtk-0.4 >= $DBUSMENUGTK_REQUIRED_VERSION") 2>&5
   ac_status=$?
   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; then
   pkg_cv_INDICATOR_CFLAGS=`$PKG_CONFIG --cflags "gtk+-2.0 >= $GTK_REQUIRED_VERSION
+                                       gio-2.0 >= $GIO_REQUIRED_VERSION
                                        indicator >= $INDICATOR_REQUIRED_VERSION
                                        json-glib-1.0 >= $JSON_GLIB_REQUIRED_VERSION
                                        dbus-glib-1 >= $DBUS_GLIB_REQUIRED_VERSION
-                                       dbusmenu-gtk >= $DBUSMENUGTK_REQUIRED_VERSION" 2>/dev/null`
+                                       dbusmenu-gtk-0.4 >= $DBUSMENUGTK_REQUIRED_VERSION" 2>/dev/null`
 else
   pkg_failed=yes
 fi
@@ -11985,23 +11676,26 @@ if test -n "$INDICATOR_LIBS"; then
  elif test -n "$PKG_CONFIG"; then
     if test -n "$PKG_CONFIG" && \
     { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"gtk+-2.0 >= \$GTK_REQUIRED_VERSION
+                                       gio-2.0 >= \$GIO_REQUIRED_VERSION
                                        indicator >= \$INDICATOR_REQUIRED_VERSION
                                        json-glib-1.0 >= \$JSON_GLIB_REQUIRED_VERSION
                                        dbus-glib-1 >= \$DBUS_GLIB_REQUIRED_VERSION
-                                       dbusmenu-gtk >= \$DBUSMENUGTK_REQUIRED_VERSION\""; } >&5
+                                       dbusmenu-gtk-0.4 >= \$DBUSMENUGTK_REQUIRED_VERSION\""; } >&5
   ($PKG_CONFIG --exists --print-errors "gtk+-2.0 >= $GTK_REQUIRED_VERSION
+                                       gio-2.0 >= $GIO_REQUIRED_VERSION
                                        indicator >= $INDICATOR_REQUIRED_VERSION
                                        json-glib-1.0 >= $JSON_GLIB_REQUIRED_VERSION
                                        dbus-glib-1 >= $DBUS_GLIB_REQUIRED_VERSION
-                                       dbusmenu-gtk >= $DBUSMENUGTK_REQUIRED_VERSION") 2>&5
+                                       dbusmenu-gtk-0.4 >= $DBUSMENUGTK_REQUIRED_VERSION") 2>&5
   ac_status=$?
   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; then
   pkg_cv_INDICATOR_LIBS=`$PKG_CONFIG --libs "gtk+-2.0 >= $GTK_REQUIRED_VERSION
+                                       gio-2.0 >= $GIO_REQUIRED_VERSION
                                        indicator >= $INDICATOR_REQUIRED_VERSION
                                        json-glib-1.0 >= $JSON_GLIB_REQUIRED_VERSION
                                        dbus-glib-1 >= $DBUS_GLIB_REQUIRED_VERSION
-                                       dbusmenu-gtk >= $DBUSMENUGTK_REQUIRED_VERSION" 2>/dev/null`
+                                       dbusmenu-gtk-0.4 >= $DBUSMENUGTK_REQUIRED_VERSION" 2>/dev/null`
 else
   pkg_failed=yes
 fi
@@ -12022,25 +11716,28 @@ else
 fi
         if test $_pkg_short_errors_supported = yes; then
 	        INDICATOR_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors "gtk+-2.0 >= $GTK_REQUIRED_VERSION
+                                       gio-2.0 >= $GIO_REQUIRED_VERSION
                                        indicator >= $INDICATOR_REQUIRED_VERSION
                                        json-glib-1.0 >= $JSON_GLIB_REQUIRED_VERSION
                                        dbus-glib-1 >= $DBUS_GLIB_REQUIRED_VERSION
-                                       dbusmenu-gtk >= $DBUSMENUGTK_REQUIRED_VERSION" 2>&1`
+                                       dbusmenu-gtk-0.4 >= $DBUSMENUGTK_REQUIRED_VERSION" 2>&1`
         else
 	        INDICATOR_PKG_ERRORS=`$PKG_CONFIG --print-errors "gtk+-2.0 >= $GTK_REQUIRED_VERSION
+                                       gio-2.0 >= $GIO_REQUIRED_VERSION
                                        indicator >= $INDICATOR_REQUIRED_VERSION
                                        json-glib-1.0 >= $JSON_GLIB_REQUIRED_VERSION
                                        dbus-glib-1 >= $DBUS_GLIB_REQUIRED_VERSION
-                                       dbusmenu-gtk >= $DBUSMENUGTK_REQUIRED_VERSION" 2>&1`
+                                       dbusmenu-gtk-0.4 >= $DBUSMENUGTK_REQUIRED_VERSION" 2>&1`
         fi
 	# Put the nasty error message in config.log where it belongs
 	echo "$INDICATOR_PKG_ERRORS" >&5
 
 	as_fn_error $? "Package requirements (gtk+-2.0 >= $GTK_REQUIRED_VERSION
+                                       gio-2.0 >= $GIO_REQUIRED_VERSION
                                        indicator >= $INDICATOR_REQUIRED_VERSION
                                        json-glib-1.0 >= $JSON_GLIB_REQUIRED_VERSION
                                        dbus-glib-1 >= $DBUS_GLIB_REQUIRED_VERSION
-                                       dbusmenu-gtk >= $DBUSMENUGTK_REQUIRED_VERSION) were not met:
+                                       dbusmenu-gtk-0.4 >= $DBUSMENUGTK_REQUIRED_VERSION) were not met:
 
 $INDICATOR_PKG_ERRORS
 
@@ -12091,185 +11788,39 @@ else
 fi
 
 
-###########################
-# GObject Introspection
-###########################
+LIBAPPINDICATOR_REQUIRED_VERSION=0.2.9
 
-
-
-
-                # Check whether --enable-introspection was given.
-if test "${enable_introspection+set}" = set; then :
-  enableval=$enable_introspection;
-else
-  enable_introspection=auto
-fi
-
-
-    { $as_echo "$as_me:${as_lineno-$LINENO}: checking for gobject-introspection" >&5
-$as_echo_n "checking for gobject-introspection... " >&6; }
-
-        case $enable_introspection in #(
-  no) :
-            found_introspection="no (disabled, use --enable-introspection to enable)"
-     ;; #(
-      yes) :
-            if test -n "$PKG_CONFIG" && \
-    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"gobject-introspection-1.0\""; } >&5
-  ($PKG_CONFIG --exists --print-errors "gobject-introspection-1.0") 2>&5
-  ac_status=$?
-  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
-  test $ac_status = 0; }; then
-  :
-else
-  as_fn_error $? "gobject-introspection-1.0 is not installed" "$LINENO" 5
-fi
-        if test -n "$PKG_CONFIG" && \
-    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"gobject-introspection-1.0 >= 0.6.7\""; } >&5
-  ($PKG_CONFIG --exists --print-errors "gobject-introspection-1.0 >= 0.6.7") 2>&5
-  ac_status=$?
-  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
-  test $ac_status = 0; }; then
-  found_introspection=yes
-else
-  as_fn_error $? "You need to have gobject-introspection >= 0.6.7 installed to build indicator-application" "$LINENO" 5
-fi
-     ;; #(
-      auto) :
-            if test -n "$PKG_CONFIG" && \
-    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"gobject-introspection-1.0 >= 0.6.7\""; } >&5
-  ($PKG_CONFIG --exists --print-errors "gobject-introspection-1.0 >= 0.6.7") 2>&5
-  ac_status=$?
-  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
-  test $ac_status = 0; }; then
-  found_introspection=yes
-else
-  found_introspection=no
-fi
-     ;; #(
-  *) :
-                as_fn_error $? "invalid argument passed to --enable-introspection, should be one of [no/auto/yes]" "$LINENO" 5
-     ;;
-esac
-    { $as_echo "$as_me:${as_lineno-$LINENO}: result: $found_introspection" >&5
-$as_echo "$found_introspection" >&6; }
-
-    INTROSPECTION_SCANNER=
-    INTROSPECTION_COMPILER=
-    INTROSPECTION_GENERATE=
-    INTROSPECTION_GIRDIR=
-    INTROSPECTION_TYPELIBDIR=
-    if test "x$found_introspection" = "xyes"; then
-       INTROSPECTION_SCANNER=`$PKG_CONFIG --variable=g_ir_scanner gobject-introspection-1.0`
-       INTROSPECTION_COMPILER=`$PKG_CONFIG --variable=g_ir_compiler gobject-introspection-1.0`
-       INTROSPECTION_GENERATE=`$PKG_CONFIG --variable=g_ir_generate gobject-introspection-1.0`
-       INTROSPECTION_GIRDIR=`$PKG_CONFIG --variable=girdir gobject-introspection-1.0`
-       INTROSPECTION_TYPELIBDIR="$($PKG_CONFIG --variable=typelibdir gobject-introspection-1.0)"
-       INTROSPECTION_CFLAGS=`$PKG_CONFIG --cflags gobject-introspection-1.0`
-       INTROSPECTION_LIBS=`$PKG_CONFIG --libs gobject-introspection-1.0`
-       INTROSPECTION_MAKEFILE=`$PKG_CONFIG --variable=datadir gobject-introspection-1.0`/gobject-introspection-1.0/Makefile.introspection
-    fi
-
-
-
-
-
-
-
-
-
-     if test "x$found_introspection" = "xyes"; then
-  HAVE_INTROSPECTION_TRUE=
-  HAVE_INTROSPECTION_FALSE='#'
-else
-  HAVE_INTROSPECTION_TRUE='#'
-  HAVE_INTROSPECTION_FALSE=
-fi
-
-
-
-
-###########################
-# Vala API Generation
-###########################
-
-# Extract the first word of "vapigen", so it can be a program name with args.
-set dummy vapigen; ac_word=$2
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
-$as_echo_n "checking for $ac_word... " >&6; }
-if test "${ac_cv_path_VALA_API_GEN+set}" = set; then :
-  $as_echo_n "(cached) " >&6
-else
-  case $VALA_API_GEN in
-  [\\/]* | ?:[\\/]*)
-  ac_cv_path_VALA_API_GEN="$VALA_API_GEN" # Let the user override the test with a path.
-  ;;
-  *)
-  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
-for as_dir in $PATH
-do
-  IFS=$as_save_IFS
-  test -z "$as_dir" && as_dir=.
-    for ac_exec_ext in '' $ac_executable_extensions; do
-  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
-    ac_cv_path_VALA_API_GEN="$as_dir/$ac_word$ac_exec_ext"
-    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
-    break 2
-  fi
-done
-  done
-IFS=$as_save_IFS
-
-  ;;
-esac
-fi
-VALA_API_GEN=$ac_cv_path_VALA_API_GEN
-if test -n "$VALA_API_GEN"; then
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $VALA_API_GEN" >&5
-$as_echo "$VALA_API_GEN" >&6; }
-else
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-fi
-
-
-
-###########################
-# Check for Mono support
-###########################
-
-MONO_REQUIRED_VERSION=1.0
 
 pkg_failed=no
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for MONO_DEPENDENCY" >&5
-$as_echo_n "checking for MONO_DEPENDENCY... " >&6; }
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for TEST" >&5
+$as_echo_n "checking for TEST... " >&6; }
 
-if test -n "$MONO_DEPENDENCY_CFLAGS"; then
-    pkg_cv_MONO_DEPENDENCY_CFLAGS="$MONO_DEPENDENCY_CFLAGS"
+if test -n "$TEST_CFLAGS"; then
+    pkg_cv_TEST_CFLAGS="$TEST_CFLAGS"
  elif test -n "$PKG_CONFIG"; then
     if test -n "$PKG_CONFIG" && \
-    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"mono >= \$MONO_REQUIRED_VERSION\""; } >&5
-  ($PKG_CONFIG --exists --print-errors "mono >= $MONO_REQUIRED_VERSION") 2>&5
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"appindicator-0.1 >= \$LIBAPPINDICATOR_REQUIRED_VERSION\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "appindicator-0.1 >= $LIBAPPINDICATOR_REQUIRED_VERSION") 2>&5
   ac_status=$?
   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; then
-  pkg_cv_MONO_DEPENDENCY_CFLAGS=`$PKG_CONFIG --cflags "mono >= $MONO_REQUIRED_VERSION" 2>/dev/null`
+  pkg_cv_TEST_CFLAGS=`$PKG_CONFIG --cflags "appindicator-0.1 >= $LIBAPPINDICATOR_REQUIRED_VERSION" 2>/dev/null`
 else
   pkg_failed=yes
 fi
  else
     pkg_failed=untried
 fi
-if test -n "$MONO_DEPENDENCY_LIBS"; then
-    pkg_cv_MONO_DEPENDENCY_LIBS="$MONO_DEPENDENCY_LIBS"
+if test -n "$TEST_LIBS"; then
+    pkg_cv_TEST_LIBS="$TEST_LIBS"
  elif test -n "$PKG_CONFIG"; then
     if test -n "$PKG_CONFIG" && \
-    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"mono >= \$MONO_REQUIRED_VERSION\""; } >&5
-  ($PKG_CONFIG --exists --print-errors "mono >= $MONO_REQUIRED_VERSION") 2>&5
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"appindicator-0.1 >= \$LIBAPPINDICATOR_REQUIRED_VERSION\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "appindicator-0.1 >= $LIBAPPINDICATOR_REQUIRED_VERSION") 2>&5
   ac_status=$?
   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; then
-  pkg_cv_MONO_DEPENDENCY_LIBS=`$PKG_CONFIG --libs "mono >= $MONO_REQUIRED_VERSION" 2>/dev/null`
+  pkg_cv_TEST_LIBS=`$PKG_CONFIG --libs "appindicator-0.1 >= $LIBAPPINDICATOR_REQUIRED_VERSION" 2>/dev/null`
 else
   pkg_failed=yes
 fi
@@ -12289,288 +11840,22 @@ else
         _pkg_short_errors_supported=no
 fi
         if test $_pkg_short_errors_supported = yes; then
-	        MONO_DEPENDENCY_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors "mono >= $MONO_REQUIRED_VERSION" 2>&1`
+	        TEST_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors "appindicator-0.1 >= $LIBAPPINDICATOR_REQUIRED_VERSION" 2>&1`
         else
-	        MONO_DEPENDENCY_PKG_ERRORS=`$PKG_CONFIG --print-errors "mono >= $MONO_REQUIRED_VERSION" 2>&1`
+	        TEST_PKG_ERRORS=`$PKG_CONFIG --print-errors "appindicator-0.1 >= $LIBAPPINDICATOR_REQUIRED_VERSION" 2>&1`
         fi
 	# Put the nasty error message in config.log where it belongs
-	echo "$MONO_DEPENDENCY_PKG_ERRORS" >&5
+	echo "$TEST_PKG_ERRORS" >&5
 
-	has_mono=false
-elif test $pkg_failed = untried; then
-     	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-	has_mono=false
-else
-	MONO_DEPENDENCY_CFLAGS=$pkg_cv_MONO_DEPENDENCY_CFLAGS
-	MONO_DEPENDENCY_LIBS=$pkg_cv_MONO_DEPENDENCY_LIBS
-        { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
-$as_echo "yes" >&6; }
-	has_mono=true
-fi
+	as_fn_error $? "Package requirements (appindicator-0.1 >= $LIBAPPINDICATOR_REQUIRED_VERSION) were not met:
 
-# Extract the first word of "al", so it can be a program name with args.
-set dummy al; ac_word=$2
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
-$as_echo_n "checking for $ac_word... " >&6; }
-if test "${ac_cv_path_AL+set}" = set; then :
-  $as_echo_n "(cached) " >&6
-else
-  case $AL in
-  [\\/]* | ?:[\\/]*)
-  ac_cv_path_AL="$AL" # Let the user override the test with a path.
-  ;;
-  *)
-  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
-for as_dir in $PATH
-do
-  IFS=$as_save_IFS
-  test -z "$as_dir" && as_dir=.
-    for ac_exec_ext in '' $ac_executable_extensions; do
-  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
-    ac_cv_path_AL="$as_dir/$ac_word$ac_exec_ext"
-    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
-    break 2
-  fi
-done
-  done
-IFS=$as_save_IFS
-
-  test -z "$ac_cv_path_AL" && ac_cv_path_AL="no"
-  ;;
-esac
-fi
-AL=$ac_cv_path_AL
-if test -n "$AL"; then
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $AL" >&5
-$as_echo "$AL" >&6; }
-else
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-fi
-
-
-if test "x$AL" = "xno" ; then
-   as_fn_error $? "No al tool found.  You need to install Mono." "$LINENO" 5
-fi
-
-if test "x$has_mono" = "xtrue" ; then
-   GENERATED_SOURCES=generated/*.cs
-   # Extract the first word of "mono", so it can be a program name with args.
-set dummy mono; ac_word=$2
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
-$as_echo_n "checking for $ac_word... " >&6; }
-if test "${ac_cv_path_RUNTIME+set}" = set; then :
-  $as_echo_n "(cached) " >&6
-else
-  case $RUNTIME in
-  [\\/]* | ?:[\\/]*)
-  ac_cv_path_RUNTIME="$RUNTIME" # Let the user override the test with a path.
-  ;;
-  *)
-  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
-for as_dir in $PATH
-do
-  IFS=$as_save_IFS
-  test -z "$as_dir" && as_dir=.
-    for ac_exec_ext in '' $ac_executable_extensions; do
-  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
-    ac_cv_path_RUNTIME="$as_dir/$ac_word$ac_exec_ext"
-    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
-    break 2
-  fi
-done
-  done
-IFS=$as_save_IFS
-
-  test -z "$ac_cv_path_RUNTIME" && ac_cv_path_RUNTIME="no"
-  ;;
-esac
-fi
-RUNTIME=$ac_cv_path_RUNTIME
-if test -n "$RUNTIME"; then
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $RUNTIME" >&5
-$as_echo "$RUNTIME" >&6; }
-else
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-fi
-
-
-
-   if test "x$RUNTIME" != "no" ; then
-      RUNTIME=mono
-   fi
-
-   # Extract the first word of "gmcs", so it can be a program name with args.
-set dummy gmcs; ac_word=$2
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
-$as_echo_n "checking for $ac_word... " >&6; }
-if test "${ac_cv_path_CSC+set}" = set; then :
-  $as_echo_n "(cached) " >&6
-else
-  case $CSC in
-  [\\/]* | ?:[\\/]*)
-  ac_cv_path_CSC="$CSC" # Let the user override the test with a path.
-  ;;
-  *)
-  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
-for as_dir in $PATH
-do
-  IFS=$as_save_IFS
-  test -z "$as_dir" && as_dir=.
-    for ac_exec_ext in '' $ac_executable_extensions; do
-  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
-    ac_cv_path_CSC="$as_dir/$ac_word$ac_exec_ext"
-    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
-    break 2
-  fi
-done
-  done
-IFS=$as_save_IFS
-
-  test -z "$ac_cv_path_CSC" && ac_cv_path_CSC="no"
-  ;;
-esac
-fi
-CSC=$ac_cv_path_CSC
-if test -n "$CSC"; then
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $CSC" >&5
-$as_echo "$CSC" >&6; }
-else
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-fi
-
-
-   LIB_PREFIX=.so
-   LIB_SUFFIX=
-fi
-
-if test "x$CSC" = "xno" ; then
-   as_fn_error $? "No Mono compiler found." "$LINENO" 5
-fi
-
-# Extract the first word of "gacutil", so it can be a program name with args.
-set dummy gacutil; ac_word=$2
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
-$as_echo_n "checking for $ac_word... " >&6; }
-if test "${ac_cv_path_GACUTIL+set}" = set; then :
-  $as_echo_n "(cached) " >&6
-else
-  case $GACUTIL in
-  [\\/]* | ?:[\\/]*)
-  ac_cv_path_GACUTIL="$GACUTIL" # Let the user override the test with a path.
-  ;;
-  *)
-  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
-for as_dir in $PATH
-do
-  IFS=$as_save_IFS
-  test -z "$as_dir" && as_dir=.
-    for ac_exec_ext in '' $ac_executable_extensions; do
-  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
-    ac_cv_path_GACUTIL="$as_dir/$ac_word$ac_exec_ext"
-    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
-    break 2
-  fi
-done
-  done
-IFS=$as_save_IFS
-
-  test -z "$ac_cv_path_GACUTIL" && ac_cv_path_GACUTIL="no"
-  ;;
-esac
-fi
-GACUTIL=$ac_cv_path_GACUTIL
-if test -n "$GACUTIL"; then
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $GACUTIL" >&5
-$as_echo "$GACUTIL" >&6; }
-else
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-fi
-
-
-if test "x$GACUTIL" = "xno" ; then
-   as_fn_error $? "No gacutil tool found" "$LINENO" 5
-fi
-
-
-
-
-
-
-
-
-GLIB_SHARP_REQ_VERSION=2.12.1
-GTK_SHARP_REQ_VERSION=2.12
-
-pkg_failed=no
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for GTK_SHARP" >&5
-$as_echo_n "checking for GTK_SHARP... " >&6; }
-
-if test -n "$GTK_SHARP_CFLAGS"; then
-    pkg_cv_GTK_SHARP_CFLAGS="$GTK_SHARP_CFLAGS"
- elif test -n "$PKG_CONFIG"; then
-    if test -n "$PKG_CONFIG" && \
-    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"gtk-sharp-2.0 >= \$GTK_SHARP_REQ_VERSION\""; } >&5
-  ($PKG_CONFIG --exists --print-errors "gtk-sharp-2.0 >= $GTK_SHARP_REQ_VERSION") 2>&5
-  ac_status=$?
-  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
-  test $ac_status = 0; }; then
-  pkg_cv_GTK_SHARP_CFLAGS=`$PKG_CONFIG --cflags "gtk-sharp-2.0 >= $GTK_SHARP_REQ_VERSION" 2>/dev/null`
-else
-  pkg_failed=yes
-fi
- else
-    pkg_failed=untried
-fi
-if test -n "$GTK_SHARP_LIBS"; then
-    pkg_cv_GTK_SHARP_LIBS="$GTK_SHARP_LIBS"
- elif test -n "$PKG_CONFIG"; then
-    if test -n "$PKG_CONFIG" && \
-    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"gtk-sharp-2.0 >= \$GTK_SHARP_REQ_VERSION\""; } >&5
-  ($PKG_CONFIG --exists --print-errors "gtk-sharp-2.0 >= $GTK_SHARP_REQ_VERSION") 2>&5
-  ac_status=$?
-  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
-  test $ac_status = 0; }; then
-  pkg_cv_GTK_SHARP_LIBS=`$PKG_CONFIG --libs "gtk-sharp-2.0 >= $GTK_SHARP_REQ_VERSION" 2>/dev/null`
-else
-  pkg_failed=yes
-fi
- else
-    pkg_failed=untried
-fi
-
-
-
-if test $pkg_failed = yes; then
-   	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-
-if $PKG_CONFIG --atleast-pkgconfig-version 0.20; then
-        _pkg_short_errors_supported=yes
-else
-        _pkg_short_errors_supported=no
-fi
-        if test $_pkg_short_errors_supported = yes; then
-	        GTK_SHARP_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors "gtk-sharp-2.0 >= $GTK_SHARP_REQ_VERSION" 2>&1`
-        else
-	        GTK_SHARP_PKG_ERRORS=`$PKG_CONFIG --print-errors "gtk-sharp-2.0 >= $GTK_SHARP_REQ_VERSION" 2>&1`
-        fi
-	# Put the nasty error message in config.log where it belongs
-	echo "$GTK_SHARP_PKG_ERRORS" >&5
-
-	as_fn_error $? "Package requirements (gtk-sharp-2.0 >= $GTK_SHARP_REQ_VERSION) were not met:
-
-$GTK_SHARP_PKG_ERRORS
+$TEST_PKG_ERRORS
 
 Consider adjusting the PKG_CONFIG_PATH environment variable if you
 installed software in a non-standard prefix.
 
-Alternatively, you may set the environment variables GTK_SHARP_CFLAGS
-and GTK_SHARP_LIBS to avoid the need to call pkg-config.
+Alternatively, you may set the environment variables TEST_CFLAGS
+and TEST_LIBS to avoid the need to call pkg-config.
 See the pkg-config man page for more details." "$LINENO" 5
 elif test $pkg_failed = untried; then
      	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
@@ -12581,15 +11866,15 @@ as_fn_error $? "The pkg-config script could not be found or is too old.  Make su
 is in your PATH or set the PKG_CONFIG environment variable to the full
 path to pkg-config.
 
-Alternatively, you may set the environment variables GTK_SHARP_CFLAGS
-and GTK_SHARP_LIBS to avoid the need to call pkg-config.
+Alternatively, you may set the environment variables TEST_CFLAGS
+and TEST_LIBS to avoid the need to call pkg-config.
 See the pkg-config man page for more details.
 
 To get pkg-config, see <http://pkg-config.freedesktop.org/>.
 See \`config.log' for more details" "$LINENO" 5 ; }
 else
-	GTK_SHARP_CFLAGS=$pkg_cv_GTK_SHARP_CFLAGS
-	GTK_SHARP_LIBS=$pkg_cv_GTK_SHARP_LIBS
+	TEST_CFLAGS=$pkg_cv_TEST_CFLAGS
+	TEST_LIBS=$pkg_cv_TEST_LIBS
         { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
 $as_echo "yes" >&6; }
 
@@ -12598,310 +11883,9 @@ fi
 
 
 
-pkg_failed=no
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for GAPI" >&5
-$as_echo_n "checking for GAPI... " >&6; }
+APP_INDICATOR_INCLUDE_BASE=`$PKG_CONFIG --variable=includedir appindicator-0.1`
+APP_INDICATOR_INCLUDE="$APP_INDICATOR_INCLUDE_BASE/libappindicator-0.1/"
 
-if test -n "$GAPI_CFLAGS"; then
-    pkg_cv_GAPI_CFLAGS="$GAPI_CFLAGS"
- elif test -n "$PKG_CONFIG"; then
-    if test -n "$PKG_CONFIG" && \
-    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"gapi-2.0 >= \$GLIB_SHARP_REQ_VERSION\""; } >&5
-  ($PKG_CONFIG --exists --print-errors "gapi-2.0 >= $GLIB_SHARP_REQ_VERSION") 2>&5
-  ac_status=$?
-  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
-  test $ac_status = 0; }; then
-  pkg_cv_GAPI_CFLAGS=`$PKG_CONFIG --cflags "gapi-2.0 >= $GLIB_SHARP_REQ_VERSION" 2>/dev/null`
-else
-  pkg_failed=yes
-fi
- else
-    pkg_failed=untried
-fi
-if test -n "$GAPI_LIBS"; then
-    pkg_cv_GAPI_LIBS="$GAPI_LIBS"
- elif test -n "$PKG_CONFIG"; then
-    if test -n "$PKG_CONFIG" && \
-    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"gapi-2.0 >= \$GLIB_SHARP_REQ_VERSION\""; } >&5
-  ($PKG_CONFIG --exists --print-errors "gapi-2.0 >= $GLIB_SHARP_REQ_VERSION") 2>&5
-  ac_status=$?
-  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
-  test $ac_status = 0; }; then
-  pkg_cv_GAPI_LIBS=`$PKG_CONFIG --libs "gapi-2.0 >= $GLIB_SHARP_REQ_VERSION" 2>/dev/null`
-else
-  pkg_failed=yes
-fi
- else
-    pkg_failed=untried
-fi
-
-
-
-if test $pkg_failed = yes; then
-   	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-
-if $PKG_CONFIG --atleast-pkgconfig-version 0.20; then
-        _pkg_short_errors_supported=yes
-else
-        _pkg_short_errors_supported=no
-fi
-        if test $_pkg_short_errors_supported = yes; then
-	        GAPI_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors "gapi-2.0 >= $GLIB_SHARP_REQ_VERSION" 2>&1`
-        else
-	        GAPI_PKG_ERRORS=`$PKG_CONFIG --print-errors "gapi-2.0 >= $GLIB_SHARP_REQ_VERSION" 2>&1`
-        fi
-	# Put the nasty error message in config.log where it belongs
-	echo "$GAPI_PKG_ERRORS" >&5
-
-	as_fn_error $? "Package requirements (gapi-2.0 >= $GLIB_SHARP_REQ_VERSION) were not met:
-
-$GAPI_PKG_ERRORS
-
-Consider adjusting the PKG_CONFIG_PATH environment variable if you
-installed software in a non-standard prefix.
-
-Alternatively, you may set the environment variables GAPI_CFLAGS
-and GAPI_LIBS to avoid the need to call pkg-config.
-See the pkg-config man page for more details." "$LINENO" 5
-elif test $pkg_failed = untried; then
-     	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-	{ { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
-$as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
-as_fn_error $? "The pkg-config script could not be found or is too old.  Make sure it
-is in your PATH or set the PKG_CONFIG environment variable to the full
-path to pkg-config.
-
-Alternatively, you may set the environment variables GAPI_CFLAGS
-and GAPI_LIBS to avoid the need to call pkg-config.
-See the pkg-config man page for more details.
-
-To get pkg-config, see <http://pkg-config.freedesktop.org/>.
-See \`config.log' for more details" "$LINENO" 5 ; }
-else
-	GAPI_CFLAGS=$pkg_cv_GAPI_CFLAGS
-	GAPI_LIBS=$pkg_cv_GAPI_LIBS
-        { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
-$as_echo "yes" >&6; }
-
-fi
-# Extract the first word of "gapi2-parser", so it can be a program name with args.
-set dummy gapi2-parser; ac_word=$2
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
-$as_echo_n "checking for $ac_word... " >&6; }
-if test "${ac_cv_path_GAPI_PARSER+set}" = set; then :
-  $as_echo_n "(cached) " >&6
-else
-  case $GAPI_PARSER in
-  [\\/]* | ?:[\\/]*)
-  ac_cv_path_GAPI_PARSER="$GAPI_PARSER" # Let the user override the test with a path.
-  ;;
-  *)
-  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
-for as_dir in $PATH
-do
-  IFS=$as_save_IFS
-  test -z "$as_dir" && as_dir=.
-    for ac_exec_ext in '' $ac_executable_extensions; do
-  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
-    ac_cv_path_GAPI_PARSER="$as_dir/$ac_word$ac_exec_ext"
-    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
-    break 2
-  fi
-done
-  done
-IFS=$as_save_IFS
-
-  test -z "$ac_cv_path_GAPI_PARSER" && ac_cv_path_GAPI_PARSER="no"
-  ;;
-esac
-fi
-GAPI_PARSER=$ac_cv_path_GAPI_PARSER
-if test -n "$GAPI_PARSER"; then
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $GAPI_PARSER" >&5
-$as_echo "$GAPI_PARSER" >&6; }
-else
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-fi
-
-
-
-# Extract the first word of "gapi2-codegen", so it can be a program name with args.
-set dummy gapi2-codegen; ac_word=$2
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
-$as_echo_n "checking for $ac_word... " >&6; }
-if test "${ac_cv_path_GAPI_CODEGEN+set}" = set; then :
-  $as_echo_n "(cached) " >&6
-else
-  case $GAPI_CODEGEN in
-  [\\/]* | ?:[\\/]*)
-  ac_cv_path_GAPI_CODEGEN="$GAPI_CODEGEN" # Let the user override the test with a path.
-  ;;
-  *)
-  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
-for as_dir in $PATH
-do
-  IFS=$as_save_IFS
-  test -z "$as_dir" && as_dir=.
-    for ac_exec_ext in '' $ac_executable_extensions; do
-  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
-    ac_cv_path_GAPI_CODEGEN="$as_dir/$ac_word$ac_exec_ext"
-    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
-    break 2
-  fi
-done
-  done
-IFS=$as_save_IFS
-
-  test -z "$ac_cv_path_GAPI_CODEGEN" && ac_cv_path_GAPI_CODEGEN="no"
-  ;;
-esac
-fi
-GAPI_CODEGEN=$ac_cv_path_GAPI_CODEGEN
-if test -n "$GAPI_CODEGEN"; then
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $GAPI_CODEGEN" >&5
-$as_echo "$GAPI_CODEGEN" >&6; }
-else
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-fi
-
-
-
-# Extract the first word of "gapi2-fixup", so it can be a program name with args.
-set dummy gapi2-fixup; ac_word=$2
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
-$as_echo_n "checking for $ac_word... " >&6; }
-if test "${ac_cv_path_GAPI_FIXUP+set}" = set; then :
-  $as_echo_n "(cached) " >&6
-else
-  case $GAPI_FIXUP in
-  [\\/]* | ?:[\\/]*)
-  ac_cv_path_GAPI_FIXUP="$GAPI_FIXUP" # Let the user override the test with a path.
-  ;;
-  *)
-  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
-for as_dir in $PATH
-do
-  IFS=$as_save_IFS
-  test -z "$as_dir" && as_dir=.
-    for ac_exec_ext in '' $ac_executable_extensions; do
-  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
-    ac_cv_path_GAPI_FIXUP="$as_dir/$ac_word$ac_exec_ext"
-    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
-    break 2
-  fi
-done
-  done
-IFS=$as_save_IFS
-
-  test -z "$ac_cv_path_GAPI_FIXUP" && ac_cv_path_GAPI_FIXUP="no"
-  ;;
-esac
-fi
-GAPI_FIXUP=$ac_cv_path_GAPI_FIXUP
-if test -n "$GAPI_FIXUP"; then
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $GAPI_FIXUP" >&5
-$as_echo "$GAPI_FIXUP" >&6; }
-else
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-fi
-
-
-
-
-
-pkg_failed=no
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for NUNIT" >&5
-$as_echo_n "checking for NUNIT... " >&6; }
-
-if test -n "$NUNIT_CFLAGS"; then
-    pkg_cv_NUNIT_CFLAGS="$NUNIT_CFLAGS"
- elif test -n "$PKG_CONFIG"; then
-    if test -n "$PKG_CONFIG" && \
-    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"nunit >= 2.4.7\""; } >&5
-  ($PKG_CONFIG --exists --print-errors "nunit >= 2.4.7") 2>&5
-  ac_status=$?
-  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
-  test $ac_status = 0; }; then
-  pkg_cv_NUNIT_CFLAGS=`$PKG_CONFIG --cflags "nunit >= 2.4.7" 2>/dev/null`
-else
-  pkg_failed=yes
-fi
- else
-    pkg_failed=untried
-fi
-if test -n "$NUNIT_LIBS"; then
-    pkg_cv_NUNIT_LIBS="$NUNIT_LIBS"
- elif test -n "$PKG_CONFIG"; then
-    if test -n "$PKG_CONFIG" && \
-    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"nunit >= 2.4.7\""; } >&5
-  ($PKG_CONFIG --exists --print-errors "nunit >= 2.4.7") 2>&5
-  ac_status=$?
-  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
-  test $ac_status = 0; }; then
-  pkg_cv_NUNIT_LIBS=`$PKG_CONFIG --libs "nunit >= 2.4.7" 2>/dev/null`
-else
-  pkg_failed=yes
-fi
- else
-    pkg_failed=untried
-fi
-
-
-
-if test $pkg_failed = yes; then
-   	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-
-if $PKG_CONFIG --atleast-pkgconfig-version 0.20; then
-        _pkg_short_errors_supported=yes
-else
-        _pkg_short_errors_supported=no
-fi
-        if test $_pkg_short_errors_supported = yes; then
-	        NUNIT_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors "nunit >= 2.4.7" 2>&1`
-        else
-	        NUNIT_PKG_ERRORS=`$PKG_CONFIG --print-errors "nunit >= 2.4.7" 2>&1`
-        fi
-	# Put the nasty error message in config.log where it belongs
-	echo "$NUNIT_PKG_ERRORS" >&5
-
-	as_fn_error $? "Package requirements (nunit >= 2.4.7) were not met:
-
-$NUNIT_PKG_ERRORS
-
-Consider adjusting the PKG_CONFIG_PATH environment variable if you
-installed software in a non-standard prefix.
-
-Alternatively, you may set the environment variables NUNIT_CFLAGS
-and NUNIT_LIBS to avoid the need to call pkg-config.
-See the pkg-config man page for more details." "$LINENO" 5
-elif test $pkg_failed = untried; then
-     	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-	{ { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
-$as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
-as_fn_error $? "The pkg-config script could not be found or is too old.  Make sure it
-is in your PATH or set the PKG_CONFIG environment variable to the full
-path to pkg-config.
-
-Alternatively, you may set the environment variables NUNIT_CFLAGS
-and NUNIT_LIBS to avoid the need to call pkg-config.
-See the pkg-config man page for more details.
-
-To get pkg-config, see <http://pkg-config.freedesktop.org/>.
-See \`config.log' for more details" "$LINENO" 5 ; }
-else
-	NUNIT_CFLAGS=$pkg_cv_NUNIT_CFLAGS
-	NUNIT_LIBS=$pkg_cv_NUNIT_LIBS
-        { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
-$as_echo "yes" >&6; }
-
-fi
 
 
 ###########################
@@ -12943,368 +11927,10 @@ fi
 
 
 ###########################
-# Python
-###########################
-
-PYGTK_REQUIRED=2.14.0
-PYGOBJECT_REQUIRED=0.22
-
-
-
-
-
-        if test -n "$PYTHON"; then
-      # If the user set $PYTHON, use it and don't search something else.
-      { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether $PYTHON version >= 2.3.5" >&5
-$as_echo_n "checking whether $PYTHON version >= 2.3.5... " >&6; }
-      prog="import sys, string
-# split strings by '.' and convert to numeric.  Append some zeros
-# because we need at least 4 digits for the hex conversion.
-minver = map(int, string.split('2.3.5', '.')) + [0, 0, 0]
-minverhex = 0
-for i in xrange(0, 4): minverhex = (minverhex << 8) + minver[i]
-sys.exit(sys.hexversion < minverhex)"
-  if { echo "$as_me:$LINENO: $PYTHON -c "$prog"" >&5
-   ($PYTHON -c "$prog") >&5 2>&5
-   ac_status=$?
-   echo "$as_me:$LINENO: \$? = $ac_status" >&5
-   (exit $ac_status); }; then :
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
-$as_echo "yes" >&6; }
-else
-  as_fn_error $? "too old" "$LINENO" 5
-fi
-      am_display_PYTHON=$PYTHON
-    else
-      # Otherwise, try each interpreter until we find one that satisfies
-      # VERSION.
-      { $as_echo "$as_me:${as_lineno-$LINENO}: checking for a Python interpreter with version >= 2.3.5" >&5
-$as_echo_n "checking for a Python interpreter with version >= 2.3.5... " >&6; }
-if test "${am_cv_pathless_PYTHON+set}" = set; then :
-  $as_echo_n "(cached) " >&6
-else
-
-	for am_cv_pathless_PYTHON in python python2 python2.4 python2.3 python2.2 python2.1 python2.0 python1.6 python1.5 none; do
-	  test "$am_cv_pathless_PYTHON" = none && break
-	  prog="import sys, string
-# split strings by '.' and convert to numeric.  Append some zeros
-# because we need at least 4 digits for the hex conversion.
-minver = map(int, string.split('2.3.5', '.')) + [0, 0, 0]
-minverhex = 0
-for i in xrange(0, 4): minverhex = (minverhex << 8) + minver[i]
-sys.exit(sys.hexversion < minverhex)"
-  if { echo "$as_me:$LINENO: $am_cv_pathless_PYTHON -c "$prog"" >&5
-   ($am_cv_pathless_PYTHON -c "$prog") >&5 2>&5
-   ac_status=$?
-   echo "$as_me:$LINENO: \$? = $ac_status" >&5
-   (exit $ac_status); }; then :
-  break
-fi
-	done
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $am_cv_pathless_PYTHON" >&5
-$as_echo "$am_cv_pathless_PYTHON" >&6; }
-      # Set $PYTHON to the absolute path of $am_cv_pathless_PYTHON.
-      if test "$am_cv_pathless_PYTHON" = none; then
-	PYTHON=:
-      else
-        # Extract the first word of "$am_cv_pathless_PYTHON", so it can be a program name with args.
-set dummy $am_cv_pathless_PYTHON; ac_word=$2
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
-$as_echo_n "checking for $ac_word... " >&6; }
-if test "${ac_cv_path_PYTHON+set}" = set; then :
-  $as_echo_n "(cached) " >&6
-else
-  case $PYTHON in
-  [\\/]* | ?:[\\/]*)
-  ac_cv_path_PYTHON="$PYTHON" # Let the user override the test with a path.
-  ;;
-  *)
-  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
-for as_dir in $PATH
-do
-  IFS=$as_save_IFS
-  test -z "$as_dir" && as_dir=.
-    for ac_exec_ext in '' $ac_executable_extensions; do
-  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
-    ac_cv_path_PYTHON="$as_dir/$ac_word$ac_exec_ext"
-    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
-    break 2
-  fi
-done
-  done
-IFS=$as_save_IFS
-
-  ;;
-esac
-fi
-PYTHON=$ac_cv_path_PYTHON
-if test -n "$PYTHON"; then
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $PYTHON" >&5
-$as_echo "$PYTHON" >&6; }
-else
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-fi
-
-
-      fi
-      am_display_PYTHON=$am_cv_pathless_PYTHON
-    fi
-
-
-  if test "$PYTHON" = :; then
-      as_fn_error $? "no suitable Python interpreter found" "$LINENO" 5
-  else
-
-
-  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $am_display_PYTHON version" >&5
-$as_echo_n "checking for $am_display_PYTHON version... " >&6; }
-if test "${am_cv_python_version+set}" = set; then :
-  $as_echo_n "(cached) " >&6
-else
-  am_cv_python_version=`$PYTHON -c "import sys; print sys.version[:3]"`
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $am_cv_python_version" >&5
-$as_echo "$am_cv_python_version" >&6; }
-  PYTHON_VERSION=$am_cv_python_version
-
-
-
-  PYTHON_PREFIX='${prefix}'
-
-  PYTHON_EXEC_PREFIX='${exec_prefix}'
-
-
-
-  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $am_display_PYTHON platform" >&5
-$as_echo_n "checking for $am_display_PYTHON platform... " >&6; }
-if test "${am_cv_python_platform+set}" = set; then :
-  $as_echo_n "(cached) " >&6
-else
-  am_cv_python_platform=`$PYTHON -c "import sys; print sys.platform"`
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $am_cv_python_platform" >&5
-$as_echo "$am_cv_python_platform" >&6; }
-  PYTHON_PLATFORM=$am_cv_python_platform
-
-
-
-
-                { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $am_display_PYTHON script directory" >&5
-$as_echo_n "checking for $am_display_PYTHON script directory... " >&6; }
-if test "${am_cv_python_pythondir+set}" = set; then :
-  $as_echo_n "(cached) " >&6
-else
-  am_cv_python_pythondir=`$PYTHON -c "from distutils import sysconfig; print sysconfig.get_python_lib(0,0,prefix='$PYTHON_PREFIX')" 2>/dev/null ||
-     echo "$PYTHON_PREFIX/lib/python$PYTHON_VERSION/site-packages"`
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $am_cv_python_pythondir" >&5
-$as_echo "$am_cv_python_pythondir" >&6; }
-  pythondir=$am_cv_python_pythondir
-
-
-
-  pkgpythondir=\${pythondir}/$PACKAGE
-
-
-            { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $am_display_PYTHON extension module directory" >&5
-$as_echo_n "checking for $am_display_PYTHON extension module directory... " >&6; }
-if test "${am_cv_python_pyexecdir+set}" = set; then :
-  $as_echo_n "(cached) " >&6
-else
-  am_cv_python_pyexecdir=`$PYTHON -c "from distutils import sysconfig; print sysconfig.get_python_lib(1,0,prefix='$PYTHON_EXEC_PREFIX')" 2>/dev/null ||
-     echo "${PYTHON_EXEC_PREFIX}/lib/python${PYTHON_VERSION}/site-packages"`
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $am_cv_python_pyexecdir" >&5
-$as_echo "$am_cv_python_pyexecdir" >&6; }
-  pyexecdir=$am_cv_python_pyexecdir
-
-
-
-  pkgpyexecdir=\${pyexecdir}/$PACKAGE
-
-
-
-  fi
-
-
-
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for headers required to compile python extensions" >&5
-$as_echo_n "checking for headers required to compile python extensions... " >&6; }
-py_prefix=`$PYTHON -c "import sys; print sys.prefix"`
-py_exec_prefix=`$PYTHON -c "import sys; print sys.exec_prefix"`
-PYTHON_INCLUDES="-I${py_prefix}/include/python${PYTHON_VERSION}"
-if test "$py_prefix" != "$py_exec_prefix"; then
-  PYTHON_INCLUDES="$PYTHON_INCLUDES -I${py_exec_prefix}/include/python${PYTHON_VERSION}"
-fi
-
-save_CPPFLAGS="$CPPFLAGS"
-CPPFLAGS="$CPPFLAGS $PYTHON_INCLUDES"
-cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-#include <Python.h>
-_ACEOF
-if ac_fn_c_try_cpp "$LINENO"; then :
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: found" >&5
-$as_echo "found" >&6; }
-
-else
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: not found" >&5
-$as_echo "not found" >&6; }
-as_fn_error $? "could not find Python headers" "$LINENO" 5
-fi
-rm -f conftest.err conftest.i conftest.$ac_ext
-CPPFLAGS="$save_CPPFLAGS"
-
-
-
-pkg_failed=no
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for APPINDICATOR_PYTHON" >&5
-$as_echo_n "checking for APPINDICATOR_PYTHON... " >&6; }
-
-if test -n "$APPINDICATOR_PYTHON_CFLAGS"; then
-    pkg_cv_APPINDICATOR_PYTHON_CFLAGS="$APPINDICATOR_PYTHON_CFLAGS"
- elif test -n "$PKG_CONFIG"; then
-    if test -n "$PKG_CONFIG" && \
-    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"
-					pygtk-2.0 >= \$PYGTK_REQUIRED
-					gtk+-2.0 >= \$GTK_REQUIRED_VERSION
-					pygobject-2.0 >= \$PYGOBJECT_REQUIRED
-                  \""; } >&5
-  ($PKG_CONFIG --exists --print-errors "
-					pygtk-2.0 >= $PYGTK_REQUIRED
-					gtk+-2.0 >= $GTK_REQUIRED_VERSION
-					pygobject-2.0 >= $PYGOBJECT_REQUIRED
-                  ") 2>&5
-  ac_status=$?
-  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
-  test $ac_status = 0; }; then
-  pkg_cv_APPINDICATOR_PYTHON_CFLAGS=`$PKG_CONFIG --cflags "
-					pygtk-2.0 >= $PYGTK_REQUIRED
-					gtk+-2.0 >= $GTK_REQUIRED_VERSION
-					pygobject-2.0 >= $PYGOBJECT_REQUIRED
-                  " 2>/dev/null`
-else
-  pkg_failed=yes
-fi
- else
-    pkg_failed=untried
-fi
-if test -n "$APPINDICATOR_PYTHON_LIBS"; then
-    pkg_cv_APPINDICATOR_PYTHON_LIBS="$APPINDICATOR_PYTHON_LIBS"
- elif test -n "$PKG_CONFIG"; then
-    if test -n "$PKG_CONFIG" && \
-    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"
-					pygtk-2.0 >= \$PYGTK_REQUIRED
-					gtk+-2.0 >= \$GTK_REQUIRED_VERSION
-					pygobject-2.0 >= \$PYGOBJECT_REQUIRED
-                  \""; } >&5
-  ($PKG_CONFIG --exists --print-errors "
-					pygtk-2.0 >= $PYGTK_REQUIRED
-					gtk+-2.0 >= $GTK_REQUIRED_VERSION
-					pygobject-2.0 >= $PYGOBJECT_REQUIRED
-                  ") 2>&5
-  ac_status=$?
-  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
-  test $ac_status = 0; }; then
-  pkg_cv_APPINDICATOR_PYTHON_LIBS=`$PKG_CONFIG --libs "
-					pygtk-2.0 >= $PYGTK_REQUIRED
-					gtk+-2.0 >= $GTK_REQUIRED_VERSION
-					pygobject-2.0 >= $PYGOBJECT_REQUIRED
-                  " 2>/dev/null`
-else
-  pkg_failed=yes
-fi
- else
-    pkg_failed=untried
-fi
-
-
-
-if test $pkg_failed = yes; then
-   	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-
-if $PKG_CONFIG --atleast-pkgconfig-version 0.20; then
-        _pkg_short_errors_supported=yes
-else
-        _pkg_short_errors_supported=no
-fi
-        if test $_pkg_short_errors_supported = yes; then
-	        APPINDICATOR_PYTHON_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors "
-					pygtk-2.0 >= $PYGTK_REQUIRED
-					gtk+-2.0 >= $GTK_REQUIRED_VERSION
-					pygobject-2.0 >= $PYGOBJECT_REQUIRED
-                  " 2>&1`
-        else
-	        APPINDICATOR_PYTHON_PKG_ERRORS=`$PKG_CONFIG --print-errors "
-					pygtk-2.0 >= $PYGTK_REQUIRED
-					gtk+-2.0 >= $GTK_REQUIRED_VERSION
-					pygobject-2.0 >= $PYGOBJECT_REQUIRED
-                  " 2>&1`
-        fi
-	# Put the nasty error message in config.log where it belongs
-	echo "$APPINDICATOR_PYTHON_PKG_ERRORS" >&5
-
-	as_fn_error $? "Package requirements (
-					pygtk-2.0 >= $PYGTK_REQUIRED
-					gtk+-2.0 >= $GTK_REQUIRED_VERSION
-					pygobject-2.0 >= $PYGOBJECT_REQUIRED
-                  ) were not met:
-
-$APPINDICATOR_PYTHON_PKG_ERRORS
-
-Consider adjusting the PKG_CONFIG_PATH environment variable if you
-installed software in a non-standard prefix.
-
-Alternatively, you may set the environment variables APPINDICATOR_PYTHON_CFLAGS
-and APPINDICATOR_PYTHON_LIBS to avoid the need to call pkg-config.
-See the pkg-config man page for more details." "$LINENO" 5
-elif test $pkg_failed = untried; then
-     	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-	{ { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
-$as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
-as_fn_error $? "The pkg-config script could not be found or is too old.  Make sure it
-is in your PATH or set the PKG_CONFIG environment variable to the full
-path to pkg-config.
-
-Alternatively, you may set the environment variables APPINDICATOR_PYTHON_CFLAGS
-and APPINDICATOR_PYTHON_LIBS to avoid the need to call pkg-config.
-See the pkg-config man page for more details.
-
-To get pkg-config, see <http://pkg-config.freedesktop.org/>.
-See \`config.log' for more details" "$LINENO" 5 ; }
-else
-	APPINDICATOR_PYTHON_CFLAGS=$pkg_cv_APPINDICATOR_PYTHON_CFLAGS
-	APPINDICATOR_PYTHON_LIBS=$pkg_cv_APPINDICATOR_PYTHON_LIBS
-        { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
-$as_echo "yes" >&6; }
-
-fi
-
-
-
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for pygtk defs" >&5
-$as_echo_n "checking for pygtk defs... " >&6; }
-PYGTK_DEFSDIR=`$PKG_CONFIG --variable=defsdir pygtk-2.0`
-
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $PYGTK_DEFSDIR" >&5
-$as_echo "$PYGTK_DEFSDIR" >&6; }
-
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for pygtk codegen" >&5
-$as_echo_n "checking for pygtk codegen... " >&6; }
-PYGTK_CODEGEN="$PYTHON `$PKG_CONFIG --variable=codegendir pygtk-2.0`/codegen.py"
-
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $PYGTK_CODEGEN" >&5
-$as_echo "$PYGTK_CODEGEN" >&6; }
-
-###########################
 # Files
 ###########################
 
-ac_config_files="$ac_config_files Makefile src/Makefile src/appindicator-0.1.pc src/appindicator3-0.1.pc bindings/Makefile bindings/mono/Makefile bindings/mono/appindicator-sharp.dll.config bindings/mono/appindicator-sharp-0.1.pc bindings/mono/examples/Makefile bindings/mono/examples/indicator-example bindings/python/Makefile data/Makefile tests/Makefile example/Makefile docs/Makefile docs/reference/Makefile docs/reference/version.xml docs/reference/libappindicator-docs.sgml"
+ac_config_files="$ac_config_files Makefile src/Makefile data/Makefile tests/Makefile"
 
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
@@ -13428,32 +12054,8 @@ if test -z "${am__fastdepCC_TRUE}" && test -z "${am__fastdepCC_FALSE}"; then
   as_fn_error $? "conditional \"am__fastdepCC\" was never defined.
 Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
-if test -z "${ENABLE_GTK_DOC_TRUE}" && test -z "${ENABLE_GTK_DOC_FALSE}"; then
-  as_fn_error $? "conditional \"ENABLE_GTK_DOC\" was never defined.
-Usually this means the macro was only invoked conditionally." "$LINENO" 5
-fi
-if test -z "${GTK_DOC_BUILD_HTML_TRUE}" && test -z "${GTK_DOC_BUILD_HTML_FALSE}"; then
-  as_fn_error $? "conditional \"GTK_DOC_BUILD_HTML\" was never defined.
-Usually this means the macro was only invoked conditionally." "$LINENO" 5
-fi
-if test -z "${GTK_DOC_BUILD_PDF_TRUE}" && test -z "${GTK_DOC_BUILD_PDF_FALSE}"; then
-  as_fn_error $? "conditional \"GTK_DOC_BUILD_PDF\" was never defined.
-Usually this means the macro was only invoked conditionally." "$LINENO" 5
-fi
-if test -z "${GTK_DOC_USE_LIBTOOL_TRUE}" && test -z "${GTK_DOC_USE_LIBTOOL_FALSE}"; then
-  as_fn_error $? "conditional \"GTK_DOC_USE_LIBTOOL\" was never defined.
-Usually this means the macro was only invoked conditionally." "$LINENO" 5
-fi
-if test -z "${GTK_DOC_USE_REBASE_TRUE}" && test -z "${GTK_DOC_USE_REBASE_FALSE}"; then
-  as_fn_error $? "conditional \"GTK_DOC_USE_REBASE\" was never defined.
-Usually this means the macro was only invoked conditionally." "$LINENO" 5
-fi
 if test -z "${USE_GTK3_TRUE}" && test -z "${USE_GTK3_FALSE}"; then
   as_fn_error $? "conditional \"USE_GTK3\" was never defined.
-Usually this means the macro was only invoked conditionally." "$LINENO" 5
-fi
-if test -z "${HAVE_INTROSPECTION_TRUE}" && test -z "${HAVE_INTROSPECTION_FALSE}"; then
-  as_fn_error $? "conditional \"HAVE_INTROSPECTION\" was never defined.
 Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 
@@ -14319,22 +12921,8 @@ do
     "libtool") CONFIG_COMMANDS="$CONFIG_COMMANDS libtool" ;;
     "Makefile") CONFIG_FILES="$CONFIG_FILES Makefile" ;;
     "src/Makefile") CONFIG_FILES="$CONFIG_FILES src/Makefile" ;;
-    "src/appindicator-0.1.pc") CONFIG_FILES="$CONFIG_FILES src/appindicator-0.1.pc" ;;
-    "src/appindicator3-0.1.pc") CONFIG_FILES="$CONFIG_FILES src/appindicator3-0.1.pc" ;;
-    "bindings/Makefile") CONFIG_FILES="$CONFIG_FILES bindings/Makefile" ;;
-    "bindings/mono/Makefile") CONFIG_FILES="$CONFIG_FILES bindings/mono/Makefile" ;;
-    "bindings/mono/appindicator-sharp.dll.config") CONFIG_FILES="$CONFIG_FILES bindings/mono/appindicator-sharp.dll.config" ;;
-    "bindings/mono/appindicator-sharp-0.1.pc") CONFIG_FILES="$CONFIG_FILES bindings/mono/appindicator-sharp-0.1.pc" ;;
-    "bindings/mono/examples/Makefile") CONFIG_FILES="$CONFIG_FILES bindings/mono/examples/Makefile" ;;
-    "bindings/mono/examples/indicator-example") CONFIG_FILES="$CONFIG_FILES bindings/mono/examples/indicator-example" ;;
-    "bindings/python/Makefile") CONFIG_FILES="$CONFIG_FILES bindings/python/Makefile" ;;
     "data/Makefile") CONFIG_FILES="$CONFIG_FILES data/Makefile" ;;
     "tests/Makefile") CONFIG_FILES="$CONFIG_FILES tests/Makefile" ;;
-    "example/Makefile") CONFIG_FILES="$CONFIG_FILES example/Makefile" ;;
-    "docs/Makefile") CONFIG_FILES="$CONFIG_FILES docs/Makefile" ;;
-    "docs/reference/Makefile") CONFIG_FILES="$CONFIG_FILES docs/reference/Makefile" ;;
-    "docs/reference/version.xml") CONFIG_FILES="$CONFIG_FILES docs/reference/version.xml" ;;
-    "docs/reference/libappindicator-docs.sgml") CONFIG_FILES="$CONFIG_FILES docs/reference/libappindicator-docs.sgml" ;;
 
   *) as_fn_error $? "invalid argument: \`$ac_config_target'" "$LINENO" 5 ;;
   esac

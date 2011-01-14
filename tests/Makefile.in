@@ -33,19 +33,11 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
-check_PROGRAMS = test-approver$(EXEEXT) test-libappindicator$(EXEEXT) \
-	test-libappindicator-dbus-client$(EXEEXT) \
-	test-libappindicator-dbus-server$(EXEEXT) \
-	test-libappindicator-status-client$(EXEEXT) \
-	test-libappindicator-status-server$(EXEEXT) \
-	test-libappindicator-fallback-watcher$(EXEEXT) \
-	test-libappindicator-fallback-item$(EXEEXT) \
-	test-simple-app$(EXEEXT)
+check_PROGRAMS = test-approver$(EXEEXT)
 subdir = tests
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
-am__aclocal_m4_deps = $(top_srcdir)/m4/gtk-doc.m4 \
-	$(top_srcdir)/m4/introspection.m4 $(top_srcdir)/m4/libtool.m4 \
+am__aclocal_m4_deps = $(top_srcdir)/m4/libtool.m4 \
 	$(top_srcdir)/m4/ltoptions.m4 $(top_srcdir)/m4/ltsugar.m4 \
 	$(top_srcdir)/m4/ltversion.m4 $(top_srcdir)/m4/lt~obsolete.m4 \
 	$(top_srcdir)/acinclude.m4 $(top_srcdir)/configure.ac
@@ -55,89 +47,19 @@ mkinstalldirs = $(install_sh) -d
 CONFIG_HEADER = $(top_builddir)/config.h
 CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
-am_test_approver_OBJECTS = test_approver-test-approver.$(OBJEXT)
+am_test_approver_OBJECTS =  \
+	test_approver-gen-notification-approver.xml.$(OBJEXT) \
+	test_approver-test-approver.$(OBJEXT)
 test_approver_OBJECTS = $(am_test_approver_OBJECTS)
 am__DEPENDENCIES_1 =
 test_approver_DEPENDENCIES = $(am__DEPENDENCIES_1) \
-	$(top_builddir)/src/libappindicator.la
+	$(am__DEPENDENCIES_1)
 AM_V_lt = $(am__v_lt_$(V))
 am__v_lt_ = $(am__v_lt_$(AM_DEFAULT_VERBOSITY))
 am__v_lt_0 = --silent
 test_approver_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(test_approver_CFLAGS) \
 	$(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
-am_test_libappindicator_OBJECTS =  \
-	test_libappindicator-test-libappindicator.$(OBJEXT)
-test_libappindicator_OBJECTS = $(am_test_libappindicator_OBJECTS)
-test_libappindicator_DEPENDENCIES = $(am__DEPENDENCIES_1) \
-	$(top_builddir)/src/libappindicator.la
-test_libappindicator_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
-	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CCLD) \
-	$(test_libappindicator_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
-	$(LDFLAGS) -o $@
-am_test_libappindicator_dbus_client_OBJECTS = test_libappindicator_dbus_client-test-libappindicator-dbus-client.$(OBJEXT)
-test_libappindicator_dbus_client_OBJECTS =  \
-	$(am_test_libappindicator_dbus_client_OBJECTS)
-test_libappindicator_dbus_client_DEPENDENCIES = $(am__DEPENDENCIES_1) \
-	$(top_builddir)/src/libappindicator.la
-test_libappindicator_dbus_client_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
-	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CCLD) \
-	$(test_libappindicator_dbus_client_CFLAGS) $(CFLAGS) \
-	$(AM_LDFLAGS) $(LDFLAGS) -o $@
-am_test_libappindicator_dbus_server_OBJECTS = test_libappindicator_dbus_server-test-libappindicator-dbus-server.$(OBJEXT)
-test_libappindicator_dbus_server_OBJECTS =  \
-	$(am_test_libappindicator_dbus_server_OBJECTS)
-test_libappindicator_dbus_server_DEPENDENCIES = $(am__DEPENDENCIES_1) \
-	$(top_builddir)/src/libappindicator.la
-test_libappindicator_dbus_server_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
-	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CCLD) \
-	$(test_libappindicator_dbus_server_CFLAGS) $(CFLAGS) \
-	$(AM_LDFLAGS) $(LDFLAGS) -o $@
-am_test_libappindicator_fallback_item_OBJECTS = test_libappindicator_fallback_item-test-libappindicator-fallback-item.$(OBJEXT)
-test_libappindicator_fallback_item_OBJECTS =  \
-	$(am_test_libappindicator_fallback_item_OBJECTS)
-test_libappindicator_fallback_item_DEPENDENCIES =  \
-	$(am__DEPENDENCIES_1) $(top_builddir)/src/libappindicator.la
-test_libappindicator_fallback_item_LINK = $(LIBTOOL) $(AM_V_lt) \
-	--tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link \
-	$(CCLD) $(test_libappindicator_fallback_item_CFLAGS) $(CFLAGS) \
-	$(AM_LDFLAGS) $(LDFLAGS) -o $@
-am_test_libappindicator_fallback_watcher_OBJECTS = test_libappindicator_fallback_watcher-test-libappindicator-fallback-watcher.$(OBJEXT)
-test_libappindicator_fallback_watcher_OBJECTS =  \
-	$(am_test_libappindicator_fallback_watcher_OBJECTS)
-test_libappindicator_fallback_watcher_DEPENDENCIES =  \
-	$(am__DEPENDENCIES_1) $(top_builddir)/src/libappindicator.la
-test_libappindicator_fallback_watcher_LINK = $(LIBTOOL) $(AM_V_lt) \
-	--tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link \
-	$(CCLD) $(test_libappindicator_fallback_watcher_CFLAGS) \
-	$(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
-am_test_libappindicator_status_client_OBJECTS = test_libappindicator_status_client-test-libappindicator-status-client.$(OBJEXT)
-test_libappindicator_status_client_OBJECTS =  \
-	$(am_test_libappindicator_status_client_OBJECTS)
-test_libappindicator_status_client_DEPENDENCIES =  \
-	$(am__DEPENDENCIES_1) $(top_builddir)/src/libappindicator.la
-test_libappindicator_status_client_LINK = $(LIBTOOL) $(AM_V_lt) \
-	--tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link \
-	$(CCLD) $(test_libappindicator_status_client_CFLAGS) $(CFLAGS) \
-	$(AM_LDFLAGS) $(LDFLAGS) -o $@
-am_test_libappindicator_status_server_OBJECTS = test_libappindicator_status_server-test-libappindicator-status-server.$(OBJEXT)
-test_libappindicator_status_server_OBJECTS =  \
-	$(am_test_libappindicator_status_server_OBJECTS)
-test_libappindicator_status_server_DEPENDENCIES =  \
-	$(am__DEPENDENCIES_1) $(top_builddir)/src/libappindicator.la
-test_libappindicator_status_server_LINK = $(LIBTOOL) $(AM_V_lt) \
-	--tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link \
-	$(CCLD) $(test_libappindicator_status_server_CFLAGS) $(CFLAGS) \
-	$(AM_LDFLAGS) $(LDFLAGS) -o $@
-am_test_simple_app_OBJECTS =  \
-	test_simple_app-test-simple-app.$(OBJEXT)
-test_simple_app_OBJECTS = $(am_test_simple_app_OBJECTS)
-test_simple_app_DEPENDENCIES = $(am__DEPENDENCIES_1) \
-	$(top_builddir)/src/libappindicator.la
-test_simple_app_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
-	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CCLD) \
-	$(test_simple_app_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) \
-	-o $@
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
@@ -164,34 +86,17 @@ am__v_CCLD_0 = @echo "  CCLD  " $@;
 AM_V_GEN = $(am__v_GEN_$(V))
 am__v_GEN_ = $(am__v_GEN_$(AM_DEFAULT_VERBOSITY))
 am__v_GEN_0 = @echo "  GEN   " $@;
-SOURCES = $(test_approver_SOURCES) $(test_libappindicator_SOURCES) \
-	$(test_libappindicator_dbus_client_SOURCES) \
-	$(test_libappindicator_dbus_server_SOURCES) \
-	$(test_libappindicator_fallback_item_SOURCES) \
-	$(test_libappindicator_fallback_watcher_SOURCES) \
-	$(test_libappindicator_status_client_SOURCES) \
-	$(test_libappindicator_status_server_SOURCES) \
-	$(test_simple_app_SOURCES)
-DIST_SOURCES = $(test_approver_SOURCES) \
-	$(test_libappindicator_SOURCES) \
-	$(test_libappindicator_dbus_client_SOURCES) \
-	$(test_libappindicator_dbus_server_SOURCES) \
-	$(test_libappindicator_fallback_item_SOURCES) \
-	$(test_libappindicator_fallback_watcher_SOURCES) \
-	$(test_libappindicator_status_client_SOURCES) \
-	$(test_libappindicator_status_server_SOURCES) \
-	$(test_simple_app_SOURCES)
+SOURCES = $(test_approver_SOURCES)
+DIST_SOURCES = $(test_approver_SOURCES)
 ETAGS = etags
 CTAGS = ctags
 am__tty_colors = \
 red=; grn=; lgn=; blu=; std=
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 ACLOCAL = @ACLOCAL@
-AL = @AL@
 AMTAR = @AMTAR@
 AM_DEFAULT_VERBOSITY = @AM_DEFAULT_VERBOSITY@
-APPINDICATOR_PYTHON_CFLAGS = @APPINDICATOR_PYTHON_CFLAGS@
-APPINDICATOR_PYTHON_LIBS = @APPINDICATOR_PYTHON_LIBS@
+APP_INDICATOR_INCLUDE = @APP_INDICATOR_INCLUDE@
 AR = @AR@
 AUTOCONF = @AUTOCONF@
 AUTOHEADER = @AUTOHEADER@
@@ -202,7 +107,6 @@ CCDEPMODE = @CCDEPMODE@
 CFLAGS = @CFLAGS@
 CPP = @CPP@
 CPPFLAGS = @CPPFLAGS@
-CSC = @CSC@
 CYGPATH_W = @CYGPATH_W@
 DBUSSERVICEDIR = @DBUSSERVICEDIR@
 DEFS = @DEFS@
@@ -215,22 +119,9 @@ ECHO_T = @ECHO_T@
 EGREP = @EGREP@
 EXEEXT = @EXEEXT@
 FGREP = @FGREP@
-GACUTIL = @GACUTIL@
-GAPI_CFLAGS = @GAPI_CFLAGS@
-GAPI_CODEGEN = @GAPI_CODEGEN@
-GAPI_FIXUP = @GAPI_FIXUP@
-GAPI_LIBS = @GAPI_LIBS@
-GAPI_PARSER = @GAPI_PARSER@
-GENERATED_SOURCES = @GENERATED_SOURCES@
 GLIB_GENMARSHAL = @GLIB_GENMARSHAL@
 GLIB_MKENUMS = @GLIB_MKENUMS@
 GREP = @GREP@
-GTKDOC_CHECK = @GTKDOC_CHECK@
-GTKDOC_MKPDF = @GTKDOC_MKPDF@
-GTKDOC_REBASE = @GTKDOC_REBASE@
-GTK_SHARP_CFLAGS = @GTK_SHARP_CFLAGS@
-GTK_SHARP_LIBS = @GTK_SHARP_LIBS@
-HTML_DIR = @HTML_DIR@
 INDICATORDIR = @INDICATORDIR@
 INDICATORICONSDIR = @INDICATORICONSDIR@
 INDICATOR_CFLAGS = @INDICATOR_CFLAGS@
@@ -240,33 +131,19 @@ INSTALL_DATA = @INSTALL_DATA@
 INSTALL_PROGRAM = @INSTALL_PROGRAM@
 INSTALL_SCRIPT = @INSTALL_SCRIPT@
 INSTALL_STRIP_PROGRAM = @INSTALL_STRIP_PROGRAM@
-INTROSPECTION_CFLAGS = @INTROSPECTION_CFLAGS@
-INTROSPECTION_COMPILER = @INTROSPECTION_COMPILER@
-INTROSPECTION_GENERATE = @INTROSPECTION_GENERATE@
-INTROSPECTION_GIRDIR = @INTROSPECTION_GIRDIR@
-INTROSPECTION_LIBS = @INTROSPECTION_LIBS@
-INTROSPECTION_MAKEFILE = @INTROSPECTION_MAKEFILE@
-INTROSPECTION_SCANNER = @INTROSPECTION_SCANNER@
-INTROSPECTION_TYPELIBDIR = @INTROSPECTION_TYPELIBDIR@
 LD = @LD@
 LDFLAGS = @LDFLAGS@
 LIBOBJS = @LIBOBJS@
 LIBS = @LIBS@
 LIBTOOL = @LIBTOOL@
-LIB_PREFIX = @LIB_PREFIX@
-LIB_SUFFIX = @LIB_SUFFIX@
 LIPO = @LIPO@
 LN_S = @LN_S@
 LTLIBOBJS = @LTLIBOBJS@
 MAINT = @MAINT@
 MAKEINFO = @MAKEINFO@
 MKDIR_P = @MKDIR_P@
-MONO_DEPENDENCY_CFLAGS = @MONO_DEPENDENCY_CFLAGS@
-MONO_DEPENDENCY_LIBS = @MONO_DEPENDENCY_LIBS@
 NM = @NM@
 NMEDIT = @NMEDIT@
-NUNIT_CFLAGS = @NUNIT_CFLAGS@
-NUNIT_LIBS = @NUNIT_LIBS@
 OBJDUMP = @OBJDUMP@
 OBJEXT = @OBJEXT@
 OTOOL = @OTOOL@
@@ -282,21 +159,13 @@ PATH_SEPARATOR = @PATH_SEPARATOR@
 PKG_CONFIG = @PKG_CONFIG@
 PKG_CONFIG_LIBDIR = @PKG_CONFIG_LIBDIR@
 PKG_CONFIG_PATH = @PKG_CONFIG_PATH@
-PYGTK_CODEGEN = @PYGTK_CODEGEN@
-PYGTK_DEFSDIR = @PYGTK_DEFSDIR@
-PYTHON = @PYTHON@
-PYTHON_EXEC_PREFIX = @PYTHON_EXEC_PREFIX@
-PYTHON_INCLUDES = @PYTHON_INCLUDES@
-PYTHON_PLATFORM = @PYTHON_PLATFORM@
-PYTHON_PREFIX = @PYTHON_PREFIX@
-PYTHON_VERSION = @PYTHON_VERSION@
 RANLIB = @RANLIB@
-RUNTIME = @RUNTIME@
 SED = @SED@
 SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
 STRIP = @STRIP@
-VALA_API_GEN = @VALA_API_GEN@
+TEST_CFLAGS = @TEST_CFLAGS@
+TEST_LIBS = @TEST_LIBS@
 VERSION = @VERSION@
 abs_builddir = @abs_builddir@
 abs_srcdir = @abs_srcdir@
@@ -339,13 +208,9 @@ mandir = @mandir@
 mkdir_p = @mkdir_p@
 oldincludedir = @oldincludedir@
 pdfdir = @pdfdir@
-pkgpyexecdir = @pkgpyexecdir@
-pkgpythondir = @pkgpythondir@
 prefix = @prefix@
 program_transform_name = @program_transform_name@
 psdir = @psdir@
-pyexecdir = @pyexecdir@
-pythondir = @pythondir@
 sbindir = @sbindir@
 sharedstatedir = @sharedstatedir@
 srcdir = @srcdir@
@@ -354,154 +219,27 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-TESTS = test-approver-tester test-libappindicator-fallback \
-	libappindicator-tests test-libappindicator-dbus \
-	test-libappindicator-status
-DISTCLEANFILES = $(TESTS) $(XML_REPORT) $(HTML_REPORT) \
-	libappindicator-tests-gtester
+TESTS = test-approver-tester
+DISTCLEANFILES = $(TESTS)
 EXTRA_DIST = run-xvfb.sh
-
-#########################################
-#########################################
-test_libappindicator_SOURCES = \
-	test-libappindicator.c
-
-test_libappindicator_CFLAGS = \
-	$(INDICATOR_CFLAGS) \
-	-Wall -Werror \
-	-I$(top_srcdir)/src
-
-test_libappindicator_LDADD = \
-	$(INDICATOR_LIBS) \
-	$(top_builddir)/src/libappindicator.la
-
-
-#########################################
-#########################################
-test_libappindicator_dbus_client_SOURCES = \
-	test-defines.h \
-	test-libappindicator-dbus-client.c
-
-test_libappindicator_dbus_client_CFLAGS = \
-	$(INDICATOR_CFLAGS) \
-	-Wall -Werror \
-	-I$(top_srcdir)/src
-
-test_libappindicator_dbus_client_LDADD = \
-	$(INDICATOR_LIBS) \
-	$(top_builddir)/src/libappindicator.la
-
-
-#########################################
-#########################################
-test_libappindicator_dbus_server_SOURCES = \
-	test-defines.h \
-	test-libappindicator-dbus-server.c
-
-test_libappindicator_dbus_server_CFLAGS = \
-	$(INDICATOR_CFLAGS) \
-	-Wall -Werror \
-	-I$(top_srcdir)/src
-
-test_libappindicator_dbus_server_LDADD = \
-	$(INDICATOR_LIBS) \
-	$(top_builddir)/src/libappindicator.la
-
-
-#########################################
-#########################################
-test_libappindicator_status_client_SOURCES = \
-	test-defines.h \
-	test-libappindicator-status-client.c
-
-test_libappindicator_status_client_CFLAGS = \
-	$(INDICATOR_CFLAGS) \
-	-Wall -Werror \
-	-I$(top_srcdir)/src
-
-test_libappindicator_status_client_LDADD = \
-	$(INDICATOR_LIBS) \
-	$(top_builddir)/src/libappindicator.la
-
-
-#########################################
-#########################################
-test_libappindicator_status_server_SOURCES = \
-	test-defines.h \
-	test-libappindicator-status-server.c
-
-test_libappindicator_status_server_CFLAGS = \
-	$(INDICATOR_CFLAGS) \
-	-Wall -Werror \
-	-I$(top_srcdir)/src
-
-test_libappindicator_status_server_LDADD = \
-	$(INDICATOR_LIBS) \
-	$(top_builddir)/src/libappindicator.la
-
+DBUS_RUNNER = dbus-test-runner --dbus-config /usr/share/dbus-test-runner/session.conf
 
 #########################################
 #########################################
 test_approver_SOURCES = \
+	$(top_srcdir)/src/gen-notification-approver.xml.c \
 	test-approver.c
 
 test_approver_CFLAGS = \
 	$(INDICATOR_CFLAGS) \
+	$(TEST_CFLAGS) \
 	-Wall -Werror \
 	-I$(top_srcdir)/src \
 	-I$(top_builddir)/src
 
 test_approver_LDADD = \
 	$(INDICATOR_LIBS) \
-	$(top_builddir)/src/libappindicator.la
-
-
-#########################################
-#########################################
-test_libappindicator_fallback_watcher_SOURCES = \
-	test-libappindicator-fallback-watcher.c
-
-test_libappindicator_fallback_watcher_CFLAGS = \
-	$(INDICATOR_CFLAGS) \
-	-Wall -Werror \
-	-I$(top_srcdir)/src
-
-test_libappindicator_fallback_watcher_LDADD = \
-	$(INDICATOR_LIBS) \
-	$(top_builddir)/src/libappindicator.la
-
-test_libappindicator_fallback_item_SOURCES = \
-	test-libappindicator-fallback-item.c
-
-test_libappindicator_fallback_item_CFLAGS = \
-	$(INDICATOR_CFLAGS) \
-	-Wall -Werror \
-	-I$(top_srcdir)/src
-
-test_libappindicator_fallback_item_LDADD = \
-	$(INDICATOR_LIBS) \
-	$(top_builddir)/src/libappindicator.la
-
-
-#########################################
-#########################################
-XML_REPORT = libappindicator-check-results.xml
-HTML_REPORT = libappindicator-check-results.html
-DBUS_RUNNER = dbus-test-runner --dbus-config /usr/share/dbus-test-runner/session.conf
-
-#########################################
-#########################################
-test_simple_app_SOURCES = \
-	test-simple-app.c
-
-test_simple_app_CFLAGS = \
-	$(INDICATOR_CFLAGS) \
-	-Wall -Werror \
-	-I$(top_srcdir)/src
-
-test_simple_app_LDADD = \
-	$(INDICATOR_LIBS) \
-	$(top_builddir)/src/libappindicator.la
+	$(TEST_LIBS)
 
 all: all-am
 
@@ -549,30 +287,6 @@ clean-checkPROGRAMS:
 test-approver$(EXEEXT): $(test_approver_OBJECTS) $(test_approver_DEPENDENCIES) 
 	@rm -f test-approver$(EXEEXT)
 	$(AM_V_CCLD)$(test_approver_LINK) $(test_approver_OBJECTS) $(test_approver_LDADD) $(LIBS)
-test-libappindicator$(EXEEXT): $(test_libappindicator_OBJECTS) $(test_libappindicator_DEPENDENCIES) 
-	@rm -f test-libappindicator$(EXEEXT)
-	$(AM_V_CCLD)$(test_libappindicator_LINK) $(test_libappindicator_OBJECTS) $(test_libappindicator_LDADD) $(LIBS)
-test-libappindicator-dbus-client$(EXEEXT): $(test_libappindicator_dbus_client_OBJECTS) $(test_libappindicator_dbus_client_DEPENDENCIES) 
-	@rm -f test-libappindicator-dbus-client$(EXEEXT)
-	$(AM_V_CCLD)$(test_libappindicator_dbus_client_LINK) $(test_libappindicator_dbus_client_OBJECTS) $(test_libappindicator_dbus_client_LDADD) $(LIBS)
-test-libappindicator-dbus-server$(EXEEXT): $(test_libappindicator_dbus_server_OBJECTS) $(test_libappindicator_dbus_server_DEPENDENCIES) 
-	@rm -f test-libappindicator-dbus-server$(EXEEXT)
-	$(AM_V_CCLD)$(test_libappindicator_dbus_server_LINK) $(test_libappindicator_dbus_server_OBJECTS) $(test_libappindicator_dbus_server_LDADD) $(LIBS)
-test-libappindicator-fallback-item$(EXEEXT): $(test_libappindicator_fallback_item_OBJECTS) $(test_libappindicator_fallback_item_DEPENDENCIES) 
-	@rm -f test-libappindicator-fallback-item$(EXEEXT)
-	$(AM_V_CCLD)$(test_libappindicator_fallback_item_LINK) $(test_libappindicator_fallback_item_OBJECTS) $(test_libappindicator_fallback_item_LDADD) $(LIBS)
-test-libappindicator-fallback-watcher$(EXEEXT): $(test_libappindicator_fallback_watcher_OBJECTS) $(test_libappindicator_fallback_watcher_DEPENDENCIES) 
-	@rm -f test-libappindicator-fallback-watcher$(EXEEXT)
-	$(AM_V_CCLD)$(test_libappindicator_fallback_watcher_LINK) $(test_libappindicator_fallback_watcher_OBJECTS) $(test_libappindicator_fallback_watcher_LDADD) $(LIBS)
-test-libappindicator-status-client$(EXEEXT): $(test_libappindicator_status_client_OBJECTS) $(test_libappindicator_status_client_DEPENDENCIES) 
-	@rm -f test-libappindicator-status-client$(EXEEXT)
-	$(AM_V_CCLD)$(test_libappindicator_status_client_LINK) $(test_libappindicator_status_client_OBJECTS) $(test_libappindicator_status_client_LDADD) $(LIBS)
-test-libappindicator-status-server$(EXEEXT): $(test_libappindicator_status_server_OBJECTS) $(test_libappindicator_status_server_DEPENDENCIES) 
-	@rm -f test-libappindicator-status-server$(EXEEXT)
-	$(AM_V_CCLD)$(test_libappindicator_status_server_LINK) $(test_libappindicator_status_server_OBJECTS) $(test_libappindicator_status_server_LDADD) $(LIBS)
-test-simple-app$(EXEEXT): $(test_simple_app_OBJECTS) $(test_simple_app_DEPENDENCIES) 
-	@rm -f test-simple-app$(EXEEXT)
-	$(AM_V_CCLD)$(test_simple_app_LINK) $(test_simple_app_OBJECTS) $(test_simple_app_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -580,15 +294,8 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_approver-gen-notification-approver.xml.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_approver-test-approver.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_libappindicator-test-libappindicator.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_libappindicator_dbus_client-test-libappindicator-dbus-client.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_libappindicator_dbus_server-test-libappindicator-dbus-server.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_libappindicator_fallback_item-test-libappindicator-fallback-item.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_libappindicator_fallback_watcher-test-libappindicator-fallback-watcher.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_libappindicator_status_client-test-libappindicator-status-client.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_libappindicator_status_server-test-libappindicator-status-server.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_simple_app-test-simple-app.Po@am__quote@
 
 .c.o:
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
@@ -614,6 +321,22 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(LTCOMPILE) -c -o $@ $<
 
+test_approver-gen-notification-approver.xml.o: $(top_srcdir)/src/gen-notification-approver.xml.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_approver_CFLAGS) $(CFLAGS) -MT test_approver-gen-notification-approver.xml.o -MD -MP -MF $(DEPDIR)/test_approver-gen-notification-approver.xml.Tpo -c -o test_approver-gen-notification-approver.xml.o `test -f '$(top_srcdir)/src/gen-notification-approver.xml.c' || echo '$(srcdir)/'`$(top_srcdir)/src/gen-notification-approver.xml.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/test_approver-gen-notification-approver.xml.Tpo $(DEPDIR)/test_approver-gen-notification-approver.xml.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/src/gen-notification-approver.xml.c' object='test_approver-gen-notification-approver.xml.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_approver_CFLAGS) $(CFLAGS) -c -o test_approver-gen-notification-approver.xml.o `test -f '$(top_srcdir)/src/gen-notification-approver.xml.c' || echo '$(srcdir)/'`$(top_srcdir)/src/gen-notification-approver.xml.c
+
+test_approver-gen-notification-approver.xml.obj: $(top_srcdir)/src/gen-notification-approver.xml.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_approver_CFLAGS) $(CFLAGS) -MT test_approver-gen-notification-approver.xml.obj -MD -MP -MF $(DEPDIR)/test_approver-gen-notification-approver.xml.Tpo -c -o test_approver-gen-notification-approver.xml.obj `if test -f '$(top_srcdir)/src/gen-notification-approver.xml.c'; then $(CYGPATH_W) '$(top_srcdir)/src/gen-notification-approver.xml.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/src/gen-notification-approver.xml.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/test_approver-gen-notification-approver.xml.Tpo $(DEPDIR)/test_approver-gen-notification-approver.xml.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/src/gen-notification-approver.xml.c' object='test_approver-gen-notification-approver.xml.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_approver_CFLAGS) $(CFLAGS) -c -o test_approver-gen-notification-approver.xml.obj `if test -f '$(top_srcdir)/src/gen-notification-approver.xml.c'; then $(CYGPATH_W) '$(top_srcdir)/src/gen-notification-approver.xml.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/src/gen-notification-approver.xml.c'; fi`
+
 test_approver-test-approver.o: test-approver.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_approver_CFLAGS) $(CFLAGS) -MT test_approver-test-approver.o -MD -MP -MF $(DEPDIR)/test_approver-test-approver.Tpo -c -o test_approver-test-approver.o `test -f 'test-approver.c' || echo '$(srcdir)/'`test-approver.c
 @am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/test_approver-test-approver.Tpo $(DEPDIR)/test_approver-test-approver.Po
@@ -629,134 +352,6 @@ test_approver-test-approver.obj: test-approver.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='test-approver.c' object='test_approver-test-approver.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_approver_CFLAGS) $(CFLAGS) -c -o test_approver-test-approver.obj `if test -f 'test-approver.c'; then $(CYGPATH_W) 'test-approver.c'; else $(CYGPATH_W) '$(srcdir)/test-approver.c'; fi`
-
-test_libappindicator-test-libappindicator.o: test-libappindicator.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_libappindicator_CFLAGS) $(CFLAGS) -MT test_libappindicator-test-libappindicator.o -MD -MP -MF $(DEPDIR)/test_libappindicator-test-libappindicator.Tpo -c -o test_libappindicator-test-libappindicator.o `test -f 'test-libappindicator.c' || echo '$(srcdir)/'`test-libappindicator.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/test_libappindicator-test-libappindicator.Tpo $(DEPDIR)/test_libappindicator-test-libappindicator.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='test-libappindicator.c' object='test_libappindicator-test-libappindicator.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_libappindicator_CFLAGS) $(CFLAGS) -c -o test_libappindicator-test-libappindicator.o `test -f 'test-libappindicator.c' || echo '$(srcdir)/'`test-libappindicator.c
-
-test_libappindicator-test-libappindicator.obj: test-libappindicator.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_libappindicator_CFLAGS) $(CFLAGS) -MT test_libappindicator-test-libappindicator.obj -MD -MP -MF $(DEPDIR)/test_libappindicator-test-libappindicator.Tpo -c -o test_libappindicator-test-libappindicator.obj `if test -f 'test-libappindicator.c'; then $(CYGPATH_W) 'test-libappindicator.c'; else $(CYGPATH_W) '$(srcdir)/test-libappindicator.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/test_libappindicator-test-libappindicator.Tpo $(DEPDIR)/test_libappindicator-test-libappindicator.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='test-libappindicator.c' object='test_libappindicator-test-libappindicator.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_libappindicator_CFLAGS) $(CFLAGS) -c -o test_libappindicator-test-libappindicator.obj `if test -f 'test-libappindicator.c'; then $(CYGPATH_W) 'test-libappindicator.c'; else $(CYGPATH_W) '$(srcdir)/test-libappindicator.c'; fi`
-
-test_libappindicator_dbus_client-test-libappindicator-dbus-client.o: test-libappindicator-dbus-client.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_libappindicator_dbus_client_CFLAGS) $(CFLAGS) -MT test_libappindicator_dbus_client-test-libappindicator-dbus-client.o -MD -MP -MF $(DEPDIR)/test_libappindicator_dbus_client-test-libappindicator-dbus-client.Tpo -c -o test_libappindicator_dbus_client-test-libappindicator-dbus-client.o `test -f 'test-libappindicator-dbus-client.c' || echo '$(srcdir)/'`test-libappindicator-dbus-client.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/test_libappindicator_dbus_client-test-libappindicator-dbus-client.Tpo $(DEPDIR)/test_libappindicator_dbus_client-test-libappindicator-dbus-client.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='test-libappindicator-dbus-client.c' object='test_libappindicator_dbus_client-test-libappindicator-dbus-client.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_libappindicator_dbus_client_CFLAGS) $(CFLAGS) -c -o test_libappindicator_dbus_client-test-libappindicator-dbus-client.o `test -f 'test-libappindicator-dbus-client.c' || echo '$(srcdir)/'`test-libappindicator-dbus-client.c
-
-test_libappindicator_dbus_client-test-libappindicator-dbus-client.obj: test-libappindicator-dbus-client.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_libappindicator_dbus_client_CFLAGS) $(CFLAGS) -MT test_libappindicator_dbus_client-test-libappindicator-dbus-client.obj -MD -MP -MF $(DEPDIR)/test_libappindicator_dbus_client-test-libappindicator-dbus-client.Tpo -c -o test_libappindicator_dbus_client-test-libappindicator-dbus-client.obj `if test -f 'test-libappindicator-dbus-client.c'; then $(CYGPATH_W) 'test-libappindicator-dbus-client.c'; else $(CYGPATH_W) '$(srcdir)/test-libappindicator-dbus-client.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/test_libappindicator_dbus_client-test-libappindicator-dbus-client.Tpo $(DEPDIR)/test_libappindicator_dbus_client-test-libappindicator-dbus-client.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='test-libappindicator-dbus-client.c' object='test_libappindicator_dbus_client-test-libappindicator-dbus-client.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_libappindicator_dbus_client_CFLAGS) $(CFLAGS) -c -o test_libappindicator_dbus_client-test-libappindicator-dbus-client.obj `if test -f 'test-libappindicator-dbus-client.c'; then $(CYGPATH_W) 'test-libappindicator-dbus-client.c'; else $(CYGPATH_W) '$(srcdir)/test-libappindicator-dbus-client.c'; fi`
-
-test_libappindicator_dbus_server-test-libappindicator-dbus-server.o: test-libappindicator-dbus-server.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_libappindicator_dbus_server_CFLAGS) $(CFLAGS) -MT test_libappindicator_dbus_server-test-libappindicator-dbus-server.o -MD -MP -MF $(DEPDIR)/test_libappindicator_dbus_server-test-libappindicator-dbus-server.Tpo -c -o test_libappindicator_dbus_server-test-libappindicator-dbus-server.o `test -f 'test-libappindicator-dbus-server.c' || echo '$(srcdir)/'`test-libappindicator-dbus-server.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/test_libappindicator_dbus_server-test-libappindicator-dbus-server.Tpo $(DEPDIR)/test_libappindicator_dbus_server-test-libappindicator-dbus-server.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='test-libappindicator-dbus-server.c' object='test_libappindicator_dbus_server-test-libappindicator-dbus-server.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_libappindicator_dbus_server_CFLAGS) $(CFLAGS) -c -o test_libappindicator_dbus_server-test-libappindicator-dbus-server.o `test -f 'test-libappindicator-dbus-server.c' || echo '$(srcdir)/'`test-libappindicator-dbus-server.c
-
-test_libappindicator_dbus_server-test-libappindicator-dbus-server.obj: test-libappindicator-dbus-server.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_libappindicator_dbus_server_CFLAGS) $(CFLAGS) -MT test_libappindicator_dbus_server-test-libappindicator-dbus-server.obj -MD -MP -MF $(DEPDIR)/test_libappindicator_dbus_server-test-libappindicator-dbus-server.Tpo -c -o test_libappindicator_dbus_server-test-libappindicator-dbus-server.obj `if test -f 'test-libappindicator-dbus-server.c'; then $(CYGPATH_W) 'test-libappindicator-dbus-server.c'; else $(CYGPATH_W) '$(srcdir)/test-libappindicator-dbus-server.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/test_libappindicator_dbus_server-test-libappindicator-dbus-server.Tpo $(DEPDIR)/test_libappindicator_dbus_server-test-libappindicator-dbus-server.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='test-libappindicator-dbus-server.c' object='test_libappindicator_dbus_server-test-libappindicator-dbus-server.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_libappindicator_dbus_server_CFLAGS) $(CFLAGS) -c -o test_libappindicator_dbus_server-test-libappindicator-dbus-server.obj `if test -f 'test-libappindicator-dbus-server.c'; then $(CYGPATH_W) 'test-libappindicator-dbus-server.c'; else $(CYGPATH_W) '$(srcdir)/test-libappindicator-dbus-server.c'; fi`
-
-test_libappindicator_fallback_item-test-libappindicator-fallback-item.o: test-libappindicator-fallback-item.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_libappindicator_fallback_item_CFLAGS) $(CFLAGS) -MT test_libappindicator_fallback_item-test-libappindicator-fallback-item.o -MD -MP -MF $(DEPDIR)/test_libappindicator_fallback_item-test-libappindicator-fallback-item.Tpo -c -o test_libappindicator_fallback_item-test-libappindicator-fallback-item.o `test -f 'test-libappindicator-fallback-item.c' || echo '$(srcdir)/'`test-libappindicator-fallback-item.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/test_libappindicator_fallback_item-test-libappindicator-fallback-item.Tpo $(DEPDIR)/test_libappindicator_fallback_item-test-libappindicator-fallback-item.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='test-libappindicator-fallback-item.c' object='test_libappindicator_fallback_item-test-libappindicator-fallback-item.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_libappindicator_fallback_item_CFLAGS) $(CFLAGS) -c -o test_libappindicator_fallback_item-test-libappindicator-fallback-item.o `test -f 'test-libappindicator-fallback-item.c' || echo '$(srcdir)/'`test-libappindicator-fallback-item.c
-
-test_libappindicator_fallback_item-test-libappindicator-fallback-item.obj: test-libappindicator-fallback-item.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_libappindicator_fallback_item_CFLAGS) $(CFLAGS) -MT test_libappindicator_fallback_item-test-libappindicator-fallback-item.obj -MD -MP -MF $(DEPDIR)/test_libappindicator_fallback_item-test-libappindicator-fallback-item.Tpo -c -o test_libappindicator_fallback_item-test-libappindicator-fallback-item.obj `if test -f 'test-libappindicator-fallback-item.c'; then $(CYGPATH_W) 'test-libappindicator-fallback-item.c'; else $(CYGPATH_W) '$(srcdir)/test-libappindicator-fallback-item.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/test_libappindicator_fallback_item-test-libappindicator-fallback-item.Tpo $(DEPDIR)/test_libappindicator_fallback_item-test-libappindicator-fallback-item.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='test-libappindicator-fallback-item.c' object='test_libappindicator_fallback_item-test-libappindicator-fallback-item.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_libappindicator_fallback_item_CFLAGS) $(CFLAGS) -c -o test_libappindicator_fallback_item-test-libappindicator-fallback-item.obj `if test -f 'test-libappindicator-fallback-item.c'; then $(CYGPATH_W) 'test-libappindicator-fallback-item.c'; else $(CYGPATH_W) '$(srcdir)/test-libappindicator-fallback-item.c'; fi`
-
-test_libappindicator_fallback_watcher-test-libappindicator-fallback-watcher.o: test-libappindicator-fallback-watcher.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_libappindicator_fallback_watcher_CFLAGS) $(CFLAGS) -MT test_libappindicator_fallback_watcher-test-libappindicator-fallback-watcher.o -MD -MP -MF $(DEPDIR)/test_libappindicator_fallback_watcher-test-libappindicator-fallback-watcher.Tpo -c -o test_libappindicator_fallback_watcher-test-libappindicator-fallback-watcher.o `test -f 'test-libappindicator-fallback-watcher.c' || echo '$(srcdir)/'`test-libappindicator-fallback-watcher.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/test_libappindicator_fallback_watcher-test-libappindicator-fallback-watcher.Tpo $(DEPDIR)/test_libappindicator_fallback_watcher-test-libappindicator-fallback-watcher.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='test-libappindicator-fallback-watcher.c' object='test_libappindicator_fallback_watcher-test-libappindicator-fallback-watcher.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_libappindicator_fallback_watcher_CFLAGS) $(CFLAGS) -c -o test_libappindicator_fallback_watcher-test-libappindicator-fallback-watcher.o `test -f 'test-libappindicator-fallback-watcher.c' || echo '$(srcdir)/'`test-libappindicator-fallback-watcher.c
-
-test_libappindicator_fallback_watcher-test-libappindicator-fallback-watcher.obj: test-libappindicator-fallback-watcher.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_libappindicator_fallback_watcher_CFLAGS) $(CFLAGS) -MT test_libappindicator_fallback_watcher-test-libappindicator-fallback-watcher.obj -MD -MP -MF $(DEPDIR)/test_libappindicator_fallback_watcher-test-libappindicator-fallback-watcher.Tpo -c -o test_libappindicator_fallback_watcher-test-libappindicator-fallback-watcher.obj `if test -f 'test-libappindicator-fallback-watcher.c'; then $(CYGPATH_W) 'test-libappindicator-fallback-watcher.c'; else $(CYGPATH_W) '$(srcdir)/test-libappindicator-fallback-watcher.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/test_libappindicator_fallback_watcher-test-libappindicator-fallback-watcher.Tpo $(DEPDIR)/test_libappindicator_fallback_watcher-test-libappindicator-fallback-watcher.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='test-libappindicator-fallback-watcher.c' object='test_libappindicator_fallback_watcher-test-libappindicator-fallback-watcher.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_libappindicator_fallback_watcher_CFLAGS) $(CFLAGS) -c -o test_libappindicator_fallback_watcher-test-libappindicator-fallback-watcher.obj `if test -f 'test-libappindicator-fallback-watcher.c'; then $(CYGPATH_W) 'test-libappindicator-fallback-watcher.c'; else $(CYGPATH_W) '$(srcdir)/test-libappindicator-fallback-watcher.c'; fi`
-
-test_libappindicator_status_client-test-libappindicator-status-client.o: test-libappindicator-status-client.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_libappindicator_status_client_CFLAGS) $(CFLAGS) -MT test_libappindicator_status_client-test-libappindicator-status-client.o -MD -MP -MF $(DEPDIR)/test_libappindicator_status_client-test-libappindicator-status-client.Tpo -c -o test_libappindicator_status_client-test-libappindicator-status-client.o `test -f 'test-libappindicator-status-client.c' || echo '$(srcdir)/'`test-libappindicator-status-client.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/test_libappindicator_status_client-test-libappindicator-status-client.Tpo $(DEPDIR)/test_libappindicator_status_client-test-libappindicator-status-client.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='test-libappindicator-status-client.c' object='test_libappindicator_status_client-test-libappindicator-status-client.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_libappindicator_status_client_CFLAGS) $(CFLAGS) -c -o test_libappindicator_status_client-test-libappindicator-status-client.o `test -f 'test-libappindicator-status-client.c' || echo '$(srcdir)/'`test-libappindicator-status-client.c
-
-test_libappindicator_status_client-test-libappindicator-status-client.obj: test-libappindicator-status-client.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_libappindicator_status_client_CFLAGS) $(CFLAGS) -MT test_libappindicator_status_client-test-libappindicator-status-client.obj -MD -MP -MF $(DEPDIR)/test_libappindicator_status_client-test-libappindicator-status-client.Tpo -c -o test_libappindicator_status_client-test-libappindicator-status-client.obj `if test -f 'test-libappindicator-status-client.c'; then $(CYGPATH_W) 'test-libappindicator-status-client.c'; else $(CYGPATH_W) '$(srcdir)/test-libappindicator-status-client.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/test_libappindicator_status_client-test-libappindicator-status-client.Tpo $(DEPDIR)/test_libappindicator_status_client-test-libappindicator-status-client.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='test-libappindicator-status-client.c' object='test_libappindicator_status_client-test-libappindicator-status-client.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_libappindicator_status_client_CFLAGS) $(CFLAGS) -c -o test_libappindicator_status_client-test-libappindicator-status-client.obj `if test -f 'test-libappindicator-status-client.c'; then $(CYGPATH_W) 'test-libappindicator-status-client.c'; else $(CYGPATH_W) '$(srcdir)/test-libappindicator-status-client.c'; fi`
-
-test_libappindicator_status_server-test-libappindicator-status-server.o: test-libappindicator-status-server.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_libappindicator_status_server_CFLAGS) $(CFLAGS) -MT test_libappindicator_status_server-test-libappindicator-status-server.o -MD -MP -MF $(DEPDIR)/test_libappindicator_status_server-test-libappindicator-status-server.Tpo -c -o test_libappindicator_status_server-test-libappindicator-status-server.o `test -f 'test-libappindicator-status-server.c' || echo '$(srcdir)/'`test-libappindicator-status-server.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/test_libappindicator_status_server-test-libappindicator-status-server.Tpo $(DEPDIR)/test_libappindicator_status_server-test-libappindicator-status-server.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='test-libappindicator-status-server.c' object='test_libappindicator_status_server-test-libappindicator-status-server.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_libappindicator_status_server_CFLAGS) $(CFLAGS) -c -o test_libappindicator_status_server-test-libappindicator-status-server.o `test -f 'test-libappindicator-status-server.c' || echo '$(srcdir)/'`test-libappindicator-status-server.c
-
-test_libappindicator_status_server-test-libappindicator-status-server.obj: test-libappindicator-status-server.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_libappindicator_status_server_CFLAGS) $(CFLAGS) -MT test_libappindicator_status_server-test-libappindicator-status-server.obj -MD -MP -MF $(DEPDIR)/test_libappindicator_status_server-test-libappindicator-status-server.Tpo -c -o test_libappindicator_status_server-test-libappindicator-status-server.obj `if test -f 'test-libappindicator-status-server.c'; then $(CYGPATH_W) 'test-libappindicator-status-server.c'; else $(CYGPATH_W) '$(srcdir)/test-libappindicator-status-server.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/test_libappindicator_status_server-test-libappindicator-status-server.Tpo $(DEPDIR)/test_libappindicator_status_server-test-libappindicator-status-server.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='test-libappindicator-status-server.c' object='test_libappindicator_status_server-test-libappindicator-status-server.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_libappindicator_status_server_CFLAGS) $(CFLAGS) -c -o test_libappindicator_status_server-test-libappindicator-status-server.obj `if test -f 'test-libappindicator-status-server.c'; then $(CYGPATH_W) 'test-libappindicator-status-server.c'; else $(CYGPATH_W) '$(srcdir)/test-libappindicator-status-server.c'; fi`
-
-test_simple_app-test-simple-app.o: test-simple-app.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_simple_app_CFLAGS) $(CFLAGS) -MT test_simple_app-test-simple-app.o -MD -MP -MF $(DEPDIR)/test_simple_app-test-simple-app.Tpo -c -o test_simple_app-test-simple-app.o `test -f 'test-simple-app.c' || echo '$(srcdir)/'`test-simple-app.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/test_simple_app-test-simple-app.Tpo $(DEPDIR)/test_simple_app-test-simple-app.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='test-simple-app.c' object='test_simple_app-test-simple-app.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_simple_app_CFLAGS) $(CFLAGS) -c -o test_simple_app-test-simple-app.o `test -f 'test-simple-app.c' || echo '$(srcdir)/'`test-simple-app.c
-
-test_simple_app-test-simple-app.obj: test-simple-app.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_simple_app_CFLAGS) $(CFLAGS) -MT test_simple_app-test-simple-app.obj -MD -MP -MF $(DEPDIR)/test_simple_app-test-simple-app.Tpo -c -o test_simple_app-test-simple-app.obj `if test -f 'test-simple-app.c'; then $(CYGPATH_W) 'test-simple-app.c'; else $(CYGPATH_W) '$(srcdir)/test-simple-app.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/test_simple_app-test-simple-app.Tpo $(DEPDIR)/test_simple_app-test-simple-app.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='test-simple-app.c' object='test_simple_app-test-simple-app.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_simple_app_CFLAGS) $(CFLAGS) -c -o test_simple_app-test-simple-app.obj `if test -f 'test-simple-app.c'; then $(CYGPATH_W) 'test-simple-app.c'; else $(CYGPATH_W) '$(srcdir)/test-simple-app.c'; fi`
 
 mostlyclean-libtool:
 	-rm -f *.lo
@@ -1064,35 +659,6 @@ test-approver-tester: test-approver Makefile.am
 	@echo . $(srcdir)/run-xvfb.sh >> $@
 	@echo $(DBUS_RUNNER) --task $(builddir)/test-approver --task-name Approver --task $(top_builddir)/src/indicator-application-service --task-name Service --ignore-return >> $@
 	@chmod +x $@
-
-test-libappindicator-fallback: test-libappindicator-fallback-watcher test-libappindicator-fallback-item Makefile.am
-	@echo "#!/bin/bash" > $@
-	@echo . $(srcdir)/run-xvfb.sh >> $@
-	@echo $(DBUS_RUNNER) --task ./test-libappindicator-fallback-watcher --task-name Watcher --ignore-return --task ./test-libappindicator-fallback-item --task-name Item >> $@
-	@chmod +x $@
-
-libappindicator-tests: libappindicator-tests-gtester Makefile.am
-	@echo "#!/bin/bash" > $@
-	@echo . $(srcdir)/run-xvfb.sh >> $@
-	@echo $(DBUS_RUNNER) --task ./libappindicator-tests-gtester >> $@
-	@chmod +x $@
-
-libappindicator-tests-gtester: test-libappindicator Makefile.am
-	@echo "#!/bin/sh" > $@
-	@echo gtester -k --verbose -o=$(XML_REPORT) ./test-libappindicator >> $@
-	@chmod +x $@
-
-test-libappindicator-dbus: test-libappindicator-dbus-client test-libappindicator-dbus-server Makefile.am
-	@echo "#!/bin/bash" > test-libappindicator-dbus
-	@echo . $(srcdir)/run-xvfb.sh >> $@
-	@echo $(DBUS_RUNNER) --task ./test-libappindicator-dbus-client --task-name Client --task ./test-libappindicator-dbus-server --task-name Server --ignore-return >> test-libappindicator-dbus
-	@chmod +x test-libappindicator-dbus
-
-test-libappindicator-status: test-libappindicator-status-client test-libappindicator-status-server Makefile.am
-	@echo "#!/bin/bash" > test-libappindicator-status
-	@echo . $(srcdir)/run-xvfb.sh >> $@
-	@echo $(DBUS_RUNNER) --task ./test-libappindicator-status-client --task-name Client --task ./test-libappindicator-status-server --task-name Server --ignore-return >> test-libappindicator-status
-	@chmod +x test-libappindicator-status
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
