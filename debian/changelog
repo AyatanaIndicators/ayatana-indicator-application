@@ -1,20 +1,3 @@
-indicator-application (0.2.90+r170-0ubuntu1) natty; urgency=low
-
-  [ Ted Gould ]
-  * Upstream Merge
-    * Removing libappindicator from the tarball
-  * Autogen
-  * debian/control: Removing all libappindicator packages
-
-  [ Ken VanDine ]
-  * debian/control
-    - bump build depends for dbusmenu to >= 0.3.90+r175
-  * debian/rules
-    - Removed all the extra build targets, we don't build those
-      packages anymore 
-
- -- Ken VanDine <ken.vandine@canonical.com>  Fri, 10 Dec 2010 17:10:05 -0500
-
 indicator-application (0.2.90-0ubuntu3) UNRELEASED; urgency=low
 
   * debian/control
