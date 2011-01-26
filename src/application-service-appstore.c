@@ -260,6 +260,32 @@ bus_method_call (GDBusConnection * connection, const gchar * sender,
 
 	if (g_strcmp0(method, "GetApplications") == 0) {
 		retval = get_applications(service);
+	} else if (g_strcmp0(method, "ApplicationScrollSignal") == 0) {
+		Application *app = NULL;
+		const gchar *dbusaddress;
+		const gchar *dbusobject;
+		gint delta;
+		guint direction;
+
+		g_variant_get (params, "(&s&siu)", &dbusaddress, &dbusobject,
+		                                   &delta, &direction);
+
+		GList *l;
+		for (l = service->priv->applications; l != NULL; l = l->next) {
+			Application *a = l->data;
+
+			if (g_strcmp0(a->dbus_name, dbusaddress) == 0 &&
+			      g_strcmp0(a->menu, dbusobject) == 0) {
+			   app = a;
+			   break;
+			}
+		}
+
+		if (app != NULL && app->dbus_proxy != NULL) {
+			g_dbus_proxy_call(app->dbus_proxy, "XAyatanaScrollAction",
+			              	  g_variant_new("(iu)", delta, direction),
+			                  G_DBUS_CALL_FLAGS_NONE, -1, NULL, NULL, NULL);
+		}
 	} else {
 		g_warning("Calling method '%s' on the indicator service and it's unknown", method);
 	}
