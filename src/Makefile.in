@@ -127,6 +127,7 @@ am_indicator_application_service_OBJECTS =  \
 	indicator_application_service-application-service-appstore.$(OBJEXT) \
 	indicator_application_service-application-service-marshal.$(OBJEXT) \
 	indicator_application_service-application-service-watcher.$(OBJEXT) \
+	indicator_application_service-gen-application-service.xml.$(OBJEXT) \
 	indicator_application_service-app-indicator-enum-types.$(OBJEXT) \
 	indicator_application_service-generate-id.$(OBJEXT)
 indicator_application_service_OBJECTS =  \
@@ -301,13 +302,14 @@ CLEANFILES = stamp-enum-types stamp-marshal $(BUILT_SOURCES)
 DISTCLEANFILES = $(glib_enum_h) $(glib_enum_c) $(marshal_h) \
 	$(marshal_c) app-indicator-enum-types.c
 BUILT_SOURCES = $(glib_enum_h) $(glib_enum_c) $(marshal_h) \
-	$(marshal_c) application-service-server.h \
-	application-service-marshal.h application-service-marshal.c \
-	dbus-properties-client.h notification-item-client.h \
-	notification-watcher-server.h $(DBUS_SPECS:.xml=-client.h) \
-	$(DBUS_SPECS:.xml=-server.h)
+	$(marshal_c) application-service-marshal.h \
+	application-service-marshal.c notification-watcher-server.h \
+	$(DBUS_SPECS:.xml=-client.h) $(DBUS_SPECS:.xml=-server.h) \
+	gen-application-service.xml.c gen-application-service.xml.h \
+	gen-notification-approver.xml.c \
+	gen-notification-approver.xml.h
 EXTRA_DIST = $(enum_tmpl_h) $(enum_tmpl_c) $(glib_marshal_list) \
-	$(DBUS_SPECS)
+	$(DBUS_SPECS) $(GDBUS_SPECS)
 enum_tmpl_h = $(glib_enum_h:.h=.h.in)
 enum_tmpl_c = $(glib_enum_c:.c=.c.in)
 marshal_h = $(glib_marshal_list:.list=.h)
@@ -340,6 +342,7 @@ indicator_application_service_SOURCES = \
 	application-service-marshal.c \
 	application-service-watcher.h \
 	application-service-watcher.c \
+	gen-application-service.xml.c \
 	app-indicator-enum-types.c \
 	dbus-shared.h \
 	generate-id.h \
@@ -364,11 +367,11 @@ glib_enum_headers = $(wildcard $(APP_INDICATOR_INCLUDE)/libappindicator/*.h)
 ##################################
 # DBus Specs
 ##################################
-DBUS_SPECS = \
-	dbus-properties.xml \
+GDBUS_SPECS = \
 	application-service.xml \
-	notification-approver.xml \
-	notification-item.xml \
+	notification-approver.xml
+
+DBUS_SPECS = \
 	notification-watcher.xml
 
 all: $(BUILT_SOURCES)
@@ -497,6 +500,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/indicator_application_service-application-service-marshal.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/indicator_application_service-application-service-watcher.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/indicator_application_service-application-service.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/indicator_application_service-gen-application-service.xml.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/indicator_application_service-generate-id.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libapplication_la-application-service-marshal.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libapplication_la-indicator-application.Plo@am__quote@
@@ -604,6 +608,22 @@ indicator_application_service-application-service-watcher.obj: application-servi
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='application-service-watcher.c' object='indicator_application_service-application-service-watcher.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(indicator_application_service_CFLAGS) $(CFLAGS) -c -o indicator_application_service-application-service-watcher.obj `if test -f 'application-service-watcher.c'; then $(CYGPATH_W) 'application-service-watcher.c'; else $(CYGPATH_W) '$(srcdir)/application-service-watcher.c'; fi`
+
+indicator_application_service-gen-application-service.xml.o: gen-application-service.xml.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(indicator_application_service_CFLAGS) $(CFLAGS) -MT indicator_application_service-gen-application-service.xml.o -MD -MP -MF $(DEPDIR)/indicator_application_service-gen-application-service.xml.Tpo -c -o indicator_application_service-gen-application-service.xml.o `test -f 'gen-application-service.xml.c' || echo '$(srcdir)/'`gen-application-service.xml.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/indicator_application_service-gen-application-service.xml.Tpo $(DEPDIR)/indicator_application_service-gen-application-service.xml.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='gen-application-service.xml.c' object='indicator_application_service-gen-application-service.xml.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(indicator_application_service_CFLAGS) $(CFLAGS) -c -o indicator_application_service-gen-application-service.xml.o `test -f 'gen-application-service.xml.c' || echo '$(srcdir)/'`gen-application-service.xml.c
+
+indicator_application_service-gen-application-service.xml.obj: gen-application-service.xml.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(indicator_application_service_CFLAGS) $(CFLAGS) -MT indicator_application_service-gen-application-service.xml.obj -MD -MP -MF $(DEPDIR)/indicator_application_service-gen-application-service.xml.Tpo -c -o indicator_application_service-gen-application-service.xml.obj `if test -f 'gen-application-service.xml.c'; then $(CYGPATH_W) 'gen-application-service.xml.c'; else $(CYGPATH_W) '$(srcdir)/gen-application-service.xml.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/indicator_application_service-gen-application-service.xml.Tpo $(DEPDIR)/indicator_application_service-gen-application-service.xml.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='gen-application-service.xml.c' object='indicator_application_service-gen-application-service.xml.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(indicator_application_service_CFLAGS) $(CFLAGS) -c -o indicator_application_service-gen-application-service.xml.obj `if test -f 'gen-application-service.xml.c'; then $(CYGPATH_W) 'gen-application-service.xml.c'; else $(CYGPATH_W) '$(srcdir)/gen-application-service.xml.c'; fi`
 
 indicator_application_service-app-indicator-enum-types.o: app-indicator-enum-types.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(indicator_application_service_CFLAGS) $(CFLAGS) -MT indicator_application_service-app-indicator-enum-types.o -MD -MP -MF $(DEPDIR)/indicator_application_service-app-indicator-enum-types.Tpo -c -o indicator_application_service-app-indicator-enum-types.o `test -f 'app-indicator-enum-types.c' || echo '$(srcdir)/'`app-indicator-enum-types.c
@@ -908,6 +928,16 @@ $(marshal_c): $(marshal_h)
 		--mode=glib-server \
 		--output=$@ \
 		$<
+
+gen-%.xml.c: %.xml
+	@echo "Building $@ from $<"
+	@echo "const char * _$(notdir $(subst -,_,$(subst .,_,$(basename $<)))) = " > $@
+	@sed -e "s:\":\\\\\":g" -e s:^:\": -e s:\$$:\\\\n\": $< >> $@
+	@echo ";" >> $@
+
+gen-%.xml.h: %.xml
+	@echo "Building $@ from $<"
+	@echo "extern const char * _$(notdir $(subst -,_,$(subst .,_,$(basename $<))));" > $@
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

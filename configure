@@ -2735,7 +2735,7 @@ fi
 
 # Define the identity of the package.
  PACKAGE=indicator-application
- VERSION=0.2.90
+ VERSION=0.2.91
 
 
 cat >>confdefs.h <<_ACEOF
@@ -11479,8 +11479,9 @@ fi
 
 GTK_REQUIRED_VERSION=2.18
 GTK3_REQUIRED_VERSION=2.91
+GIO_REQUIRED_VERSION=2.26
 INDICATOR_REQUIRED_VERSION=0.3.5
-DBUSMENUGTK_REQUIRED_VERSION=0.2.2
+DBUSMENUGTK_REQUIRED_VERSION=0.3.91
 JSON_GLIB_REQUIRED_VERSION=0.7.6
 DBUS_GLIB_REQUIRED_VERSION=0.82
 
@@ -11503,11 +11504,13 @@ if test -n "$INDICATOR_CFLAGS"; then
  elif test -n "$PKG_CONFIG"; then
     if test -n "$PKG_CONFIG" && \
     { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"gtk+-3.0 >= \$GTK3_REQUIRED_VERSION
+                                       gio-2.0 >= \$GIO_REQUIRED_VERSION
                                        indicator3 >= \$INDICATOR_REQUIRED_VERSION
                                        json-glib-1.0 >= \$JSON_GLIB_REQUIRED_VERSION
                                        dbus-glib-1 >= \$DBUS_GLIB_REQUIRED_VERSION
                                        dbusmenu-gtk3-0.4 >= \$DBUSMENUGTK_REQUIRED_VERSION\""; } >&5
   ($PKG_CONFIG --exists --print-errors "gtk+-3.0 >= $GTK3_REQUIRED_VERSION
+                                       gio-2.0 >= $GIO_REQUIRED_VERSION
                                        indicator3 >= $INDICATOR_REQUIRED_VERSION
                                        json-glib-1.0 >= $JSON_GLIB_REQUIRED_VERSION
                                        dbus-glib-1 >= $DBUS_GLIB_REQUIRED_VERSION
@@ -11516,6 +11519,7 @@ if test -n "$INDICATOR_CFLAGS"; then
   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; then
   pkg_cv_INDICATOR_CFLAGS=`$PKG_CONFIG --cflags "gtk+-3.0 >= $GTK3_REQUIRED_VERSION
+                                       gio-2.0 >= $GIO_REQUIRED_VERSION
                                        indicator3 >= $INDICATOR_REQUIRED_VERSION
                                        json-glib-1.0 >= $JSON_GLIB_REQUIRED_VERSION
                                        dbus-glib-1 >= $DBUS_GLIB_REQUIRED_VERSION
@@ -11531,11 +11535,13 @@ if test -n "$INDICATOR_LIBS"; then
  elif test -n "$PKG_CONFIG"; then
     if test -n "$PKG_CONFIG" && \
     { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"gtk+-3.0 >= \$GTK3_REQUIRED_VERSION
+                                       gio-2.0 >= \$GIO_REQUIRED_VERSION
                                        indicator3 >= \$INDICATOR_REQUIRED_VERSION
                                        json-glib-1.0 >= \$JSON_GLIB_REQUIRED_VERSION
                                        dbus-glib-1 >= \$DBUS_GLIB_REQUIRED_VERSION
                                        dbusmenu-gtk3-0.4 >= \$DBUSMENUGTK_REQUIRED_VERSION\""; } >&5
   ($PKG_CONFIG --exists --print-errors "gtk+-3.0 >= $GTK3_REQUIRED_VERSION
+                                       gio-2.0 >= $GIO_REQUIRED_VERSION
                                        indicator3 >= $INDICATOR_REQUIRED_VERSION
                                        json-glib-1.0 >= $JSON_GLIB_REQUIRED_VERSION
                                        dbus-glib-1 >= $DBUS_GLIB_REQUIRED_VERSION
@@ -11544,6 +11550,7 @@ if test -n "$INDICATOR_LIBS"; then
   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; then
   pkg_cv_INDICATOR_LIBS=`$PKG_CONFIG --libs "gtk+-3.0 >= $GTK3_REQUIRED_VERSION
+                                       gio-2.0 >= $GIO_REQUIRED_VERSION
                                        indicator3 >= $INDICATOR_REQUIRED_VERSION
                                        json-glib-1.0 >= $JSON_GLIB_REQUIRED_VERSION
                                        dbus-glib-1 >= $DBUS_GLIB_REQUIRED_VERSION
@@ -11568,12 +11575,14 @@ else
 fi
         if test $_pkg_short_errors_supported = yes; then
 	        INDICATOR_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors "gtk+-3.0 >= $GTK3_REQUIRED_VERSION
+                                       gio-2.0 >= $GIO_REQUIRED_VERSION
                                        indicator3 >= $INDICATOR_REQUIRED_VERSION
                                        json-glib-1.0 >= $JSON_GLIB_REQUIRED_VERSION
                                        dbus-glib-1 >= $DBUS_GLIB_REQUIRED_VERSION
                                        dbusmenu-gtk3-0.4 >= $DBUSMENUGTK_REQUIRED_VERSION" 2>&1`
         else
 	        INDICATOR_PKG_ERRORS=`$PKG_CONFIG --print-errors "gtk+-3.0 >= $GTK3_REQUIRED_VERSION
+                                       gio-2.0 >= $GIO_REQUIRED_VERSION
                                        indicator3 >= $INDICATOR_REQUIRED_VERSION
                                        json-glib-1.0 >= $JSON_GLIB_REQUIRED_VERSION
                                        dbus-glib-1 >= $DBUS_GLIB_REQUIRED_VERSION
@@ -11583,6 +11592,7 @@ fi
 	echo "$INDICATOR_PKG_ERRORS" >&5
 
 	as_fn_error $? "Package requirements (gtk+-3.0 >= $GTK3_REQUIRED_VERSION
+                                       gio-2.0 >= $GIO_REQUIRED_VERSION
                                        indicator3 >= $INDICATOR_REQUIRED_VERSION
                                        json-glib-1.0 >= $JSON_GLIB_REQUIRED_VERSION
                                        dbus-glib-1 >= $DBUS_GLIB_REQUIRED_VERSION
@@ -11635,11 +11645,13 @@ if test -n "$INDICATOR_CFLAGS"; then
  elif test -n "$PKG_CONFIG"; then
     if test -n "$PKG_CONFIG" && \
     { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"gtk+-2.0 >= \$GTK_REQUIRED_VERSION
+                                       gio-2.0 >= \$GIO_REQUIRED_VERSION
                                        indicator >= \$INDICATOR_REQUIRED_VERSION
                                        json-glib-1.0 >= \$JSON_GLIB_REQUIRED_VERSION
                                        dbus-glib-1 >= \$DBUS_GLIB_REQUIRED_VERSION
                                        dbusmenu-gtk-0.4 >= \$DBUSMENUGTK_REQUIRED_VERSION\""; } >&5
   ($PKG_CONFIG --exists --print-errors "gtk+-2.0 >= $GTK_REQUIRED_VERSION
+                                       gio-2.0 >= $GIO_REQUIRED_VERSION
                                        indicator >= $INDICATOR_REQUIRED_VERSION
                                        json-glib-1.0 >= $JSON_GLIB_REQUIRED_VERSION
                                        dbus-glib-1 >= $DBUS_GLIB_REQUIRED_VERSION
@@ -11648,6 +11660,7 @@ if test -n "$INDICATOR_CFLAGS"; then
   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; then
   pkg_cv_INDICATOR_CFLAGS=`$PKG_CONFIG --cflags "gtk+-2.0 >= $GTK_REQUIRED_VERSION
+                                       gio-2.0 >= $GIO_REQUIRED_VERSION
                                        indicator >= $INDICATOR_REQUIRED_VERSION
                                        json-glib-1.0 >= $JSON_GLIB_REQUIRED_VERSION
                                        dbus-glib-1 >= $DBUS_GLIB_REQUIRED_VERSION
@@ -11663,11 +11676,13 @@ if test -n "$INDICATOR_LIBS"; then
  elif test -n "$PKG_CONFIG"; then
     if test -n "$PKG_CONFIG" && \
     { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"gtk+-2.0 >= \$GTK_REQUIRED_VERSION
+                                       gio-2.0 >= \$GIO_REQUIRED_VERSION
                                        indicator >= \$INDICATOR_REQUIRED_VERSION
                                        json-glib-1.0 >= \$JSON_GLIB_REQUIRED_VERSION
                                        dbus-glib-1 >= \$DBUS_GLIB_REQUIRED_VERSION
                                        dbusmenu-gtk-0.4 >= \$DBUSMENUGTK_REQUIRED_VERSION\""; } >&5
   ($PKG_CONFIG --exists --print-errors "gtk+-2.0 >= $GTK_REQUIRED_VERSION
+                                       gio-2.0 >= $GIO_REQUIRED_VERSION
                                        indicator >= $INDICATOR_REQUIRED_VERSION
                                        json-glib-1.0 >= $JSON_GLIB_REQUIRED_VERSION
                                        dbus-glib-1 >= $DBUS_GLIB_REQUIRED_VERSION
@@ -11676,6 +11691,7 @@ if test -n "$INDICATOR_LIBS"; then
   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; then
   pkg_cv_INDICATOR_LIBS=`$PKG_CONFIG --libs "gtk+-2.0 >= $GTK_REQUIRED_VERSION
+                                       gio-2.0 >= $GIO_REQUIRED_VERSION
                                        indicator >= $INDICATOR_REQUIRED_VERSION
                                        json-glib-1.0 >= $JSON_GLIB_REQUIRED_VERSION
                                        dbus-glib-1 >= $DBUS_GLIB_REQUIRED_VERSION
@@ -11700,12 +11716,14 @@ else
 fi
         if test $_pkg_short_errors_supported = yes; then
 	        INDICATOR_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors "gtk+-2.0 >= $GTK_REQUIRED_VERSION
+                                       gio-2.0 >= $GIO_REQUIRED_VERSION
                                        indicator >= $INDICATOR_REQUIRED_VERSION
                                        json-glib-1.0 >= $JSON_GLIB_REQUIRED_VERSION
                                        dbus-glib-1 >= $DBUS_GLIB_REQUIRED_VERSION
                                        dbusmenu-gtk-0.4 >= $DBUSMENUGTK_REQUIRED_VERSION" 2>&1`
         else
 	        INDICATOR_PKG_ERRORS=`$PKG_CONFIG --print-errors "gtk+-2.0 >= $GTK_REQUIRED_VERSION
+                                       gio-2.0 >= $GIO_REQUIRED_VERSION
                                        indicator >= $INDICATOR_REQUIRED_VERSION
                                        json-glib-1.0 >= $JSON_GLIB_REQUIRED_VERSION
                                        dbus-glib-1 >= $DBUS_GLIB_REQUIRED_VERSION
@@ -11715,6 +11733,7 @@ fi
 	echo "$INDICATOR_PKG_ERRORS" >&5
 
 	as_fn_error $? "Package requirements (gtk+-2.0 >= $GTK_REQUIRED_VERSION
+                                       gio-2.0 >= $GIO_REQUIRED_VERSION
                                        indicator >= $INDICATOR_REQUIRED_VERSION
                                        json-glib-1.0 >= $JSON_GLIB_REQUIRED_VERSION
                                        dbus-glib-1 >= $DBUS_GLIB_REQUIRED_VERSION
