@@ -1156,24 +1156,43 @@ static GVariant *
 get_applications (ApplicationServiceAppstore * appstore)
 {
 	ApplicationServiceAppstorePrivate * priv = appstore->priv;
+	GVariant * out = NULL;
 
-	GVariantBuilder * builder = g_variant_builder_new (G_VARIANT_TYPE_ARRAY);
-	GList * listpntr;
-	gint position = 0;
+	if (g_list_length(priv->applications) > 0) {
+		GVariantBuilder builder;
+		GList * listpntr;
+		gint position = 0;
 
-	for (listpntr = priv->applications; listpntr != NULL; listpntr = g_list_next(listpntr)) {
-		Application * app = (Application *)listpntr->data;
-		if (app->visible_state == VISIBLE_STATE_HIDDEN) {
-			continue;
+		g_variant_builder_init(&builder, G_VARIANT_TYPE_ARRAY);
+
+		for (listpntr = priv->applications; listpntr != NULL; listpntr = g_list_next(listpntr)) {
+			Application * app = (Application *)listpntr->data;
+			if (app->visible_state == VISIBLE_STATE_HIDDEN) {
+				continue;
+			}
+
+			g_variant_builder_add (&builder, "(sisosss)", app->icon,
+								   position++, app->dbus_name, app->menu,
+								   app->icon_theme_path, app->label,
+								   app->guide);
 		}
 
-		g_variant_builder_add (builder, "(sisosss)", app->icon,
-		                       position++, app->dbus_name, app->menu,
-		                       app->icon_theme_path, app->label,
-		                       app->guide);
+		out = g_variant_builder_end(&builder);
+	} else {
+		GError * error = NULL;
+		out = g_variant_parse(g_variant_type_new("a(sisosss)"), "[]", NULL, NULL, &error);
+		if (error != NULL) {
+			g_warning("Unable to parse '[]' as a 'a(sisosss)': %s", error->message);
+			out = NULL;
+			g_error_free(error);
+		}
 	}
 
-	return g_variant_new("(a(sisosss))", builder);
+	if (out != NULL) {
+		return g_variant_new_tuple(&out, 1);
+	} else {
+		return NULL;
+	}
 }
 
 /* Removes and approver from our list of approvers and
