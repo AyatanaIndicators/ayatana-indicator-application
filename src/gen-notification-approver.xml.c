@@ -1,7 +1,7 @@
 const char * _notification_approver = 
 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
 "<node name=\"/\">\n"
-"	<interface name=\"org.ayatana.StatusNotifierApprover\">\n"
+"	<interface name=\"com.canonical.StatusNotifierApprover\">\n"
 "\n"
 "<!-- Methods -->\n"
 "		<method name=\"ApproveItem\">\n"
