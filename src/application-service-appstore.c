@@ -283,15 +283,15 @@ bus_method_call (GDBusConnection * connection, const gchar * sender,
 		}
 
 		switch (direction) {
-			case GDK_SCROLL_UP:
+			case INDICATOR_OBJECT_SCROLL_UP:
 				delta = -delta;
-			case GDK_SCROLL_DOWN:
+			case INDICATOR_OBJECT_SCROLL_DOWN:
 				orientation = "vertical";
 				break;
 
-			case GDK_SCROLL_LEFT:
+			case INDICATOR_OBJECT_SCROLL_LEFT:
 				delta = -delta;
-			case GDK_SCROLL_RIGHT:
+			case INDICATOR_OBJECT_SCROLL_RIGHT:
 				orientation = "horizontal";
 		}
 
