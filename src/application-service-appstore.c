@@ -260,10 +260,11 @@ bus_method_call (GDBusConnection * connection, const gchar * sender,
 
 	if (g_strcmp0(method, "GetApplications") == 0) {
 		retval = get_applications(service);
-	} else if (g_strcmp0(method, "ApplicationScrollSignal") == 0) {
+	} else if (g_strcmp0(method, "ApplicationScrollEvent") == 0) {
 		Application *app = NULL;
 		const gchar *dbusaddress;
 		const gchar *dbusobject;
+		gchar *orientation = NULL;
 		gint delta;
 		guint direction;
 
@@ -281,9 +282,22 @@ bus_method_call (GDBusConnection * connection, const gchar * sender,
 			}
 		}
 
-		if (app != NULL && app->dbus_proxy != NULL) {
-			g_dbus_proxy_call(app->dbus_proxy, "XAyatanaScrollAction",
-			              	  g_variant_new("(iu)", delta, direction),
+		switch (direction) {
+			case GDK_SCROLL_UP:
+				delta = -delta;
+			case GDK_SCROLL_DOWN:
+				orientation = "vertical";
+				break;
+
+			case GDK_SCROLL_LEFT:
+				delta = -delta;
+			case GDK_SCROLL_RIGHT:
+				orientation = "horizontal";
+		}
+
+		if (app != NULL && app->dbus_proxy != NULL && orientation != NULL) {
+			g_dbus_proxy_call(app->dbus_proxy, "Scroll",
+			              	  g_variant_new("(is)", delta, orientation),
 			                  G_DBUS_CALL_FLAGS_NONE, -1, NULL, NULL, NULL);
 		}
 	} else {
