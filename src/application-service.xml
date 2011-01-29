@@ -28,7 +28,7 @@ with this program.  If not, see <http://www.gnu.org/licenses/>.
 		<method name="GetApplications">
 			<arg type="a(sisosss)" name="applications" direction="out" />
 		</method>
-		<method name="ApplicationScrollSignal">
+		<method name="ApplicationScrollEvent">
 			<arg type="s" name="dbusaddress" direction="in" />
 			<arg type="s" name="dbusobject" direction="in" />
 			<arg type="i" name="delta" direction="in" />

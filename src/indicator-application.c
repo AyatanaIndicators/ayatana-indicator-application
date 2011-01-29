@@ -398,7 +398,7 @@ static void scroll_entry (IndicatorObject * io, IndicatorObjectEntry * entry, gi
 	ApplicationEntry *app = l->data;
 
 	if (app && app->dbusaddress && app->dbusobject && priv->service_proxy) {
-		g_dbus_proxy_call(priv->service_proxy, "ApplicationScrollSignal",
+		g_dbus_proxy_call(priv->service_proxy, "ApplicationScrollEvent",
 			              	g_variant_new("(ssiu)", app->dbusaddress,
 			              	                        app->dbusobject,
 			              	                        delta, direction),
