@@ -24,6 +24,7 @@ with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "config.h"
 #endif
 
+#include "libindicator/indicator-object.h"
 #include "libappindicator/app-indicator.h"
 #include "app-indicator-enum-types.h"
 #include "application-service-appstore.h"
