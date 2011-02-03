@@ -24,6 +24,7 @@ with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "config.h"
 #endif
 
+#include "libindicator/indicator-object.h"
 #include "libappindicator/app-indicator.h"
 #include "app-indicator-enum-types.h"
 #include "application-service-appstore.h"
@@ -260,6 +261,46 @@ bus_method_call (GDBusConnection * connection, const gchar * sender,
 
 	if (g_strcmp0(method, "GetApplications") == 0) {
 		retval = get_applications(service);
+	} else if (g_strcmp0(method, "ApplicationScrollEvent") == 0) {
+		Application *app = NULL;
+		const gchar *dbusaddress;
+		const gchar *dbusobject;
+		gchar *orientation = NULL;
+		gint delta;
+		guint direction;
+
+		g_variant_get (params, "(&s&siu)", &dbusaddress, &dbusobject,
+		                                   &delta, &direction);
+
+		GList *l;
+		for (l = service->priv->applications; l != NULL; l = l->next) {
+			Application *a = l->data;
+
+			if (g_strcmp0(a->dbus_name, dbusaddress) == 0 &&
+			      g_strcmp0(a->menu, dbusobject) == 0) {
+			   app = a;
+			   break;
+			}
+		}
+
+		switch (direction) {
+			case INDICATOR_OBJECT_SCROLL_UP:
+				delta = -delta;
+			case INDICATOR_OBJECT_SCROLL_DOWN:
+				orientation = "vertical";
+				break;
+
+			case INDICATOR_OBJECT_SCROLL_LEFT:
+				delta = -delta;
+			case INDICATOR_OBJECT_SCROLL_RIGHT:
+				orientation = "horizontal";
+		}
+
+		if (app != NULL && app->dbus_proxy != NULL && orientation != NULL) {
+			g_dbus_proxy_call(app->dbus_proxy, "Scroll",
+			              	  g_variant_new("(is)", delta, orientation),
+			                  G_DBUS_CALL_FLAGS_NONE, -1, NULL, NULL, NULL);
+		}
 	} else {
 		g_warning("Calling method '%s' on the indicator service and it's unknown", method);
 	}

@@ -1,3 +1,10 @@
+indicator-application (0.2.93-0ubuntu1) natty; urgency=low
+
+  * New upstream release.
+    * Support the scroll wheel event and send it to applications.
+
+ -- Ted Gould <ted@ubuntu.com>  Thu, 03 Feb 2011 15:02:24 -0600
+
 indicator-application (0.2.92-0ubuntu1) natty; urgency=low
 
   * New upstream release.
