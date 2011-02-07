@@ -49,12 +49,14 @@ static void props_cb (GObject * object, GAsyncResult * res, gpointer user_data);
 #define NOTIFICATION_ITEM_PROP_LABEL                 "XAyatanaLabel"
 #define NOTIFICATION_ITEM_PROP_LABEL_GUIDE           "XAyatanaLabelGuide"
 #define NOTIFICATION_ITEM_PROP_ORDERING_INDEX        "XAyatanaOrderingIndex"
+#define NOTIFICATION_ITEM_PROP_ACCESSIBLE_NAME       "AccessibleName"
 
 #define NOTIFICATION_ITEM_SIG_NEW_ICON               "NewIcon"
 #define NOTIFICATION_ITEM_SIG_NEW_AICON              "NewAttentionIcon"
 #define NOTIFICATION_ITEM_SIG_NEW_STATUS             "NewStatus"
 #define NOTIFICATION_ITEM_SIG_NEW_LABEL              "XAyatanaNewLabel"
 #define NOTIFICATION_ITEM_SIG_NEW_ICON_THEME_PATH    "NewIconThemePath"
+#define NOTIFICATION_ITEM_SIG_NEW_ACCESSIBLE_NAME    "NewAccessibleName"
 
 #define OVERRIDE_GROUP_NAME                          "Ordering Index Overrides"
 #define OVERRIDE_FILE_NAME                           "ordering-override.keyfile"
@@ -104,6 +106,7 @@ struct _Application {
 	gchar * icon_theme_path;
 	gchar * label;
 	gchar * guide;
+	gchar * accessible_name;
 	gboolean currently_free;
 	guint ordering_index;
 	GList * approved_by;
@@ -431,7 +434,7 @@ got_all_properties (GObject * source_object, GAsyncResult * res,
 	GVariant * menu = NULL, * id = NULL, * category = NULL,
 	         * status = NULL, * icon_name = NULL, * aicon_name = NULL,
 	         * icon_theme_path = NULL, * index = NULL, * label = NULL,
-	         * guide = NULL;
+	         * guide = NULL, * accessible_name = NULL;
 
 	GVariant * properties = g_dbus_proxy_call_finish(app->props, res, &error);
 
@@ -474,6 +477,8 @@ got_all_properties (GObject * source_object, GAsyncResult * res,
 			label = g_variant_ref(value);
 		} else if (g_strcmp0(name, NOTIFICATION_ITEM_PROP_LABEL_GUIDE) == 0) {
 			guide = g_variant_ref(value);
+		} else if (g_strcmp0(name, NOTIFICATION_ITEM_PROP_ACCESSIBLE_NAME) == 0) {
+			accessible_name = g_variant_ref(value);
 		} /* else ignore */
 	}
 	g_variant_iter_free (iter);
@@ -528,6 +533,12 @@ got_all_properties (GObject * source_object, GAsyncResult * res,
 			app->guide = g_strdup("");
 		}
 
+		if (accessible_name != NULL) {
+			app->accessible_name = g_variant_dup_string(accessible_name, NULL);
+		} else {
+			app->accessible_name = g_strdup("");
+		}
+
 		g_list_foreach(priv->approvers, check_with_old_approver, app);
 
 		apply_status(app);
@@ -548,6 +559,7 @@ got_all_properties (GObject * source_object, GAsyncResult * res,
 	if (index)           g_variant_unref (index);
 	if (label)           g_variant_unref (label);
 	if (guide)           g_variant_unref (guide);
+	if (accessible_name) g_variant_unref (accessible_name);
 
 	return;
 }
@@ -725,6 +737,9 @@ application_free (Application * app)
 	if (app->approved_by != NULL) {
 		g_list_free(app->approved_by);
 	}
+	if (app->accessible_name != NULL) {
+		g_free(app->accessible_name);
+	}
 
 	g_free(app);
 	return;
@@ -833,11 +848,12 @@ apply_status (Application * app)
 		if (app->visible_state == VISIBLE_STATE_HIDDEN) {
 			/* Put on panel */
 			emit_signal (appstore, "ApplicationAdded",
-				     g_variant_new ("(sisosss)", newicon,
+				     g_variant_new ("(sisossss)", newicon,
 			                            get_position(app),
 			                            app->dbus_name, app->menu,
 			                            app->icon_theme_path,
-			                            app->label, app->guide));
+			                            app->label, app->guide,
+			                            app->accessible_name));
 		} else {
 			/* Icon update */
 			gint position = get_position(app);
@@ -921,6 +937,32 @@ new_label (Application * app, const gchar * label, const gchar * guide)
 			     g_variant_new ("(iss)", position,
 		                            app->label != NULL ? app->label : "",
 		                            app->guide != NULL ? app->guide : ""));
+	}
+
+	return;
+}
+
+static void
+new_accessible_name (Application * app, const gchar * accessible_name)
+{
+	gboolean changed = FALSE;
+
+	if (g_strcmp0(app->accessible_name, accessible_name) != 0) {
+		changed = TRUE;
+		if (app->accessible_name != NULL) {
+			g_free(app->accessible_name);
+			app->accessible_name = NULL;
+		}
+		app->accessible_name = g_strdup(accessible_name);
+	}
+
+	if (changed) {
+		gint position = get_position(app);
+		if (position == -1) return;
+
+		emit_signal (app->appstore, "ApplicationAccessibleNameChanged",
+			     g_variant_new ("(is)", position,
+		             app->accessible_name != NULL ? app->accessible_name : ""));
 	}
 
 	return;
@@ -1124,6 +1166,11 @@ app_receive_signal (GDBusProxy * proxy, gchar * sender_name, gchar * signal_name
 		g_variant_get(parameters, "(&s&s)", &label, &guide);
 		new_label(app, label, guide);
 	}
+	else if (g_strcmp0(signal_name, NOTIFICATION_ITEM_SIG_NEW_ACCESSIBLE_NAME) == 0) {
+		const gchar * accessible_name;
+		g_variant_get(parameters, "(&s)", &accessible_name);
+		new_accessible_name(app, accessible_name);
+        }
 
 	return;
 }
@@ -1212,18 +1259,18 @@ get_applications (ApplicationServiceAppstore * appstore)
 				continue;
 			}
 
-			g_variant_builder_add (&builder, "(sisosss)", app->icon,
+			g_variant_builder_add (&builder, "(sisossss)", app->icon,
 								   position++, app->dbus_name, app->menu,
 								   app->icon_theme_path, app->label,
-								   app->guide);
+								   app->guide, app->accessible_name);
 		}
 
 		out = g_variant_builder_end(&builder);
 	} else {
 		GError * error = NULL;
-		out = g_variant_parse(g_variant_type_new("a(sisosss)"), "[]", NULL, NULL, &error);
+		out = g_variant_parse(g_variant_type_new("a(sisossss)"), "[]", NULL, NULL, &error);
 		if (error != NULL) {
-			g_warning("Unable to parse '[]' as a 'a(sisosss)': %s", error->message);
+			g_warning("Unable to parse '[]' as a 'a(sisossss)': %s", error->message);
 			out = NULL;
 			g_error_free(error);
 		}

@@ -115,11 +115,12 @@ static void disconnected (IndicatorApplication * application);
 static void disconnected_helper (gpointer data, gpointer user_data);
 static gboolean disconnected_kill (gpointer user_data);
 static void disconnected_kill_helper (gpointer data, gpointer user_data);
-static void application_added (IndicatorApplication * application, const gchar * iconname, gint position, const gchar * dbusaddress, const gchar * dbusobject, const gchar * icon_theme_path, const gchar * label, const gchar * guide);
+static void application_added (IndicatorApplication * application, const gchar * iconname, gint position, const gchar * dbusaddress, const gchar * dbusobject, const gchar * icon_theme_path, const gchar * label, const gchar * guide, const gchar * accessible_name);
 static void application_removed (IndicatorApplication * application, gint position);
 static void application_label_changed (IndicatorApplication * application, gint position, const gchar * label, const gchar * guide);
 static void application_icon_changed (IndicatorApplication * application, gint position, const gchar * iconname);
 static void application_icon_theme_path_changed (IndicatorApplication * application, gint position, const gchar * icon_theme_path);
+static void application_accessible_name_changed (IndicatorApplication * application, gint position, const gchar * accessible_name);
 static void get_applications (GObject * obj, GAsyncResult * res, gpointer user_data);
 static void get_applications_helper (IndicatorApplication * self, GVariant * variant);
 static void theme_dir_unref(IndicatorApplication * ia, const gchar * dir);
@@ -450,7 +451,7 @@ guess_label_size (ApplicationEntry * app)
    ApplicationEntry and signaling the indicator host that
    we've got a new indicator. */
 static void
-application_added (IndicatorApplication * application, const gchar * iconname, gint position, const gchar * dbusaddress, const gchar * dbusobject, const gchar * icon_theme_path, const gchar * label, const gchar * guide)
+application_added (IndicatorApplication * application, const gchar * iconname, gint position, const gchar * dbusaddress, const gchar * dbusobject, const gchar * icon_theme_path, const gchar * label, const gchar * guide, const gchar * accessible_name)
 {
 	g_return_if_fail(IS_INDICATOR_APPLICATION(application));
 	g_debug("Building new application entry: %s  with icon: %s at position %i", dbusaddress, iconname, position);
@@ -497,6 +498,12 @@ application_added (IndicatorApplication * application, const gchar * iconname, g
 		}
 
 		guess_label_size(app);
+	}
+
+	if (accessible_name == NULL || accessible_name[0] == '\0') {
+		app->entry.accessible_name = NULL;
+	} else {
+		app->entry.accessible_name = g_strdup(accessible_name);
 	}
 
 	app->entry.menu = GTK_MENU(dbusmenu_gtkmenu_new((gchar *)dbusaddress, (gchar *)dbusobject));
@@ -700,6 +707,65 @@ application_icon_theme_path_changed (IndicatorApplication * application, gint po
 	return;
 }
 
+/* The callback for the signal that the accessible name for an application
+   has changed. */
+static void
+application_accessible_name_changed (IndicatorApplication * application, gint position, const gchar * accessible_name)
+{
+	IndicatorApplicationPrivate * priv = INDICATOR_APPLICATION_GET_PRIVATE(application);
+	ApplicationEntry * app = (ApplicationEntry *)g_list_nth_data(priv->applications, position);
+	gboolean signal_reload = FALSE;
+
+	if (app == NULL) {
+		g_warning("Unable to find application at position: %d", position);
+		return;
+	}
+
+	if (accessible_name == NULL || accessible_name[0] == '\0') {
+		/* No accessible_name, let's see if we need to delete the old one */
+		if (app->entry.accessible_name != NULL) {
+			app->entry.accessible_name = NULL;
+			signal_reload = TRUE;
+		}
+	} else {
+		app->entry.accessible_name = g_strdup(accessible_name);
+
+		signal_reload = TRUE;
+	}
+
+	if (signal_reload) {
+		/* Telling the listener that this has been removed, and then
+		   readded to make it reparse the entry. */
+		if (app->entry.label != NULL) {
+			gtk_widget_hide(GTK_WIDGET(app->entry.label));
+		}
+
+		if (app->entry.image != NULL) {
+			gtk_widget_hide(GTK_WIDGET(app->entry.image));
+		}
+
+		if (app->entry.menu != NULL) {
+			gtk_menu_detach(app->entry.menu);
+		}
+
+		g_signal_emit(G_OBJECT(application), INDICATOR_OBJECT_SIGNAL_ENTRY_REMOVED_ID, 0, &(app->entry), TRUE);
+
+		if (app->entry.label != NULL) {
+			gtk_widget_show(GTK_WIDGET(app->entry.label));
+		}
+
+		if (app->entry.image != NULL) {
+			indicator_image_helper_update(app->entry.image, app->longname);
+			gtk_widget_show(GTK_WIDGET(app->entry.image));
+		}
+
+		g_signal_emit(G_OBJECT(application), INDICATOR_OBJECT_SIGNAL_ENTRY_ADDED_ID, 0, &(app->entry), TRUE);
+	}
+
+	return;
+
+}
+
 /* Receives all signals from the service, routed to the appropriate functions */
 static void
 receive_signal (GDBusProxy * proxy, gchar * sender_name, gchar * signal_name,
@@ -715,11 +781,14 @@ receive_signal (GDBusProxy * proxy, gchar * sender_name, gchar * signal_name,
 		const gchar * icon_theme_path;
 		const gchar * label;
 		const gchar * guide;
-		g_variant_get (parameters, "(&si&s&o&s&s&s)", &iconname,
+		const gchar * accessible_name;
+		g_variant_get (parameters, "(&si&s&o&s&s&s&s)", &iconname,
 		               &position, &dbusaddress, &dbusobject,
-		               &icon_theme_path, &label, &guide);
+		               &icon_theme_path, &label, &guide,
+		               &accessible_name);
 		application_added(self, iconname, position, dbusaddress,
-		                  dbusobject, icon_theme_path, label, guide);
+		                  dbusobject, icon_theme_path, label, guide,
+		                  accessible_name);
 	}
 	else if (g_strcmp0(signal_name, "ApplicationRemoved") == 0) {
 		gint position;
@@ -745,6 +814,12 @@ receive_signal (GDBusProxy * proxy, gchar * sender_name, gchar * signal_name,
 		g_variant_get (parameters, "(i&s&s)", &position, &label, &guide);
 		application_label_changed(self, position, label, guide);
 	}
+	else if (g_strcmp0(signal_name, "ApplicationAccessibleNameChanged") == 0) {
+		gint position;
+		const gchar * accessible_name;
+		g_variant_get (parameters, "(i&s)", &position, &accessible_name);
+		application_accessible_name_changed(self, position, accessible_name);
+	}
 
 	return;
 }
@@ -768,7 +843,7 @@ get_applications (GObject * obj, GAsyncResult * res, gpointer user_data)
 		return;
 	}
 
-	g_variant_get(result, "(a(sisosss))", &iter);
+	g_variant_get(result, "(a(sisossss))", &iter);
 	while ((child = g_variant_iter_next_value (iter)))
 		get_applications_helper(self, child);
 	g_variant_iter_free (iter);
@@ -788,11 +863,12 @@ get_applications_helper (IndicatorApplication * self, GVariant * variant)
 	const gchar * icon_theme_path;
 	const gchar * label;
 	const gchar * guide;
-	g_variant_get(variant, "(sisosss)", &icon_name, &position,
+	const gchar * accessible_name;
+	g_variant_get(variant, "(sisossss)", &icon_name, &position,
 	              &dbus_address, &dbus_object, &icon_theme_path, &label,
-	              &guide);
+	              &guide, &accessible_name);
 
-	return application_added(self, icon_name, position, dbus_address, dbus_object, icon_theme_path, label, guide);
+	return application_added(self, icon_name, position, dbus_address, dbus_object, icon_theme_path, label, guide, accessible_name);
 }
 
 /* Unrefs a theme directory.  This may involve removing it from
