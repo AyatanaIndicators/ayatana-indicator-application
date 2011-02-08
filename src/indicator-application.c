@@ -115,12 +115,12 @@ static void disconnected (IndicatorApplication * application);
 static void disconnected_helper (gpointer data, gpointer user_data);
 static gboolean disconnected_kill (gpointer user_data);
 static void disconnected_kill_helper (gpointer data, gpointer user_data);
-static void application_added (IndicatorApplication * application, const gchar * iconname, gint position, const gchar * dbusaddress, const gchar * dbusobject, const gchar * icon_theme_path, const gchar * label, const gchar * guide, const gchar * accessible_name);
+static void application_added (IndicatorApplication * application, const gchar * iconname, gint position, const gchar * dbusaddress, const gchar * dbusobject, const gchar * icon_theme_path, const gchar * label, const gchar * guide, const gchar * accessible_desc);
 static void application_removed (IndicatorApplication * application, gint position);
 static void application_label_changed (IndicatorApplication * application, gint position, const gchar * label, const gchar * guide);
 static void application_icon_changed (IndicatorApplication * application, gint position, const gchar * iconname);
 static void application_icon_theme_path_changed (IndicatorApplication * application, gint position, const gchar * icon_theme_path);
-static void application_accessible_name_changed (IndicatorApplication * application, gint position, const gchar * accessible_name);
+static void application_accessible_desc_changed (IndicatorApplication * application, gint position, const gchar * accessible_desc);
 static void get_applications (GObject * obj, GAsyncResult * res, gpointer user_data);
 static void get_applications_helper (IndicatorApplication * self, GVariant * variant);
 static void theme_dir_unref(IndicatorApplication * ia, const gchar * dir);
@@ -451,7 +451,7 @@ guess_label_size (ApplicationEntry * app)
    ApplicationEntry and signaling the indicator host that
    we've got a new indicator. */
 static void
-application_added (IndicatorApplication * application, const gchar * iconname, gint position, const gchar * dbusaddress, const gchar * dbusobject, const gchar * icon_theme_path, const gchar * label, const gchar * guide, const gchar * accessible_name)
+application_added (IndicatorApplication * application, const gchar * iconname, gint position, const gchar * dbusaddress, const gchar * dbusobject, const gchar * icon_theme_path, const gchar * label, const gchar * guide, const gchar * accessible_desc)
 {
 	g_return_if_fail(IS_INDICATOR_APPLICATION(application));
 	g_debug("Building new application entry: %s  with icon: %s at position %i", dbusaddress, iconname, position);
@@ -500,10 +500,10 @@ application_added (IndicatorApplication * application, const gchar * iconname, g
 		guess_label_size(app);
 	}
 
-	if (accessible_name == NULL || accessible_name[0] == '\0') {
-		app->entry.accessible_name = NULL;
+	if (accessible_desc == NULL || accessible_desc[0] == '\0') {
+		app->entry.accessible_desc = NULL;
 	} else {
-		app->entry.accessible_name = g_strdup(accessible_name);
+		app->entry.accessible_desc = g_strdup(accessible_desc);
 	}
 
 	app->entry.menu = GTK_MENU(dbusmenu_gtkmenu_new((gchar *)dbusaddress, (gchar *)dbusobject));
@@ -707,10 +707,10 @@ application_icon_theme_path_changed (IndicatorApplication * application, gint po
 	return;
 }
 
-/* The callback for the signal that the accessible name for an application
-   has changed. */
+/* The callback for the signal that the accessible description for
+   an application has changed. */
 static void
-application_accessible_name_changed (IndicatorApplication * application, gint position, const gchar * accessible_name)
+application_accessible_desc_changed (IndicatorApplication * application, gint position, const gchar * accessible_desc)
 {
 	IndicatorApplicationPrivate * priv = INDICATOR_APPLICATION_GET_PRIVATE(application);
 	ApplicationEntry * app = (ApplicationEntry *)g_list_nth_data(priv->applications, position);
@@ -721,14 +721,14 @@ application_accessible_name_changed (IndicatorApplication * application, gint po
 		return;
 	}
 
-	if (accessible_name == NULL || accessible_name[0] == '\0') {
-		/* No accessible_name, let's see if we need to delete the old one */
-		if (app->entry.accessible_name != NULL) {
-			app->entry.accessible_name = NULL;
+	if (accessible_desc == NULL || accessible_desc[0] == '\0') {
+		/* No accessible_desc, let's see if we need to delete the old one */
+		if (app->entry.accessible_desc != NULL) {
+			app->entry.accessible_desc = NULL;
 			signal_reload = TRUE;
 		}
 	} else {
-		app->entry.accessible_name = g_strdup(accessible_name);
+		app->entry.accessible_desc = g_strdup(accessible_desc);
 
 		signal_reload = TRUE;
 	}
@@ -781,14 +781,14 @@ receive_signal (GDBusProxy * proxy, gchar * sender_name, gchar * signal_name,
 		const gchar * icon_theme_path;
 		const gchar * label;
 		const gchar * guide;
-		const gchar * accessible_name;
+		const gchar * accessible_desc;
 		g_variant_get (parameters, "(&si&s&o&s&s&s&s)", &iconname,
 		               &position, &dbusaddress, &dbusobject,
 		               &icon_theme_path, &label, &guide,
-		               &accessible_name);
+		               &accessible_desc);
 		application_added(self, iconname, position, dbusaddress,
 		                  dbusobject, icon_theme_path, label, guide,
-		                  accessible_name);
+		                  accessible_desc);
 	}
 	else if (g_strcmp0(signal_name, "ApplicationRemoved") == 0) {
 		gint position;
@@ -814,11 +814,11 @@ receive_signal (GDBusProxy * proxy, gchar * sender_name, gchar * signal_name,
 		g_variant_get (parameters, "(i&s&s)", &position, &label, &guide);
 		application_label_changed(self, position, label, guide);
 	}
-	else if (g_strcmp0(signal_name, "ApplicationAccessibleNameChanged") == 0) {
+	else if (g_strcmp0(signal_name, "ApplicationAccessibleDescChanged") == 0) {
 		gint position;
-		const gchar * accessible_name;
-		g_variant_get (parameters, "(i&s)", &position, &accessible_name);
-		application_accessible_name_changed(self, position, accessible_name);
+		const gchar * accessible_desc;
+		g_variant_get (parameters, "(i&s)", &position, &accessible_desc);
+		application_accessible_desc_changed(self, position, accessible_desc);
 	}
 
 	return;
@@ -863,12 +863,12 @@ get_applications_helper (IndicatorApplication * self, GVariant * variant)
 	const gchar * icon_theme_path;
 	const gchar * label;
 	const gchar * guide;
-	const gchar * accessible_name;
+	const gchar * accessible_desc;
 	g_variant_get(variant, "(sisossss)", &icon_name, &position,
 	              &dbus_address, &dbus_object, &icon_theme_path, &label,
-	              &guide, &accessible_name);
+	              &guide, &accessible_desc);
 
-	return application_added(self, icon_name, position, dbus_address, dbus_object, icon_theme_path, label, guide, accessible_name);
+	return application_added(self, icon_name, position, dbus_address, dbus_object, icon_theme_path, label, guide, accessible_desc);
 }
 
 /* Unrefs a theme directory.  This may involve removing it from

@@ -44,7 +44,7 @@ with this program.  If not, see <http://www.gnu.org/licenses/>.
 			<arg type="s" name="iconpath" direction="out" />
 			<arg type="s" name="label" direction="out" />
 			<arg type="s" name="labelguide" direction="out" />
-			<arg type="s" name="accessiblename" direction="out" />
+			<arg type="s" name="accessibledesc" direction="out" />
 		</signal>
 		<signal name="ApplicationRemoved">
 			<arg type="i" name="position" direction="out" />
@@ -62,9 +62,9 @@ with this program.  If not, see <http://www.gnu.org/licenses/>.
 			<arg type="s" name="label" direction="out" />
 			<arg type="s" name="guide" direction="out" />
 		</signal>
-		<signal name="ApplicationAccessibleNameChanged">
+		<signal name="ApplicationAccessibleDescChanged">
 			<arg type="i" name="position" direction="out" />
-			<arg type="s" name="accessible_name" direction="out" />
+			<arg type="s" name="accessible_desc" direction="out" />
 		</signal>
 	</interface>
 </node>
