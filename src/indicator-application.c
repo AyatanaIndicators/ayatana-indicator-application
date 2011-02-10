@@ -734,33 +734,9 @@ application_accessible_desc_changed (IndicatorApplication * application, gint po
 	}
 
 	if (signal_reload) {
-		/* Telling the listener that this has been removed, and then
-		   readded to make it reparse the entry. */
-		if (app->entry.label != NULL) {
-			gtk_widget_hide(GTK_WIDGET(app->entry.label));
-		}
-
-		if (app->entry.image != NULL) {
-			gtk_widget_hide(GTK_WIDGET(app->entry.image));
-		}
-
-		if (app->entry.menu != NULL) {
-			gtk_menu_detach(app->entry.menu);
-		}
-
-		g_signal_emit(G_OBJECT(application), INDICATOR_OBJECT_SIGNAL_ENTRY_REMOVED_ID, 0, &(app->entry), TRUE);
-
-		if (app->entry.label != NULL) {
-			gtk_widget_show(GTK_WIDGET(app->entry.label));
-		}
-
-		if (app->entry.image != NULL) {
-			indicator_image_helper_update(app->entry.image, app->longname);
-			gtk_widget_show(GTK_WIDGET(app->entry.image));
-		}
-
-		g_signal_emit(G_OBJECT(application), INDICATOR_OBJECT_SIGNAL_ENTRY_ADDED_ID, 0, &(app->entry), TRUE);
-	}
+		/* Unlike the label change, we don't need to remove and re-add
+		   the indicator to update the accessible description. */
+		g_signal_emit(G_OBJECT(application), INDICATOR_OBJECT_SIGNAL_ACCESSIBLE_DESC_UPDATE_ID, 0, &(app->entry), TRUE);
 
 	return;
 
