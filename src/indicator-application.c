@@ -279,7 +279,7 @@ service_proxy_cb (GObject * object, GAsyncResult * res, gpointer user_data)
 	}
 
 	if (error != NULL) {
-		g_error("Could not grab DBus proxy for %s: %s", INDICATOR_APPLICATION_DBUS_ADDR, error->message);
+		g_critical("Could not grab DBus proxy for %s: %s", INDICATOR_APPLICATION_DBUS_ADDR, error->message);
 		g_error_free(error);
 		return;
 	}
