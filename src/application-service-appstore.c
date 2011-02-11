@@ -845,6 +845,10 @@ apply_status (Application * app)
 
 			emit_signal (appstore, "ApplicationIconChanged",
 				     g_variant_new ("(is)", position, newicon));
+			emit_signal (appstore, "ApplicationLabelChanged",
+				     g_variant_new ("(iss)", position, 
+		                                    app->label != NULL ? app->label : "",
+		                                    app->guide != NULL ? app->guide : ""));
 		}
 	}
 
