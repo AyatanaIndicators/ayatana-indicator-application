@@ -1,3 +1,10 @@
+indicator-application (0.2.93-0ubuntu2) natty; urgency=low
+
+  * src/application-service-appstore.c
+    - emit LabelChanged signal along with the IconChanged signal (LP: #712581)
+
+ -- Ken VanDine <ken.vandine@canonical.com>  Fri, 11 Feb 2011 10:59:17 -0500
+
 indicator-application (0.2.93-0ubuntu1) natty; urgency=low
 
   * New upstream release.

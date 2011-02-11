@@ -24,7 +24,7 @@ with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "config.h"
 #endif
 
-#include "libindicator/indicator-object.h"
+#include <libindicator/indicator-object.h>
 #include "libappindicator/app-indicator.h"
 #include "app-indicator-enum-types.h"
 #include "application-service-appstore.h"
@@ -845,6 +845,10 @@ apply_status (Application * app)
 
 			emit_signal (appstore, "ApplicationIconChanged",
 				     g_variant_new ("(is)", position, newicon));
+			emit_signal (appstore, "ApplicationLabelChanged",
+				     g_variant_new ("(iss)", position, 
+		                                    app->label != NULL ? app->label : "",
+		                                    app->guide != NULL ? app->guide : ""));
 		}
 	}
 
