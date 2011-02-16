@@ -163,7 +163,7 @@ application_service_appstore_class_init (ApplicationServiceAppstoreClass *klass)
 
 		node_info = g_dbus_node_info_new_for_xml(_application_service, &error);
 		if (error != NULL) {
-			g_error("Unable to parse Application Service Interface description: %s", error->message);
+			g_critical("Unable to parse Application Service Interface description: %s", error->message);
 			g_error_free(error);
 		}
 	}
@@ -172,7 +172,7 @@ application_service_appstore_class_init (ApplicationServiceAppstoreClass *klass)
 		interface_info = g_dbus_node_info_lookup_interface(node_info, INDICATOR_APPLICATION_DBUS_IFACE);
 
 		if (interface_info == NULL) {
-			g_error("Unable to find interface '" INDICATOR_APPLICATION_DBUS_IFACE "'");
+			g_critical("Unable to find interface '" INDICATOR_APPLICATION_DBUS_IFACE "'");
 		}
 	}
 
@@ -215,7 +215,7 @@ bus_get_cb (GObject * object, GAsyncResult * res, gpointer user_data)
 	GDBusConnection * connection = g_bus_get_finish(res, &error);
 
 	if (error != NULL) {
-		g_error("OMG! Unable to get a connection to DBus: %s", error->message);
+		g_critical("OMG! Unable to get a connection to DBus: %s", error->message);
 		g_error_free(error);
 		return;
 	}
@@ -240,7 +240,7 @@ bus_get_cb (GObject * object, GAsyncResult * res, gpointer user_data)
 	                                                            &error);
 
 	if (error != NULL) {
-		g_error("Unable to register the object to DBus: %s", error->message);
+		g_critical("Unable to register the object to DBus: %s", error->message);
 		g_error_free(error);
 		return;
 	}
@@ -441,7 +441,7 @@ got_all_properties (GObject * source_object, GAsyncResult * res,
 	}
 
 	if (error != NULL) {
-		g_error("Could not grab DBus properties for %s: %s", app->dbus_name, error->message);
+		g_critical("Could not grab DBus properties for %s: %s", app->dbus_name, error->message);
 		g_error_free(error);
 		if (!app->validated)
 			application_free(app);
@@ -773,7 +773,7 @@ emit_signal (ApplicationServiceAppstore * appstore, const gchar * name,
 		                       &error);
 
 	if (error != NULL) {
-		g_error("Unable to send %s signal: %s", name, error->message);
+		g_critical("Unable to send %s signal: %s", name, error->message);
 		g_error_free(error);
 		return;
 	}
@@ -1025,7 +1025,7 @@ dbus_proxy_cb (GObject * object, GAsyncResult * res, gpointer user_data)
 	}
 
 	if (error != NULL) {
-		g_error("Could not grab DBus proxy for %s: %s", app->dbus_name, error->message);
+		g_critical("Could not grab DBus proxy for %s: %s", app->dbus_name, error->message);
 		g_error_free(error);
 		application_free(app);
 		return;
@@ -1081,7 +1081,7 @@ props_cb (GObject * object, GAsyncResult * res, gpointer user_data)
 	}
 
 	if (error != NULL) {
-		g_error("Could not grab Properties DBus proxy for %s: %s", app->dbus_name, error->message);
+		g_critical("Could not grab Properties DBus proxy for %s: %s", app->dbus_name, error->message);
 		g_error_free(error);
 		application_free(app);
 		return;
@@ -1420,7 +1420,7 @@ approver_proxy_cb (GObject * object, GAsyncResult * res, gpointer user_data)
 	}
 
 	if (error != NULL) {
-		g_error("Could not grab DBus proxy for approver: %s", error->message);
+		g_critical("Could not grab DBus proxy for approver: %s", error->message);
 		g_error_free(error);
 		return;
 	}
