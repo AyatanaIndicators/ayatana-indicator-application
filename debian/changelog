@@ -1,3 +1,10 @@
+indicator-application (0.2.93-0ubuntu3) natty; urgency=low
+
+  * debian/control
+    - bump build depends for libindicator-dev to >= 0.3.19
+
+ -- Ken VanDine <ken.vandine@canonical.com>  Thu, 17 Feb 2011 15:01:57 -0500
+
 indicator-application (0.2.93-0ubuntu2) natty; urgency=low
 
   * src/application-service-appstore.c
