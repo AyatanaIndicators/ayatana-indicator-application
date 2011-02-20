@@ -279,7 +279,7 @@ service_proxy_cb (GObject * object, GAsyncResult * res, gpointer user_data)
 	}
 
 	if (error != NULL) {
-		g_error("Could not grab DBus proxy for %s: %s", INDICATOR_APPLICATION_DBUS_ADDR, error->message);
+		g_critical("Could not grab DBus proxy for %s: %s", INDICATOR_APPLICATION_DBUS_ADDR, error->message);
 		g_error_free(error);
 		return;
 	}
@@ -456,7 +456,7 @@ application_added (IndicatorApplication * application, const gchar * iconname, g
 	g_debug("Building new application entry: %s  with icon: %s at position %i", dbusaddress, iconname, position);
 	IndicatorApplicationPrivate * priv = INDICATOR_APPLICATION_GET_PRIVATE(application);
 
-	ApplicationEntry * app = g_new(ApplicationEntry, 1);
+	ApplicationEntry * app = g_new0(ApplicationEntry, 1);
 
 	app->old_service = FALSE;
 	app->icon_theme_path = NULL;
