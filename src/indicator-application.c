@@ -456,7 +456,7 @@ application_added (IndicatorApplication * application, const gchar * iconname, g
 	g_debug("Building new application entry: %s  with icon: %s at position %i", dbusaddress, iconname, position);
 	IndicatorApplicationPrivate * priv = INDICATOR_APPLICATION_GET_PRIVATE(application);
 
-	ApplicationEntry * app = g_new(ApplicationEntry, 1);
+	ApplicationEntry * app = g_new0(ApplicationEntry, 1);
 
 	app->old_service = FALSE;
 	app->icon_theme_path = NULL;
