@@ -737,6 +737,7 @@ application_accessible_desc_changed (IndicatorApplication * application, gint po
 		/* Unlike the label change, we don't need to remove and re-add
 		   the indicator to update the accessible description. */
 		g_signal_emit(G_OBJECT(application), INDICATOR_OBJECT_SIGNAL_ACCESSIBLE_DESC_UPDATE_ID, 0, &(app->entry), TRUE);
+	}
 
 	return;
 
