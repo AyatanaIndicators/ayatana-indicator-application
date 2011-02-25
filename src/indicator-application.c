@@ -118,9 +118,8 @@ static void disconnected_kill_helper (gpointer data, gpointer user_data);
 static void application_added (IndicatorApplication * application, const gchar * iconname, gint position, const gchar * dbusaddress, const gchar * dbusobject, const gchar * icon_theme_path, const gchar * label, const gchar * guide, const gchar * accessible_desc);
 static void application_removed (IndicatorApplication * application, gint position);
 static void application_label_changed (IndicatorApplication * application, gint position, const gchar * label, const gchar * guide);
-static void application_icon_changed (IndicatorApplication * application, gint position, const gchar * iconname);
+static void application_icon_changed (IndicatorApplication * application, gint position, const gchar * iconname, const gchar * icondesc);
 static void application_icon_theme_path_changed (IndicatorApplication * application, gint position, const gchar * icon_theme_path);
-static void application_accessible_desc_changed (IndicatorApplication * application, gint position, const gchar * accessible_desc);
 static void get_applications (GObject * obj, GAsyncResult * res, gpointer user_data);
 static void get_applications_helper (IndicatorApplication * self, GVariant * variant);
 static void theme_dir_unref(IndicatorApplication * ia, const gchar * dir);
@@ -651,13 +650,18 @@ application_label_changed (IndicatorApplication * application, gint position, co
 /* The callback for the signal that the icon for an application
    has changed. */
 static void
-application_icon_changed (IndicatorApplication * application, gint position, const gchar * iconname)
+application_icon_changed (IndicatorApplication * application, gint position, const gchar * iconname, const gchar * icondesc)
 {
 	IndicatorApplicationPrivate * priv = INDICATOR_APPLICATION_GET_PRIVATE(application);
 	ApplicationEntry * app = (ApplicationEntry *)g_list_nth_data(priv->applications, position);
 
 	if (app == NULL) {
 		g_warning("Unable to find application at position: %d", position);
+		return;
+	}
+
+	if (iconname == NULL) {
+		g_warning("We can't have a NULL icon name on %d", position);
 		return;
 	}
 
@@ -674,6 +678,19 @@ application_icon_changed (IndicatorApplication * application, gint position, con
 		app->longname = g_strdup(iconname);
 	}
 	indicator_image_helper_update(app->entry.image, app->longname);
+
+	if (g_strcmp0(app->entry.accessible_desc, icondesc) != 0) {
+		if (app->entry.accessible_desc != NULL) {
+			g_free((gchar *)app->entry.accessible_desc);
+			app->entry.accessible_desc = NULL;
+		}
+
+		if (icondesc != NULL && icondesc[0] != '\0') {
+			app->entry.accessible_desc = g_strdup(icondesc);
+		}
+
+		g_signal_emit(G_OBJECT(application), INDICATOR_OBJECT_SIGNAL_ACCESSIBLE_DESC_UPDATE_ID, 0, &(app->entry), TRUE);
+	}
 
 	return;
 }
@@ -705,42 +722,6 @@ application_icon_theme_path_changed (IndicatorApplication * application, gint po
 	}
 
 	return;
-}
-
-/* The callback for the signal that the accessible description for
-   an application has changed. */
-static void
-application_accessible_desc_changed (IndicatorApplication * application, gint position, const gchar * accessible_desc)
-{
-	IndicatorApplicationPrivate * priv = INDICATOR_APPLICATION_GET_PRIVATE(application);
-	ApplicationEntry * app = (ApplicationEntry *)g_list_nth_data(priv->applications, position);
-	gboolean signal_reload = FALSE;
-
-	if (app == NULL) {
-		g_warning("Unable to find application at position: %d", position);
-		return;
-	}
-
-	if (accessible_desc == NULL || accessible_desc[0] == '\0') {
-		/* No accessible_desc, let's see if we need to delete the old one */
-		if (app->entry.accessible_desc != NULL) {
-			app->entry.accessible_desc = NULL;
-			signal_reload = TRUE;
-		}
-	} else {
-		app->entry.accessible_desc = g_strdup(accessible_desc);
-
-		signal_reload = TRUE;
-	}
-
-	if (signal_reload) {
-		/* Unlike the label change, we don't need to remove and re-add
-		   the indicator to update the accessible description. */
-		g_signal_emit(G_OBJECT(application), INDICATOR_OBJECT_SIGNAL_ACCESSIBLE_DESC_UPDATE_ID, 0, &(app->entry), TRUE);
-	}
-
-	return;
-
 }
 
 /* Receives all signals from the service, routed to the appropriate functions */
@@ -775,8 +756,9 @@ receive_signal (GDBusProxy * proxy, gchar * sender_name, gchar * signal_name,
 	else if (g_strcmp0(signal_name, "ApplicationIconChanged") == 0) {
 		gint position;
 		const gchar * iconname;
-		g_variant_get (parameters, "(i&s)", &position, &iconname);
-		application_icon_changed(self, position, iconname);
+		const gchar * icondesc;
+		g_variant_get (parameters, "(i&s&s)", &position, &iconname, &icondesc);
+		application_icon_changed(self, position, iconname, icondesc);
 	}
 	else if (g_strcmp0(signal_name, "ApplicationIconThemePathChanged") == 0) {
 		gint position;
@@ -790,12 +772,6 @@ receive_signal (GDBusProxy * proxy, gchar * sender_name, gchar * signal_name,
 		const gchar * guide;
 		g_variant_get (parameters, "(i&s&s)", &position, &label, &guide);
 		application_label_changed(self, position, label, guide);
-	}
-	else if (g_strcmp0(signal_name, "ApplicationAccessibleDescChanged") == 0) {
-		gint position;
-		const gchar * accessible_desc;
-		g_variant_get (parameters, "(i&s)", &position, &accessible_desc);
-		application_accessible_desc_changed(self, position, accessible_desc);
 	}
 
 	return;
