@@ -1,9 +1,9 @@
-indicator-application (0.2.93-0ubuntu5~ppa1) UNRELEASED; urgency=low
+indicator-application (0.2.93-0ubuntu5~ppa1) natty; urgency=low
 
   * Upstream Merge
     * Adding in support for Accssible Descriptions
 
- -- Ted Gould <ted@ubuntu.com>  Thu, 24 Feb 2011 21:55:24 -0600
+ -- Ted Gould <ted@ubuntu.com>  Thu, 24 Feb 2011 21:57:35 -0600
 
 indicator-application (0.2.93-0ubuntu4) natty; urgency=low
 
