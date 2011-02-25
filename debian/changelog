@@ -1,3 +1,12 @@
+indicator-application (0.2.94-0ubuntu2) natty; urgency=low
+
+  * debian/control, debian/rules:
+    - Add quilt as a patch system
+  * debian/patches/fix-null-string-to-variant-crash.patch:
+    - Don't pass a null string to GVariant, it hates it.  LP: #724767
+
+ -- Michael Terry <mterry@ubuntu.com>  Fri, 25 Feb 2011 08:53:58 -0500
+
 indicator-application (0.2.94-0ubuntu1) natty; urgency=low
 
   * New upstream release.

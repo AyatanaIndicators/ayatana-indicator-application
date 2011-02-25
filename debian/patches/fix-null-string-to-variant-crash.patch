@@ -1,0 +1,19 @@
+=== modified file 'src/application-service-appstore.c'
+Index: indicator-application.ubu/src/application-service-appstore.c
+===================================================================
+--- indicator-application.ubu.orig/src/application-service-appstore.c	2011-02-25 08:50:32.170749000 -0500
++++ indicator-application.ubu/src/application-service-appstore.c	2011-02-25 08:53:26.313552982 -0500
+@@ -1238,9 +1238,10 @@
+ 			}
+ 
+ 			g_variant_builder_add (&builder, "(sisossss)", app->icon,
+-								   position++, app->dbus_name, app->menu,
+-								   app->icon_theme_path, app->label,
+-								   app->guide, app->icon_desc);
++			                       position++, app->dbus_name, app->menu,
++			                       app->icon_theme_path, app->label,
++			                       app->guide,
++			                       (app->icon_desc != NULL) ? app->icon_desc : "");
+ 		}
+ 
+ 		out = g_variant_builder_end(&builder);
