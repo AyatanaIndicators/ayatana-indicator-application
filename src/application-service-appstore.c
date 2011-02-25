@@ -1238,9 +1238,10 @@ get_applications (ApplicationServiceAppstore * appstore)
 			}
 
 			g_variant_builder_add (&builder, "(sisossss)", app->icon,
-								   position++, app->dbus_name, app->menu,
-								   app->icon_theme_path, app->label,
-								   app->guide, app->icon_desc);
+			                       position++, app->dbus_name, app->menu,
+			                       app->icon_theme_path, app->label,
+			                       app->guide,
+			                       (app->icon_desc != NULL) ? app->icon_desc : "");
 		}
 
 		out = g_variant_builder_end(&builder);
