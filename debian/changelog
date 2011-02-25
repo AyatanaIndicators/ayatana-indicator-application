@@ -1,3 +1,13 @@
+indicator-application (0.2.94-0ubuntu1) natty; urgency=low
+
+  * New upstream release.
+    * Adding in support for Accssible Descriptions
+    * Make the accessible description NULL so that indicator-applet doesn't 
+      crash (LP: #721533)
+    * emit LabelChanged signal along with the IconChanged signal (LP: #712581)
+
+ -- Ted Gould <ted@ubuntu.com>  Thu, 24 Feb 2011 22:13:26 -0600
+
 indicator-application (0.2.93-0ubuntu4) natty; urgency=low
 
   * Make the accessible description NULL so that indicator-applet doesn't 

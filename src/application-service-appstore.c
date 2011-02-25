@@ -43,7 +43,9 @@ static void props_cb (GObject * object, GAsyncResult * res, gpointer user_data);
 #define NOTIFICATION_ITEM_PROP_CATEGORY              "Category"
 #define NOTIFICATION_ITEM_PROP_STATUS                "Status"
 #define NOTIFICATION_ITEM_PROP_ICON_NAME             "IconName"
+#define NOTIFICATION_ITEM_PROP_ICON_DESC             "IconAccessibleDesc"
 #define NOTIFICATION_ITEM_PROP_AICON_NAME            "AttentionIconName"
+#define NOTIFICATION_ITEM_PROP_AICON_DESC            "AttentionAccessibleDesc"
 #define NOTIFICATION_ITEM_PROP_ICON_THEME_PATH       "IconThemePath"
 #define NOTIFICATION_ITEM_PROP_MENU                  "Menu"
 #define NOTIFICATION_ITEM_PROP_LABEL                 "XAyatanaLabel"
@@ -99,7 +101,9 @@ struct _Application {
 	gboolean validated; /* Whether we've gotten all the parameters and they look good. */
 	AppIndicatorStatus status;
 	gchar * icon;
+	gchar * icon_desc;
 	gchar * aicon;
+	gchar * aicon_desc;
 	gchar * menu;
 	gchar * icon_theme_path;
 	gchar * label;
@@ -430,6 +434,7 @@ got_all_properties (GObject * source_object, GAsyncResult * res,
 	ApplicationServiceAppstorePrivate * priv = app->appstore->priv;
 	GVariant * menu = NULL, * id = NULL, * category = NULL,
 	         * status = NULL, * icon_name = NULL, * aicon_name = NULL,
+	         * icon_desc = NULL, * aicon_desc = NULL,
 	         * icon_theme_path = NULL, * index = NULL, * label = NULL,
 	         * guide = NULL;
 
@@ -464,8 +469,12 @@ got_all_properties (GObject * source_object, GAsyncResult * res,
 			status = g_variant_ref(value);
 		} else if (g_strcmp0(name, NOTIFICATION_ITEM_PROP_ICON_NAME) == 0) {
 			icon_name = g_variant_ref(value);
+		} else if (g_strcmp0(name, NOTIFICATION_ITEM_PROP_ICON_DESC) == 0) {
+			icon_desc = g_variant_ref(value);
 		} else if (g_strcmp0(name, NOTIFICATION_ITEM_PROP_AICON_NAME) == 0) {
 			aicon_name = g_variant_ref(value);
+		} else if (g_strcmp0(name, NOTIFICATION_ITEM_PROP_AICON_DESC) == 0) {
+			aicon_desc = g_variant_ref(value);
 		} else if (g_strcmp0(name, NOTIFICATION_ITEM_PROP_ICON_THEME_PATH) == 0) {
 			icon_theme_path = g_variant_ref(value);
 		} else if (g_strcmp0(name, NOTIFICATION_ITEM_PROP_ORDERING_INDEX) == 0) {
@@ -543,7 +552,9 @@ got_all_properties (GObject * source_object, GAsyncResult * res,
 	if (category)        g_variant_unref (category);
 	if (status)          g_variant_unref (status);
 	if (icon_name)       g_variant_unref (icon_name);
+	if (icon_desc)       g_variant_unref (icon_desc);
 	if (aicon_name)      g_variant_unref (aicon_name);
+	if (aicon_desc)      g_variant_unref (aicon_desc);
 	if (icon_theme_path) g_variant_unref (icon_theme_path);
 	if (index)           g_variant_unref (index);
 	if (label)           g_variant_unref (label);
@@ -707,8 +718,11 @@ application_free (Application * app)
 	if (app->icon != NULL) {
 		g_free(app->icon);
 	}
-	if (app->aicon != NULL) {
-		g_free(app->aicon);
+	if (app->icon_desc != NULL) {
+		g_free(app->icon_desc);
+	}
+	if (app->aicon_desc != NULL) {
+		g_free(app->aicon_desc);
 	}
 	if (app->menu != NULL) {
 		g_free(app->menu);
@@ -825,26 +839,33 @@ apply_status (Application * app)
 	} else {
 		/* Figure out which icon we should be using */
 		gchar * newicon = app->icon;
+		gchar * newdesc = app->icon_desc;
 		if (app->status == APP_INDICATOR_STATUS_ATTENTION && app->aicon != NULL && app->aicon[0] != '\0') {
 			newicon = app->aicon;
+			newdesc = app->aicon_desc;
+		}
+
+		if (newdesc == NULL) {
+			newdesc = "";
 		}
 
 		/* Determine whether we're already shown or not */
 		if (app->visible_state == VISIBLE_STATE_HIDDEN) {
 			/* Put on panel */
 			emit_signal (appstore, "ApplicationAdded",
-				     g_variant_new ("(sisosss)", newicon,
+				     g_variant_new ("(sisossss)", newicon,
 			                            get_position(app),
 			                            app->dbus_name, app->menu,
 			                            app->icon_theme_path,
-			                            app->label, app->guide));
+			                            app->label, app->guide,
+			                            newdesc));
 		} else {
 			/* Icon update */
 			gint position = get_position(app);
 			if (position == -1) return;
 
 			emit_signal (appstore, "ApplicationIconChanged",
-				     g_variant_new ("(is)", position, newicon));
+				     g_variant_new ("(iss)", position, newicon, newdesc));
 			emit_signal (appstore, "ApplicationLabelChanged",
 				     g_variant_new ("(iss)", position, 
 		                                    app->label != NULL ? app->label : "",
@@ -1216,18 +1237,18 @@ get_applications (ApplicationServiceAppstore * appstore)
 				continue;
 			}
 
-			g_variant_builder_add (&builder, "(sisosss)", app->icon,
+			g_variant_builder_add (&builder, "(sisossss)", app->icon,
 								   position++, app->dbus_name, app->menu,
 								   app->icon_theme_path, app->label,
-								   app->guide);
+								   app->guide, app->icon_desc);
 		}
 
 		out = g_variant_builder_end(&builder);
 	} else {
 		GError * error = NULL;
-		out = g_variant_parse(g_variant_type_new("a(sisosss)"), "[]", NULL, NULL, &error);
+		out = g_variant_parse(g_variant_type_new("a(sisossss)"), "[]", NULL, NULL, &error);
 		if (error != NULL) {
-			g_warning("Unable to parse '[]' as a 'a(sisosss)': %s", error->message);
+			g_warning("Unable to parse '[]' as a 'a(sisossss)': %s", error->message);
 			out = NULL;
 			g_error_free(error);
 		}
