@@ -845,6 +845,10 @@ apply_status (Application * app)
 			newdesc = app->aicon_desc;
 		}
 
+		if (newdesc == NULL) {
+			newdesc = "";
+		}
+
 		/* Determine whether we're already shown or not */
 		if (app->visible_state == VISIBLE_STATE_HIDDEN) {
 			/* Put on panel */
