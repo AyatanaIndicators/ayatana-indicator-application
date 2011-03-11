@@ -823,13 +823,15 @@ get_applications (GObject * obj, GAsyncResult * res, gpointer user_data)
 	GVariant * child;
 	GVariantIter * iter;
 
+	result = g_dbus_proxy_call_finish(priv->service_proxy, res, &error);
+
 	/* No one can cancel us anymore, we've completed! */
 	if (priv->get_apps_cancel != NULL) {
-		g_object_unref(priv->get_apps_cancel);
-		priv->get_apps_cancel = NULL;
+		if (error == NULL || error->domain != G_IO_ERROR || error->code != G_IO_ERROR_CANCELLED) {
+			g_object_unref(priv->get_apps_cancel);
+			priv->get_apps_cancel = NULL;
+		}
 	}
-
-	result = g_dbus_proxy_call_finish(priv->service_proxy, res, &error);
 
 	if (error != NULL) {
 		g_warning("Unable to get application list: %s", error->message);
