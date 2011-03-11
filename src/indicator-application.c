@@ -835,13 +835,17 @@ get_applications (GObject * obj, GAsyncResult * res, gpointer user_data)
 
 	if (error != NULL) {
 		g_warning("Unable to get application list: %s", error->message);
+		g_error_free(error);
 		return;
 	}
 
 	g_variant_get(result, "(a(sisossss))", &iter);
-	while ((child = g_variant_iter_next_value (iter)))
+	while ((child = g_variant_iter_next_value (iter))) {
 		get_applications_helper(self, child);
+		g_variant_unref(child);
+	}
 	g_variant_iter_free (iter);
+	g_variant_unref(result);
 
 	return;
 }
