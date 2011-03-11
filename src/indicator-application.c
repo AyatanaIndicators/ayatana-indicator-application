@@ -86,6 +86,7 @@ struct _IndicatorApplicationPrivate {
 	GList * applications;
 	GHashTable * theme_dirs;
 	guint disconnect_kill;
+	GCancellable * get_apps_cancel;
 };
 
 typedef struct _ApplicationEntry ApplicationEntry;
@@ -166,6 +167,8 @@ indicator_application_init (IndicatorApplication *self)
 
 	priv->theme_dirs = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
 
+	priv->get_apps_cancel = NULL;
+
 	return;
 }
 
@@ -176,6 +179,12 @@ indicator_application_dispose (GObject *object)
 
 	if (priv->disconnect_kill != 0) {
 		g_source_remove(priv->disconnect_kill);
+	}
+
+	if (priv->get_apps_cancel != NULL) {
+		g_cancellable_cancel(priv->get_apps_cancel);
+		/* The callback should clear the cancelable */
+		g_warn_if_fail(priv->get_apps_cancel == NULL);
 	}
 
 	while (priv->applications != NULL) {
@@ -290,10 +299,20 @@ service_proxy_cb (GObject * object, GAsyncResult * res, gpointer user_data)
 
 	g_signal_connect(proxy, "g-signal", G_CALLBACK(receive_signal), self);
 
+	/* We shouldn't be in a situation where we've already
+	   called this function.  It doesn't *hurt* anything, but
+	   man we should look into it more. */
+	if (priv->get_apps_cancel != NULL) {
+		g_warning("Already getting applications?  Odd.");
+		return;
+	}
+
+	priv->get_apps_cancel = g_cancellable_new();
+
 	/* Query it for existing applications */
 	g_debug("Request current apps");
 	g_dbus_proxy_call(priv->service_proxy, "GetApplications", NULL,
-	                  G_DBUS_CALL_FLAGS_NONE, -1, NULL,
+	                  G_DBUS_CALL_FLAGS_NONE, -1, priv->get_apps_cancel,
 	                  get_applications, self);
 
 	return;
@@ -788,6 +807,12 @@ get_applications (GObject * obj, GAsyncResult * res, gpointer user_data)
 	GVariant * result;
 	GVariant * child;
 	GVariantIter * iter;
+
+	/* No one can cancel us anymore, we've completed! */
+	if (priv->get_apps_cancel != NULL) {
+		g_object_unref(priv->get_apps_cancel);
+		priv->get_apps_cancel = NULL;
+	}
 
 	result = g_dbus_proxy_call_finish(priv->service_proxy, res, &error);
 
