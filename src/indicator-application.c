@@ -749,6 +749,21 @@ receive_signal (GDBusProxy * proxy, gchar * sender_name, gchar * signal_name,
                 GVariant * parameters, gpointer user_data)
 {
 	IndicatorApplication * self = INDICATOR_APPLICATION(user_data);
+	IndicatorApplicationPrivate * priv = INDICATOR_APPLICATION_GET_PRIVATE(self);
+
+	/* If we're in the middle of a GetApplications call and we get
+	   any of these our state is probably going to just be confused.  Let's
+	   cancel the call we had and try again to try and get a clear answer */
+	if (priv->get_apps_cancel != NULL) {
+		g_cancelable_cancel(priv->get_apps_cancel);
+		g_object_unref(priv->get_apps_cancel);
+
+		priv->get_apps_cancel = g_cancellable_new();
+
+		g_dbus_proxy_call(priv->service_proxy, "GetApplications", NULL,
+		                  G_DBUS_CALL_FLAGS_NONE, -1, priv->get_apps_cancel,
+		                  get_applications, self);
+	}
 
 	if (g_strcmp0(signal_name, "ApplicationAdded") == 0) {
 		const gchar * iconname;
