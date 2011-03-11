@@ -763,6 +763,7 @@ receive_signal (GDBusProxy * proxy, gchar * sender_name, gchar * signal_name,
 		g_dbus_proxy_call(priv->service_proxy, "GetApplications", NULL,
 		                  G_DBUS_CALL_FLAGS_NONE, -1, priv->get_apps_cancel,
 		                  get_applications, self);
+		return;
 	}
 
 	if (g_strcmp0(signal_name, "ApplicationAdded") == 0) {
