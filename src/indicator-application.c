@@ -183,8 +183,8 @@ indicator_application_dispose (GObject *object)
 
 	if (priv->get_apps_cancel != NULL) {
 		g_cancellable_cancel(priv->get_apps_cancel);
-		/* The callback should clear the cancelable */
-		g_warn_if_fail(priv->get_apps_cancel == NULL);
+		g_object_unref(priv->get_apps_cancel);
+		priv->get_apps_cancel = NULL;
 	}
 
 	while (priv->applications != NULL) {
@@ -755,7 +755,7 @@ receive_signal (GDBusProxy * proxy, gchar * sender_name, gchar * signal_name,
 	   any of these our state is probably going to just be confused.  Let's
 	   cancel the call we had and try again to try and get a clear answer */
 	if (priv->get_apps_cancel != NULL) {
-		g_cancelable_cancel(priv->get_apps_cancel);
+		g_cancellable_cancel(priv->get_apps_cancel);
 		g_object_unref(priv->get_apps_cancel);
 
 		priv->get_apps_cancel = g_cancellable_new();
