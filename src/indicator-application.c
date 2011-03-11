@@ -833,12 +833,20 @@ get_applications (GObject * obj, GAsyncResult * res, gpointer user_data)
 		}
 	}
 
+	/* If we got an error, print it and exit out */
 	if (error != NULL) {
 		g_warning("Unable to get application list: %s", error->message);
 		g_error_free(error);
 		return;
 	}
 
+	/* Remove all applications that we previously had
+	   as we're going to repopulate the list. */
+	while (priv->applications != NULL) {
+		application_removed(self, 0);
+	}
+
+	/* Get our new applications that we got in the request */
 	g_variant_get(result, "(a(sisossss))", &iter);
 	while ((child = g_variant_iter_next_value (iter))) {
 		get_applications_helper(self, child);
