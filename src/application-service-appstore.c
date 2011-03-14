@@ -525,6 +525,7 @@ got_all_properties (GObject * source_object, GAsyncResult * res,
 			app->ordering_index = GPOINTER_TO_UINT(ordering_index_over);
 		}
 		g_debug("'%s' ordering index is '%X'", app->id, app->ordering_index);
+		app->appstore->priv->applications = g_list_sort_with_data(app->appstore->priv->applications, app_sort_func, NULL);
 
 		if (label != NULL) {
 			app->label = g_variant_dup_string(label, NULL);
