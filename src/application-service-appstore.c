@@ -486,6 +486,7 @@ got_all_properties (GObject * source_object, GAsyncResult * res,
 		} /* else ignore */
 	}
 	g_variant_iter_free (iter);
+	g_variant_unref(properties);
 
 	if (menu == NULL || id == NULL || category == NULL || status == NULL ||
 	    icon_name == NULL) {
