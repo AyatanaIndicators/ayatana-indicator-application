@@ -374,6 +374,7 @@ load_override_file (GHashTable * hash, const gchar * filename)
 	g_return_if_fail(filename != NULL);
 
 	if (!g_file_test(filename, G_FILE_TEST_EXISTS)) {
+		g_debug("Override file '%s' doesn't exist");
 		return;
 	}
 
