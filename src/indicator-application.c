@@ -86,6 +86,7 @@ struct _IndicatorApplicationPrivate {
 	GList * applications;
 	GHashTable * theme_dirs;
 	guint disconnect_kill;
+	GCancellable * get_apps_cancel;
 };
 
 typedef struct _ApplicationEntry ApplicationEntry;
@@ -166,6 +167,8 @@ indicator_application_init (IndicatorApplication *self)
 
 	priv->theme_dirs = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
 
+	priv->get_apps_cancel = NULL;
+
 	return;
 }
 
@@ -176,6 +179,12 @@ indicator_application_dispose (GObject *object)
 
 	if (priv->disconnect_kill != 0) {
 		g_source_remove(priv->disconnect_kill);
+	}
+
+	if (priv->get_apps_cancel != NULL) {
+		g_cancellable_cancel(priv->get_apps_cancel);
+		g_object_unref(priv->get_apps_cancel);
+		priv->get_apps_cancel = NULL;
 	}
 
 	while (priv->applications != NULL) {
@@ -290,10 +299,20 @@ service_proxy_cb (GObject * object, GAsyncResult * res, gpointer user_data)
 
 	g_signal_connect(proxy, "g-signal", G_CALLBACK(receive_signal), self);
 
+	/* We shouldn't be in a situation where we've already
+	   called this function.  It doesn't *hurt* anything, but
+	   man we should look into it more. */
+	if (priv->get_apps_cancel != NULL) {
+		g_warning("Already getting applications?  Odd.");
+		return;
+	}
+
+	priv->get_apps_cancel = g_cancellable_new();
+
 	/* Query it for existing applications */
 	g_debug("Request current apps");
 	g_dbus_proxy_call(priv->service_proxy, "GetApplications", NULL,
-	                  G_DBUS_CALL_FLAGS_NONE, -1, NULL,
+	                  G_DBUS_CALL_FLAGS_NONE, -1, priv->get_apps_cancel,
 	                  get_applications, self);
 
 	return;
@@ -730,6 +749,22 @@ receive_signal (GDBusProxy * proxy, gchar * sender_name, gchar * signal_name,
                 GVariant * parameters, gpointer user_data)
 {
 	IndicatorApplication * self = INDICATOR_APPLICATION(user_data);
+	IndicatorApplicationPrivate * priv = INDICATOR_APPLICATION_GET_PRIVATE(self);
+
+	/* If we're in the middle of a GetApplications call and we get
+	   any of these our state is probably going to just be confused.  Let's
+	   cancel the call we had and try again to try and get a clear answer */
+	if (priv->get_apps_cancel != NULL) {
+		g_cancellable_cancel(priv->get_apps_cancel);
+		g_object_unref(priv->get_apps_cancel);
+
+		priv->get_apps_cancel = g_cancellable_new();
+
+		g_dbus_proxy_call(priv->service_proxy, "GetApplications", NULL,
+		                  G_DBUS_CALL_FLAGS_NONE, -1, priv->get_apps_cancel,
+		                  get_applications, self);
+		return;
+	}
 
 	if (g_strcmp0(signal_name, "ApplicationAdded") == 0) {
 		const gchar * iconname;
@@ -791,15 +826,35 @@ get_applications (GObject * obj, GAsyncResult * res, gpointer user_data)
 
 	result = g_dbus_proxy_call_finish(priv->service_proxy, res, &error);
 
+	/* No one can cancel us anymore, we've completed! */
+	if (priv->get_apps_cancel != NULL) {
+		if (error == NULL || error->domain != G_IO_ERROR || error->code != G_IO_ERROR_CANCELLED) {
+			g_object_unref(priv->get_apps_cancel);
+			priv->get_apps_cancel = NULL;
+		}
+	}
+
+	/* If we got an error, print it and exit out */
 	if (error != NULL) {
 		g_warning("Unable to get application list: %s", error->message);
+		g_error_free(error);
 		return;
 	}
 
+	/* Remove all applications that we previously had
+	   as we're going to repopulate the list. */
+	while (priv->applications != NULL) {
+		application_removed(self, 0);
+	}
+
+	/* Get our new applications that we got in the request */
 	g_variant_get(result, "(a(sisossss))", &iter);
-	while ((child = g_variant_iter_next_value (iter)))
+	while ((child = g_variant_iter_next_value (iter))) {
 		get_applications_helper(self, child);
+		g_variant_unref(child);
+	}
 	g_variant_iter_free (iter);
+	g_variant_unref(result);
 
 	return;
 }
