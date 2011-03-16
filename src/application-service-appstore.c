@@ -438,7 +438,7 @@ got_all_properties (GObject * source_object, GAsyncResult * res,
 	         * icon_theme_path = NULL, * index = NULL, * label = NULL,
 	         * guide = NULL;
 
-	GVariant * properties = g_dbus_proxy_call_finish(app->props, res, &error);
+	GVariant * properties = g_dbus_proxy_call_finish(G_DBUS_PROXY(source_object), res, &error);
 
 	if (app->props_cancel != NULL) {
 		g_object_unref(app->props_cancel);
