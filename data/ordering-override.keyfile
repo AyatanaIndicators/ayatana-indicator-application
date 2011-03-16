@@ -1,5 +1,6 @@
 [Ordering Index Overrides]
-gnome-power-manager=1
-gst-keyboard-xkb=2
-gsd-keyboard-xkb=3
-ibus=4
+nm_applet=1
+gnome-power-manager=2
+ibus=3
+gst-keyboard-xkb=4
+gsd-keyboard-xkb=5
