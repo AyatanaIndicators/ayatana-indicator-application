@@ -1,4 +1,4 @@
-indicator-application (0.2.95-0ubuntu1~ppa1) UNRELEASED; urgency=low
+indicator-application (0.2.95-0ubuntu1~ppa1) natty; urgency=low
 
   * New upstream release.
     ∘ Fix ordering of indicators
@@ -7,7 +7,7 @@ indicator-application (0.2.95-0ubuntu1~ppa1) UNRELEASED; urgency=low
     ∘ Protect from the accessible description being NULL. (LP: #724767)
   * Drop debian/patches/fix-null-string-to-variant-crash.patch
 
- -- Ted Gould <ted@ubuntu.com>  Wed, 16 Mar 2011 14:49:34 -0500
+ -- Ted Gould <ted@ubuntu.com>  Wed, 16 Mar 2011 14:50:37 -0500
 
 indicator-application (0.2.94-0ubuntu2) natty; urgency=low
 
