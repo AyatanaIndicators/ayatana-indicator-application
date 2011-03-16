@@ -374,6 +374,7 @@ load_override_file (GHashTable * hash, const gchar * filename)
 	g_return_if_fail(filename != NULL);
 
 	if (!g_file_test(filename, G_FILE_TEST_EXISTS)) {
+		g_debug("Override file '%s' doesn't exist", filename);
 		return;
 	}
 
@@ -438,7 +439,7 @@ got_all_properties (GObject * source_object, GAsyncResult * res,
 	         * icon_theme_path = NULL, * index = NULL, * label = NULL,
 	         * guide = NULL;
 
-	GVariant * properties = g_dbus_proxy_call_finish(app->props, res, &error);
+	GVariant * properties = g_dbus_proxy_call_finish(G_DBUS_PROXY(source_object), res, &error);
 
 	if (app->props_cancel != NULL) {
 		g_object_unref(app->props_cancel);
@@ -486,6 +487,7 @@ got_all_properties (GObject * source_object, GAsyncResult * res,
 		} /* else ignore */
 	}
 	g_variant_iter_free (iter);
+	g_variant_unref(properties);
 
 	if (menu == NULL || id == NULL || category == NULL || status == NULL ||
 	    icon_name == NULL) {
@@ -524,6 +526,7 @@ got_all_properties (GObject * source_object, GAsyncResult * res,
 			app->ordering_index = GPOINTER_TO_UINT(ordering_index_over);
 		}
 		g_debug("'%s' ordering index is '%X'", app->id, app->ordering_index);
+		app->appstore->priv->applications = g_list_sort_with_data(app->appstore->priv->applications, app_sort_func, NULL);
 
 		if (label != NULL) {
 			app->label = g_variant_dup_string(label, NULL);
@@ -1238,9 +1241,10 @@ get_applications (ApplicationServiceAppstore * appstore)
 			}
 
 			g_variant_builder_add (&builder, "(sisossss)", app->icon,
-								   position++, app->dbus_name, app->menu,
-								   app->icon_theme_path, app->label,
-								   app->guide, app->icon_desc);
+			                       position++, app->dbus_name, app->menu,
+			                       app->icon_theme_path, app->label,
+			                       app->guide,
+			                       (app->icon_desc != NULL) ? app->icon_desc : "");
 		}
 
 		out = g_variant_builder_end(&builder);
