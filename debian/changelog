@@ -1,4 +1,4 @@
-indicator-application (0.3.0-0ubuntu1~ppa1) natty; urgency=low
+indicator-application (0.3.0-0ubuntu1) natty; urgency=low
 
   * New upstream release.
     * Version number bump
