@@ -432,7 +432,6 @@ got_all_properties (GObject * source_object, GAsyncResult * res,
 	g_return_if_fail(app != NULL);
 
 	GError * error = NULL;
-	ApplicationServiceAppstorePrivate * priv = app->appstore->priv;
 	GVariant * menu = NULL, * id = NULL, * category = NULL,
 	         * status = NULL, * icon_name = NULL, * aicon_name = NULL,
 	         * icon_desc = NULL, * aicon_desc = NULL,
@@ -440,6 +439,11 @@ got_all_properties (GObject * source_object, GAsyncResult * res,
 	         * guide = NULL;
 
 	GVariant * properties = g_dbus_proxy_call_finish(G_DBUS_PROXY(source_object), res, &error);
+
+	if (g_error_matches (error, G_IO_ERROR, G_IO_ERROR_CANCELLED)) {
+		g_error_free (error);
+		return; // Must exit before accessing freed memory
+	}
 
 	if (app->props_cancel != NULL) {
 		g_object_unref(app->props_cancel);
@@ -453,6 +457,8 @@ got_all_properties (GObject * source_object, GAsyncResult * res,
 			application_free(app);
 		return;
 	}
+
+	ApplicationServiceAppstorePrivate * priv = app->appstore->priv;
 
 	/* Grab all properties from variant */
 	GVariantIter * iter = NULL;
@@ -1043,6 +1049,11 @@ dbus_proxy_cb (GObject * object, GAsyncResult * res, gpointer user_data)
 
 	GDBusProxy * proxy = g_dbus_proxy_new_for_bus_finish(res, &error);
 
+	if (g_error_matches (error, G_IO_ERROR, G_IO_ERROR_CANCELLED)) {
+		g_error_free (error);
+		return; // Must exit before accessing freed memory
+	}
+
 	if (app->dbus_proxy_cancel != NULL) {
 		g_object_unref(app->dbus_proxy_cancel);
 		app->dbus_proxy_cancel = NULL;
@@ -1437,6 +1448,12 @@ approver_proxy_cb (GObject * object, GAsyncResult * res, gpointer user_data)
 	g_return_if_fail(approver != NULL);
 
 	GDBusProxy * proxy = g_dbus_proxy_new_for_bus_finish(res, &error);
+
+	if (g_error_matches (error, G_IO_ERROR, G_IO_ERROR_CANCELLED)) {
+		g_error_free (error);
+		return; // Must exit before accessing freed memory
+	}
+
 	ApplicationServiceAppstorePrivate * priv = APPLICATION_SERVICE_APPSTORE_GET_PRIVATE (approver->appstore);
 
 	if (approver->proxy_cancel != NULL) {

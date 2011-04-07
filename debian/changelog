@@ -1,3 +1,11 @@
+indicator-application (0.3.1-0ubuntu1) natty; urgency=low
+
+  * New upstream release.
+    ∘ Fix the name of "nm-applet" in the overrides file
+    ∘ Handle async tasks being canceled (LP: #752998)
+
+ -- Ted Gould <ted@ubuntu.com>  Thu, 07 Apr 2011 13:34:09 -0500
+
 indicator-application (0.3.0-0ubuntu1) natty; urgency=low
 
   * New upstream release.
