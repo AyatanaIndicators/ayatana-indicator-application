@@ -1,5 +1,5 @@
 [Ordering Index Overrides]
-nm_applet=1
+nm-applet=1
 gnome-power-manager=2
 ibus=3
 gst-keyboard-xkb=4
