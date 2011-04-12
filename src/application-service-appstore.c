@@ -577,6 +577,7 @@ static void
 get_all_properties (Application * app)
 {
 	if (app->props != NULL && app->props_cancel == NULL) {
+		app->props_cancel = g_cancellable_new();
 		g_dbus_proxy_call(app->props, "GetAll",
 		                  g_variant_new("(s)", NOTIFICATION_ITEM_DBUS_IFACE),
 		                  G_DBUS_CALL_FLAGS_NONE, -1, app->props_cancel,
