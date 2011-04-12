@@ -3,8 +3,9 @@ indicator-application (0.3.1-0ubuntu3~ppa1) UNRELEASED; urgency=low
   * Upstream Merge
     * Free app using application_free() instead of just freeing the
       memory (LP: #743564)
+  * Drop debian/patches/lp_743564.patch as merged upstream.
 
- -- Ted Gould <ted@ubuntu.com>  Tue, 12 Apr 2011 15:16:13 -0500
+ -- Ted Gould <ted@ubuntu.com>  Tue, 12 Apr 2011 15:17:33 -0500
 
 indicator-application (0.3.1-0ubuntu2) natty; urgency=low
 
