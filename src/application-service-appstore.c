@@ -110,6 +110,7 @@ struct _Application {
 	gchar * guide;
 	gboolean currently_free;
 	guint ordering_index;
+	GList * approver_cancels;
 	GList * approved_by;
 	visible_state_t visible_state;
 	guint name_watcher;
@@ -745,6 +746,11 @@ application_free (Application * app)
 	if (app->guide != NULL) {
 		g_free(app->guide);
 	}
+	if (app->approver_cancels != NULL) {
+		g_list_foreach(app->approver_cancels, (GFunc)g_cancellable_cancel, NULL);
+		g_list_foreach(app->approver_cancels, (GFunc)g_object_unref, NULL);
+		g_list_free(app->approver_cancels);
+	}
 	if (app->approved_by != NULL) {
 		g_list_free(app->approved_by);
 	}
@@ -997,6 +1003,7 @@ application_service_appstore_application_add (ApplicationServiceAppstore * appst
 	app->guide = NULL;
 	app->currently_free = FALSE;
 	app->ordering_index = 0;
+	app->approver_cancels = NULL;
 	app->approved_by = NULL;
 	app->visible_state = VISIBLE_STATE_HIDDEN;
 	app->name_watcher = 0;
@@ -1283,6 +1290,24 @@ static void
 remove_approver (gpointer papp, gpointer pproxy)
 {
 	Application * app = (Application *)papp;
+
+	/* Check for any pending approvals and cancel them */
+	GList * iter = app->approver_cancels;
+	while (iter != NULL) {
+		GCancellable * cancel = (GCancellable *)iter->data;
+		GDBusProxy * proxy = (GDBusProxy *)g_object_get_data(G_OBJECT(cancel), "proxy");
+		if (proxy == pproxy) {
+			g_cancellable_cancel(cancel);
+			g_object_unref(cancel);
+
+			GList * next = iter->next;
+			app->approver_cancels = g_list_delete_link(app->approver_cancels, iter);
+			iter = next;
+		} else {
+			iter = iter->next;
+		}
+	}
+
 	app->approved_by = g_list_remove(app->approved_by, pproxy);
 	apply_status(app);
 	return;
@@ -1323,12 +1348,21 @@ static void
 approver_request_cb (GObject *object, GAsyncResult *res, gpointer user_data)
 {
 	GDBusProxy * proxy = G_DBUS_PROXY(object);
-	Application * app = (Application *)user_data;
+	GCancellable * cancel = (GCancellable *)user_data;
 	GError * error = NULL;
 	gboolean approved = TRUE; /* default to approved */
 	GVariant * result;
 
 	result = g_dbus_proxy_call_finish(proxy, res, &error);
+
+	if (g_error_matches (error, G_IO_ERROR, G_IO_ERROR_CANCELLED)) {
+		g_error_free (error);
+		return; // Must exit before accessing freed memory
+	}
+
+	Application * app = (Application *)g_object_get_data(G_OBJECT(cancel), "app");
+	app->approver_cancels = g_list_remove(app->approver_cancels, cancel);
+	g_object_unref(cancel);
 
 	if (error == NULL) {
 		g_variant_get(result, "(b)", &approved);
@@ -1336,6 +1370,7 @@ approver_request_cb (GObject *object, GAsyncResult *res, gpointer user_data)
 	}
 	else {
 		g_debug("Approver responded error: %s", error->message);
+		g_error_free (error);
 	}
 
 	if (approved) {
@@ -1354,12 +1389,18 @@ check_with_new_approver (gpointer papp, gpointer papprove)
 {
 	Application * app = (Application *)papp;
 	Approver * approver = (Approver *)papprove;
+	GCancellable * cancel = NULL;
+
+	cancel = g_cancellable_new();
+	g_object_set_data(G_OBJECT(cancel), "app", app);
+	g_object_set_data(G_OBJECT(cancel), "proxy", approver->proxy);
+	app->approver_cancels = g_list_prepend(app->approver_cancels, cancel);
 
 	g_dbus_proxy_call(approver->proxy, "ApproveItem",
 	                  g_variant_new("(ssuso)", app->id, app->category,
 	                                0, app->dbus_name, app->dbus_object),
-	                  G_DBUS_CALL_FLAGS_NONE, -1, NULL,
-	                  approver_request_cb, app);
+	                  G_DBUS_CALL_FLAGS_NONE, -1, cancel,
+	                  approver_request_cb, cancel);
 
 	return;
 }
