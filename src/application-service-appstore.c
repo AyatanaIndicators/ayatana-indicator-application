@@ -577,6 +577,7 @@ static void
 get_all_properties (Application * app)
 {
 	if (app->props != NULL && app->props_cancel == NULL) {
+		app->props_cancel = g_cancellable_new();
 		g_dbus_proxy_call(app->props, "GetAll",
 		                  g_variant_new("(s)", NOTIFICATION_ITEM_DBUS_IFACE),
 		                  G_DBUS_CALL_FLAGS_NONE, -1, app->props_cancel,
@@ -1110,6 +1111,11 @@ props_cb (GObject * object, GAsyncResult * res, gpointer user_data)
 	g_return_if_fail(app != NULL);
 
 	GDBusProxy * proxy = g_dbus_proxy_new_for_bus_finish(res, &error);
+
+	if (g_error_matches (error, G_IO_ERROR, G_IO_ERROR_CANCELLED)) {
+		g_error_free (error);
+		return; // Must exit before accessing freed memory
+	}
 
 	if (app->props_cancel != NULL) {
 		g_object_unref(app->props_cancel);
