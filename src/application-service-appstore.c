@@ -1111,6 +1111,11 @@ props_cb (GObject * object, GAsyncResult * res, gpointer user_data)
 
 	GDBusProxy * proxy = g_dbus_proxy_new_for_bus_finish(res, &error);
 
+	if (g_error_matches (error, G_IO_ERROR, G_IO_ERROR_CANCELLED)) {
+		g_error_free (error);
+		return; // Must exit before accessing freed memory
+	}
+
 	if (app->props_cancel != NULL) {
 		g_object_unref(app->props_cancel);
 		app->props_cancel = NULL;
