@@ -498,7 +498,8 @@ got_all_properties (GObject * source_object, GAsyncResult * res,
 	if (menu == NULL || id == NULL || category == NULL || status == NULL ||
 	    icon_name == NULL) {
 		g_warning("Notification Item on object %s of %s doesn't have enough properties.", app->dbus_object, app->dbus_name);
-		g_free(app); // Need to do more than this, but it gives the idea of the flow we're going for.
+		if (!app->validated)
+			application_free(app);
 	}
 	else {
 		app->validated = TRUE;
