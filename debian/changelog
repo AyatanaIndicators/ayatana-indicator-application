@@ -1,3 +1,15 @@
+indicator-application (0.3.2-0ubuntu1) natty; urgency=low
+
+  * New upstream release.
+    ∘ Free app using application_free() instead of just freeing
+      the memory (LP: #743564)
+    ∘ Protect against cancellation
+    ∘ Make it so that we can cancel GetAll() (LP: #725665)
+    ∘ Make it so that we can cancel Approver requests
+  * Drop debian/patches/lp_743564.patch as merged upstream.
+
+ -- Ted Gould <ted@ubuntu.com>  Thu, 14 Apr 2011 14:30:32 -0500
+
 indicator-application (0.3.1-0ubuntu2) natty; urgency=low
 
   * debian/patches/lp_743564.patch
