@@ -93,9 +93,12 @@ AC_ARG_ENABLE(localinstall, AS_HELP_STRING([--enable-localinstall], [install all
 if test "x$with_localinstall" = "xyes"; then
 	INDICATORDIR="${libdir}/indicators/2/"
 	INDICATORICONSDIR="${datadir}/libindicate/icons/"
-else
+elif test "x$with_gtk" = x2; then
 	INDICATORDIR=`$PKG_CONFIG --variable=indicatordir indicator`
 	INDICATORICONSDIR=`$PKG_CONFIG --variable=iconsdir indicator`
+else
+	INDICATORDIR=`$PKG_CONFIG --variable=indicatordir indicator3`
+	INDICATORICONSDIR=`$PKG_CONFIG --variable=iconsdir indicator3`
 fi
 AC_SUBST(INDICATORDIR)
 AC_SUBST(INDICATORICONSDIR)
