@@ -39,9 +39,9 @@ DBUS_GLIB_REQUIRED_VERSION=0.82
 
 AC_ARG_WITH([gtk],
   [AS_HELP_STRING([--with-gtk],
-    [Which version of gtk to use @<:@default=2@:>@])],
+    [Which version of gtk to use @<:@default=3@:>@])],
   [],
-  [with_gtk=2])
+  [with_gtk=3])
 AS_IF([test "x$with_gtk" = x3],
         [PKG_CHECK_MODULES(INDICATOR,  gtk+-3.0 >= $GTK3_REQUIRED_VERSION
                                        gio-2.0 >= $GIO_REQUIRED_VERSION
@@ -93,9 +93,12 @@ AC_ARG_ENABLE(localinstall, AS_HELP_STRING([--enable-localinstall], [install all
 if test "x$with_localinstall" = "xyes"; then
 	INDICATORDIR="${libdir}/indicators/2/"
 	INDICATORICONSDIR="${datadir}/libindicate/icons/"
-else
+elif test "x$with_gtk" = x2; then
 	INDICATORDIR=`$PKG_CONFIG --variable=indicatordir indicator`
 	INDICATORICONSDIR=`$PKG_CONFIG --variable=iconsdir indicator`
+else
+	INDICATORDIR=`$PKG_CONFIG --variable=indicatordir indicator3`
+	INDICATORICONSDIR=`$PKG_CONFIG --variable=iconsdir indicator3`
 fi
 AC_SUBST(INDICATORDIR)
 AC_SUBST(INDICATORICONSDIR)
