@@ -15,23 +15,6 @@
 
 @SET_MAKE@
 
-# Rules for generating enumeration types using glib-mkenums
-#
-# Define:
-# 	glib_enum_h = header template file
-# 	glib_enum_c = source template file
-# 	glib_enum_headers = list of headers to parse
-#
-# before including Makefile.am.enums. You will also need to have
-# the following targets already defined:
-#
-# 	CLEANFILES
-#	DISTCLEANFILES
-#	BUILT_SOURCES
-#	EXTRA_DIST
-#
-# Author: Emmanuele Bassi <ebassi@linux.intel.com>
-
 # Rules for generating marshal files using glib-genmarshal
 #
 # Define:
@@ -69,13 +52,14 @@ POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in \
-	$(top_srcdir)/Makefile.am.enum \
 	$(top_srcdir)/Makefile.am.marshal
 libexec_PROGRAMS = indicator-application-service$(EXEEXT)
 subdir = src
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
-am__aclocal_m4_deps = $(top_srcdir)/acinclude.m4 \
-	$(top_srcdir)/configure.ac
+am__aclocal_m4_deps = $(top_srcdir)/m4/libtool.m4 \
+	$(top_srcdir)/m4/ltoptions.m4 $(top_srcdir)/m4/ltsugar.m4 \
+	$(top_srcdir)/m4/ltversion.m4 $(top_srcdir)/m4/lt~obsolete.m4 \
+	$(top_srcdir)/acinclude.m4 $(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 mkinstalldirs = $(install_sh) -d
@@ -126,11 +110,11 @@ am_indicator_application_service_OBJECTS =  \
 	indicator_application_service-application-service-marshal.$(OBJEXT) \
 	indicator_application_service-application-service-watcher.$(OBJEXT) \
 	indicator_application_service-gen-application-service.xml.$(OBJEXT) \
-	indicator_application_service-app-indicator-enum-types.$(OBJEXT) \
 	indicator_application_service-generate-id.$(OBJEXT)
 indicator_application_service_OBJECTS =  \
 	$(am_indicator_application_service_OBJECTS)
-indicator_application_service_DEPENDENCIES = $(am__DEPENDENCIES_1)
+indicator_application_service_DEPENDENCIES = $(am__DEPENDENCIES_1) \
+	$(am__DEPENDENCIES_1)
 indicator_application_service_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
 	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CCLD) \
 	$(indicator_application_service_CFLAGS) $(CFLAGS) \
@@ -171,7 +155,8 @@ DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 ACLOCAL = @ACLOCAL@
 AMTAR = @AMTAR@
 AM_DEFAULT_VERBOSITY = @AM_DEFAULT_VERBOSITY@
-APP_INDICATOR_INCLUDE = @APP_INDICATOR_INCLUDE@
+APPINDICATOR_CFLAGS = @APPINDICATOR_CFLAGS@
+APPINDICATOR_LIBS = @APPINDICATOR_LIBS@
 AR = @AR@
 AUTOCONF = @AUTOCONF@
 AUTOHEADER = @AUTOHEADER@
@@ -186,6 +171,7 @@ CYGPATH_W = @CYGPATH_W@
 DBUSSERVICEDIR = @DBUSSERVICEDIR@
 DEFS = @DEFS@
 DEPDIR = @DEPDIR@
+DLLTOOL = @DLLTOOL@
 DSYMUTIL = @DSYMUTIL@
 DUMPBIN = @DUMPBIN@
 ECHO_C = @ECHO_C@
@@ -216,6 +202,7 @@ LN_S = @LN_S@
 LTLIBOBJS = @LTLIBOBJS@
 MAINT = @MAINT@
 MAKEINFO = @MAKEINFO@
+MANIFEST_TOOL = @MANIFEST_TOOL@
 MKDIR_P = @MKDIR_P@
 NM = @NM@
 NMEDIT = @NMEDIT@
@@ -239,13 +226,12 @@ SED = @SED@
 SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
 STRIP = @STRIP@
-TEST_CFLAGS = @TEST_CFLAGS@
-TEST_LIBS = @TEST_LIBS@
 VERSION = @VERSION@
 abs_builddir = @abs_builddir@
 abs_srcdir = @abs_srcdir@
 abs_top_builddir = @abs_top_builddir@
 abs_top_srcdir = @abs_top_srcdir@
+ac_ct_AR = @ac_ct_AR@
 ac_ct_CC = @ac_ct_CC@
 ac_ct_DUMPBIN = @ac_ct_DUMPBIN@
 am__include = @am__include@
@@ -278,7 +264,6 @@ libdir = @libdir@
 libexecdir = @libexecdir@
 localedir = @localedir@
 localstatedir = @localstatedir@
-lt_ECHO = @lt_ECHO@
 mandir = @mandir@
 mkdir_p = @mkdir_p@
 oldincludedir = @oldincludedir@
@@ -296,20 +281,15 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 @USE_GTK3_FALSE@VER = 
 @USE_GTK3_TRUE@VER = 3
-CLEANFILES = stamp-enum-types stamp-marshal $(BUILT_SOURCES)
-DISTCLEANFILES = $(glib_enum_h) $(glib_enum_c) $(marshal_h) \
-	$(marshal_c) app-indicator-enum-types.c
-BUILT_SOURCES = $(glib_enum_h) $(glib_enum_c) $(marshal_h) \
-	$(marshal_c) application-service-marshal.h \
-	application-service-marshal.c notification-watcher-server.h \
-	$(DBUS_SPECS:.xml=-client.h) $(DBUS_SPECS:.xml=-server.h) \
-	gen-application-service.xml.c gen-application-service.xml.h \
-	gen-notification-approver.xml.c \
+CLEANFILES = stamp-marshal $(BUILT_SOURCES)
+DISTCLEANFILES = $(marshal_h) $(marshal_c)
+BUILT_SOURCES = $(marshal_h) $(marshal_c) \
+	application-service-marshal.h application-service-marshal.c \
+	notification-watcher-server.h $(DBUS_SPECS:.xml=-client.h) \
+	$(DBUS_SPECS:.xml=-server.h) gen-application-service.xml.c \
+	gen-application-service.xml.h gen-notification-approver.xml.c \
 	gen-notification-approver.xml.h
-EXTRA_DIST = $(enum_tmpl_h) $(enum_tmpl_c) $(glib_marshal_list) \
-	$(DBUS_SPECS) $(GDBUS_SPECS)
-enum_tmpl_h = $(glib_enum_h:.h=.h.in)
-enum_tmpl_c = $(glib_enum_c:.c=.c.in)
+EXTRA_DIST = $(glib_marshal_list) $(DBUS_SPECS) $(GDBUS_SPECS)
 marshal_h = $(glib_marshal_list:.list=.h)
 marshal_c = $(glib_marshal_list:.list=.c)
 
@@ -331,7 +311,7 @@ libapplication_la_CFLAGS = $(INDICATOR_CFLAGS) \
 	-Werror \
 	-DG_LOG_DOMAIN=\"Indicator-Application\"
 
-libapplication_la_LIBADD = $(INDICATOR_LIBS)
+libapplication_la_LIBADD = $(INDICATOR_LIBS) 
 libapplication_la_LDFLAGS = -module -avoid-version
 indicator_application_service_SOURCES = \
 	application-service.c \
@@ -341,26 +321,23 @@ indicator_application_service_SOURCES = \
 	application-service-watcher.h \
 	application-service-watcher.c \
 	gen-application-service.xml.c \
-	app-indicator-enum-types.c \
 	dbus-shared.h \
 	generate-id.h \
 	generate-id.c
 
 indicator_application_service_CFLAGS = \
 	$(INDICATOR_CFLAGS) \
-	-I$(APP_INDICATOR_INCLUDE) \
+	$(APPINDICATOR_CFLAGS) \
 	-DDATADIR="\"$(pkgdatadir)\"" \
 	-Wall -Werror \
 	-DG_LOG_DOMAIN=\"indicator-application-service\"
 
 indicator_application_service_LDADD = \
-	$(INDICATOR_LIBS)
+	$(INDICATOR_LIBS) \
+	$(APPINDICATOR_LIBS)
 
 glib_marshal_list = application-service-marshal.list
 glib_marshal_prefix = _application_service_marshal
-glib_enum_h = app-indicator-enum-types.h
-glib_enum_c = app-indicator-enum-types.c
-glib_enum_headers = $(wildcard $(APP_INDICATOR_INCLUDE)/libappindicator/*.h)
 
 ##################################
 # DBus Specs
@@ -377,7 +354,7 @@ all: $(BUILT_SOURCES)
 
 .SUFFIXES:
 .SUFFIXES: .c .lo .o .obj
-$(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.am $(top_srcdir)/Makefile.am.enum $(top_srcdir)/Makefile.am.marshal $(am__configure_deps)
+$(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.am $(top_srcdir)/Makefile.am.marshal $(am__configure_deps)
 	@for dep in $?; do \
 	  case '$(am__configure_deps)' in \
 	    *$$dep*) \
@@ -493,7 +470,6 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/indicator_application_service-app-indicator-enum-types.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/indicator_application_service-application-service-appstore.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/indicator_application_service-application-service-marshal.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/indicator_application_service-application-service-watcher.Po@am__quote@
@@ -622,22 +598,6 @@ indicator_application_service-gen-application-service.xml.obj: gen-application-s
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='gen-application-service.xml.c' object='indicator_application_service-gen-application-service.xml.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(indicator_application_service_CFLAGS) $(CFLAGS) -c -o indicator_application_service-gen-application-service.xml.obj `if test -f 'gen-application-service.xml.c'; then $(CYGPATH_W) 'gen-application-service.xml.c'; else $(CYGPATH_W) '$(srcdir)/gen-application-service.xml.c'; fi`
-
-indicator_application_service-app-indicator-enum-types.o: app-indicator-enum-types.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(indicator_application_service_CFLAGS) $(CFLAGS) -MT indicator_application_service-app-indicator-enum-types.o -MD -MP -MF $(DEPDIR)/indicator_application_service-app-indicator-enum-types.Tpo -c -o indicator_application_service-app-indicator-enum-types.o `test -f 'app-indicator-enum-types.c' || echo '$(srcdir)/'`app-indicator-enum-types.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/indicator_application_service-app-indicator-enum-types.Tpo $(DEPDIR)/indicator_application_service-app-indicator-enum-types.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='app-indicator-enum-types.c' object='indicator_application_service-app-indicator-enum-types.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(indicator_application_service_CFLAGS) $(CFLAGS) -c -o indicator_application_service-app-indicator-enum-types.o `test -f 'app-indicator-enum-types.c' || echo '$(srcdir)/'`app-indicator-enum-types.c
-
-indicator_application_service-app-indicator-enum-types.obj: app-indicator-enum-types.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(indicator_application_service_CFLAGS) $(CFLAGS) -MT indicator_application_service-app-indicator-enum-types.obj -MD -MP -MF $(DEPDIR)/indicator_application_service-app-indicator-enum-types.Tpo -c -o indicator_application_service-app-indicator-enum-types.obj `if test -f 'app-indicator-enum-types.c'; then $(CYGPATH_W) 'app-indicator-enum-types.c'; else $(CYGPATH_W) '$(srcdir)/app-indicator-enum-types.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/indicator_application_service-app-indicator-enum-types.Tpo $(DEPDIR)/indicator_application_service-app-indicator-enum-types.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='app-indicator-enum-types.c' object='indicator_application_service-app-indicator-enum-types.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(indicator_application_service_CFLAGS) $(CFLAGS) -c -o indicator_application_service-app-indicator-enum-types.obj `if test -f 'app-indicator-enum-types.c'; then $(CYGPATH_W) 'app-indicator-enum-types.c'; else $(CYGPATH_W) '$(srcdir)/app-indicator-enum-types.c'; fi`
 
 indicator_application_service-generate-id.o: generate-id.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(indicator_application_service_CFLAGS) $(CFLAGS) -MT indicator_application_service-generate-id.o -MD -MP -MF $(DEPDIR)/indicator_application_service-generate-id.Tpo -c -o indicator_application_service-generate-id.o `test -f 'generate-id.c' || echo '$(srcdir)/'`generate-id.c
@@ -871,26 +831,6 @@ uninstall-am: uninstall-applicationlibLTLIBRARIES \
 	uninstall-am uninstall-applicationlibLTLIBRARIES \
 	uninstall-libexecPROGRAMS
 
-
-stamp-enum-types: $(glib_enum_headers)
-	$(QUIET_GEN)mkdir -p `dirname $(builddir)/$(glib_enum_h)`
-	$(QUIET_GEN)$(GLIB_MKENUMS) \
-		--template $(srcdir)/$(enum_tmpl_h) \
-	$(glib_enum_headers) > xgen-eh \
-	&& (cmp -s xgen-eh $(builddir)/$(glib_enum_h) || cp -f xgen-eh $(builddir)/$(glib_enum_h)) \
-	&& rm -f xgen-eh \
-	&& echo timestamp > $(@F)
-
-$(glib_enum_h): stamp-enum-types
-	@true
-
-$(glib_enum_c): $(glib_enum_h)
-	$(QUIET_GEN)mkdir -p `dirname $(builddir)/$(glib_enum_c)`
-	$(QUIET_GEN)$(GLIB_MKENUMS) \
-		--template $(srcdir)/$(enum_tmpl_c) \
-	$(glib_enum_headers) > xgen-ec \
-	&& cp -f xgen-ec $(builddir)/$(glib_enum_c) \
-	&& rm -f xgen-ec
 
 stamp-marshal: $(glib_marshal_list)
 	$(QUIET_GEN)$(GLIB_GENMARSHAL) \
