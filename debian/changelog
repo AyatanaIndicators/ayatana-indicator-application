@@ -1,4 +1,4 @@
-indicator-application (0.3.2-0ubuntu1~ppa1) natty; urgency=low
+indicator-application (0.3.2-0ubuntu1) natty; urgency=low
 
   * New upstream release.
     ∘ Free app using application_free() instead of just freeing
