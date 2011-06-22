@@ -1,9 +1,22 @@
-indicator-application (0.3.90-0ubuntu1~ppa1) oneiric; urgency=low
+indicator-application (0.3.90-0ubuntu1) oneiric; urgency=low
 
+  [ Ted Gould ]
   * New upstream release.
     * GTK3 Port
 
- -- Ted Gould <ted@ubuntu.com>  Wed, 22 Jun 2011 11:37:43 -0500
+  [ Ken VanDine ]
+  * debian/control
+    - Bumped standards version to 3.9.2
+    - Add new binary for indicator-application-gtk2 
+    - Make indicator-application recommend indicator-application-gtk2 (until 
+      unity can load gtk3 indicators)
+    - indicator-application-gtk2 replaces indicator-application << 0.2.90
+    - Added build depends for libdbusmenu-gtk3-dev, libindicator3-dev 
+      and libappindicator3-dev
+  * debian/rules
+    - build for both gtk2 and gtk3
+
+ -- Ken VanDine <ken.vandine@canonical.com>  Wed, 22 Jun 2011 13:07:06 -0400
 
 indicator-application (0.3.2-0ubuntu1) natty; urgency=low
 
