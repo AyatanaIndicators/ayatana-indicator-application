@@ -1,9 +1,9 @@
-indicator-application (0.3.90-0ubuntu1~ppa1) UNRELEASED; urgency=low
+indicator-application (0.3.90-0ubuntu1~ppa1) oneiric; urgency=low
 
   * New upstream release.
     * GTK3 Port
 
- -- Ted Gould <ted@ubuntu.com>  Wed, 22 Jun 2011 11:32:44 -0500
+ -- Ted Gould <ted@ubuntu.com>  Wed, 22 Jun 2011 11:37:43 -0500
 
 indicator-application (0.3.2-0ubuntu1) natty; urgency=low
 
