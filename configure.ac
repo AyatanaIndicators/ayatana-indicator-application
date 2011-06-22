@@ -37,6 +37,8 @@ DBUSMENUGTK_REQUIRED_VERSION=0.3.91
 JSON_GLIB_REQUIRED_VERSION=0.7.6
 DBUS_GLIB_REQUIRED_VERSION=0.82
 
+LIBAPPINDICATOR_REQUIRED_VERSION=0.2.9
+
 AC_ARG_WITH([gtk],
   [AS_HELP_STRING([--with-gtk],
     [Which version of gtk to use @<:@default=3@:>@])],
@@ -49,8 +51,9 @@ AS_IF([test "x$with_gtk" = x3],
                                        json-glib-1.0 >= $JSON_GLIB_REQUIRED_VERSION
                                        dbus-glib-1 >= $DBUS_GLIB_REQUIRED_VERSION
                                        dbusmenu-gtk3-0.4 >= $DBUSMENUGTK_REQUIRED_VERSION)
-         AC_SUBST(INDICATOR_CFLAGS)
-         AC_SUBST(INDICATOR_LIBS)
+
+         PKG_CHECK_MODULES(APPINDICATOR, appindicator3-0.1 >= $LIBAPPINDICATOR_REQUIRED_VERSION)
+
          AC_DEFINE(HAVE_GTK3, 1, [whether gtk3 is available])
         ],
       [test "x$with_gtk" = x2],
@@ -60,24 +63,19 @@ AS_IF([test "x$with_gtk" = x3],
                                        json-glib-1.0 >= $JSON_GLIB_REQUIRED_VERSION
                                        dbus-glib-1 >= $DBUS_GLIB_REQUIRED_VERSION
                                        dbusmenu-gtk-0.4 >= $DBUSMENUGTK_REQUIRED_VERSION)
-         AC_SUBST(INDICATOR_CFLAGS)
-         AC_SUBST(INDICATOR_LIBS)
+
+         PKG_CHECK_MODULES(APPINDICATOR, appindicator3-0.1 >= $LIBAPPINDICATOR_REQUIRED_VERSION)
         ],
       [AC_MSG_FAILURE([Value for --with-gtk was neither 2 nor 3])]
 )
 AM_CONDITIONAL(USE_GTK3, [test "x$with_gtk" = x3])
 
-LIBAPPINDICATOR_REQUIRED_VERSION=0.2.9
+AC_SUBST(INDICATOR_CFLAGS)
+AC_SUBST(INDICATOR_LIBS)
 
-PKG_CHECK_MODULES(TEST, appindicator-0.1 >= $LIBAPPINDICATOR_REQUIRED_VERSION)
+AC_SUBST(APPINDICATOR_CFLAGS)
+AC_SUBST(APPINDICATOR_LIBS)
 
-AC_SUBST(TEST_CFLAGS)
-AC_SUBST(TEST_LIBS)
-
-APP_INDICATOR_INCLUDE_BASE=`$PKG_CONFIG --variable=includedir appindicator-0.1`
-APP_INDICATOR_INCLUDE="$APP_INDICATOR_INCLUDE_BASE/libappindicator-0.1/"
-
-AC_SUBST(APP_INDICATOR_INCLUDE)
 
 ###########################
 # Check to see if we're local
