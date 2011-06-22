@@ -9,7 +9,6 @@ DISTCLEANFILES =
 BUILT_SOURCES =
 EXTRA_DIST = 
 
-include $(top_srcdir)/Makefile.am.enum
 include $(top_srcdir)/Makefile.am.marshal
 
 ##################################
@@ -29,7 +28,7 @@ libapplication_la_CFLAGS = $(INDICATOR_CFLAGS) \
 	-Wl,--as-needed \
 	-Werror \
 	-DG_LOG_DOMAIN=\"Indicator-Application\"
-libapplication_la_LIBADD = $(INDICATOR_LIBS)
+libapplication_la_LIBADD = $(INDICATOR_LIBS) 
 libapplication_la_LDFLAGS = -module -avoid-version
 
 ##################################
@@ -51,29 +50,23 @@ indicator_application_service_SOURCES = \
 	application-service-watcher.h \
 	application-service-watcher.c \
 	gen-application-service.xml.c \
-	app-indicator-enum-types.c \
 	dbus-shared.h \
 	generate-id.h \
 	generate-id.c
 
 indicator_application_service_CFLAGS = \
 	$(INDICATOR_CFLAGS) \
-	-I$(APP_INDICATOR_INCLUDE) \
+	$(APPINDICATOR_CFLAGS) \
 	-DDATADIR="\"$(pkgdatadir)\"" \
 	-Wall -Werror \
 	-DG_LOG_DOMAIN=\"indicator-application-service\"
 
 indicator_application_service_LDADD = \
-	$(INDICATOR_LIBS)
+	$(INDICATOR_LIBS) \
+	$(APPINDICATOR_LIBS)
 
 glib_marshal_list = application-service-marshal.list
 glib_marshal_prefix = _application_service_marshal
-
-glib_enum_h = app-indicator-enum-types.h
-glib_enum_c = app-indicator-enum-types.c
-glib_enum_headers = $(wildcard $(APP_INDICATOR_INCLUDE)/libappindicator/*.h)
-
-DISTCLEANFILES += app-indicator-enum-types.c
 
 ##################################
 # DBus Specs
