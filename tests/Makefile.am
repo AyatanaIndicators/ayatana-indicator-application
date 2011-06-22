@@ -19,14 +19,14 @@ test_approver_SOURCES = \
 
 test_approver_CFLAGS = \
 	$(INDICATOR_CFLAGS) \
-	$(TEST_CFLAGS) \
+	$(APPINDICATOR_CFLAGS) \
 	-Wall -Werror \
 	-I$(top_srcdir)/src \
 	-I$(top_builddir)/src
 
 test_approver_LDADD = \
 	$(INDICATOR_LIBS) \
-	$(TEST_LIBS)
+	$(APPINDICATOR_LIBS)
 
 test-approver-tester: test-approver Makefile.am
 	@echo "#!/bin/bash" > $@

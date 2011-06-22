@@ -26,7 +26,7 @@ with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <libindicator/indicator-object.h>
 #include "libappindicator/app-indicator.h"
-#include "app-indicator-enum-types.h"
+#include "libappindicator/app-indicator-enum-types.h"
 #include "application-service-appstore.h"
 #include "application-service-marshal.h"
 #include "dbus-shared.h"
