@@ -24,7 +24,6 @@ Vcs-Bzr: http://bazaar.launchpad.net/~ubuntu-desktop/indicator-application/ubunt
 Package: indicator-application
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
-Recommends: indicator-application-gtk2
 Description: Application Indicators
  A library and indicator to take menus from applications and place them in
  the panel.
