@@ -64,7 +64,7 @@ AS_IF([test "x$with_gtk" = x3],
                                        dbus-glib-1 >= $DBUS_GLIB_REQUIRED_VERSION
                                        dbusmenu-gtk-0.4 >= $DBUSMENUGTK_REQUIRED_VERSION)
 
-         PKG_CHECK_MODULES(APPINDICATOR, appindicator3-0.1 >= $LIBAPPINDICATOR_REQUIRED_VERSION)
+         PKG_CHECK_MODULES(APPINDICATOR, appindicator-0.1 >= $LIBAPPINDICATOR_REQUIRED_VERSION)
         ],
       [AC_MSG_FAILURE([Value for --with-gtk was neither 2 nor 3])]
 )
