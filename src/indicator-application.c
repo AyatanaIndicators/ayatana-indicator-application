@@ -109,7 +109,7 @@ static void indicator_application_dispose    (GObject *object);
 static void indicator_application_finalize   (GObject *object);
 static GList * get_entries (IndicatorObject * io);
 static guint get_location (IndicatorObject * io, IndicatorObjectEntry * entry);
-static void scroll_entry (IndicatorObject * io, IndicatorObjectEntry * entry, gint delta, IndicatorScrollDirection direction);
+static void entry_scrolled (IndicatorObject * io, IndicatorObjectEntry * entry, gint delta, IndicatorScrollDirection direction);
 void connection_changed (IndicatorServiceManager * sm, gboolean connected, IndicatorApplication * application);
 static void connected (IndicatorApplication * application);
 static void disconnected (IndicatorApplication * application);
@@ -144,7 +144,7 @@ indicator_application_class_init (IndicatorApplicationClass *klass)
 
 	io_class->get_entries = get_entries;
 	io_class->get_location = get_location;
-	io_class->scroll_entry = scroll_entry;
+	io_class->entry_scrolled = entry_scrolled;
 
 	return;
 }
@@ -403,7 +403,7 @@ get_location (IndicatorObject * io, IndicatorObjectEntry * entry)
 }
 
 /* Redirect the scroll event to the Application Item */
-static void scroll_entry (IndicatorObject * io, IndicatorObjectEntry * entry, gint delta, IndicatorScrollDirection direction) {
+static void entry_scrolled (IndicatorObject * io, IndicatorObjectEntry * entry, gint delta, IndicatorScrollDirection direction) {
 	
 	g_return_if_fail(IS_INDICATOR_APPLICATION(io));
 
