@@ -1,9 +1,9 @@
-indicator-application (0.3.91-0ubuntu1~ppa1) UNRELEASED; urgency=low
+indicator-application (0.3.91-0ubuntu1~ppa1) oneiric; urgency=low
 
   * New upstream release.
     * Build with libindicator 0.4
 
- -- Ted Gould <ted@ubuntu.com>  Thu, 07 Jul 2011 15:31:51 -0500
+ -- Ted Gould <ted@ubuntu.com>  Thu, 07 Jul 2011 15:32:55 -0500
 
 indicator-application (0.3.90-0ubuntu2) oneiric; urgency=low
 
