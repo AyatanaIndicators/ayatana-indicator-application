@@ -1,11 +1,11 @@
 
-AC_INIT(indicator-application, 0.3.90, ted@canonical.com)
+AC_INIT(indicator-application, 0.3.91, ted@canonical.com)
 AC_COPYRIGHT([Copyright 2009, 2010 Canonical])
 
 AC_PREREQ(2.53)
 
 AM_CONFIG_HEADER(config.h)
-AM_INIT_AUTOMAKE(indicator-application, 0.3.90)
+AM_INIT_AUTOMAKE(indicator-application, 0.3.91)
 
 AM_MAINTAINER_MODE
 
@@ -47,7 +47,7 @@ AC_ARG_WITH([gtk],
 AS_IF([test "x$with_gtk" = x3],
         [PKG_CHECK_MODULES(INDICATOR,  gtk+-3.0 >= $GTK3_REQUIRED_VERSION
                                        gio-2.0 >= $GIO_REQUIRED_VERSION
-                                       indicator3 >= $INDICATOR_REQUIRED_VERSION
+                                       indicator3-0.4 >= $INDICATOR_REQUIRED_VERSION
                                        json-glib-1.0 >= $JSON_GLIB_REQUIRED_VERSION
                                        dbus-glib-1 >= $DBUS_GLIB_REQUIRED_VERSION
                                        dbusmenu-gtk3-0.4 >= $DBUSMENUGTK_REQUIRED_VERSION)
@@ -59,12 +59,12 @@ AS_IF([test "x$with_gtk" = x3],
       [test "x$with_gtk" = x2],
         [PKG_CHECK_MODULES(INDICATOR,  gtk+-2.0 >= $GTK_REQUIRED_VERSION
                                        gio-2.0 >= $GIO_REQUIRED_VERSION
-                                       indicator >= $INDICATOR_REQUIRED_VERSION 
+                                       indicator-0.4 >= $INDICATOR_REQUIRED_VERSION 
                                        json-glib-1.0 >= $JSON_GLIB_REQUIRED_VERSION
                                        dbus-glib-1 >= $DBUS_GLIB_REQUIRED_VERSION
                                        dbusmenu-gtk-0.4 >= $DBUSMENUGTK_REQUIRED_VERSION)
 
-         PKG_CHECK_MODULES(APPINDICATOR, appindicator3-0.1 >= $LIBAPPINDICATOR_REQUIRED_VERSION)
+         PKG_CHECK_MODULES(APPINDICATOR, appindicator-0.1 >= $LIBAPPINDICATOR_REQUIRED_VERSION)
         ],
       [AC_MSG_FAILURE([Value for --with-gtk was neither 2 nor 3])]
 )
@@ -92,11 +92,11 @@ if test "x$with_localinstall" = "xyes"; then
 	INDICATORDIR="${libdir}/indicators/2/"
 	INDICATORICONSDIR="${datadir}/libindicate/icons/"
 elif test "x$with_gtk" = x2; then
-	INDICATORDIR=`$PKG_CONFIG --variable=indicatordir indicator`
-	INDICATORICONSDIR=`$PKG_CONFIG --variable=iconsdir indicator`
+	INDICATORDIR=`$PKG_CONFIG --variable=indicatordir indicator-0.4`
+	INDICATORICONSDIR=`$PKG_CONFIG --variable=iconsdir indicator-0.4`
 else
-	INDICATORDIR=`$PKG_CONFIG --variable=indicatordir indicator3`
-	INDICATORICONSDIR=`$PKG_CONFIG --variable=iconsdir indicator3`
+	INDICATORDIR=`$PKG_CONFIG --variable=indicatordir indicator3-0.4`
+	INDICATORICONSDIR=`$PKG_CONFIG --variable=iconsdir indicator3-0.4`
 fi
 AC_SUBST(INDICATORDIR)
 AC_SUBST(INDICATORICONSDIR)

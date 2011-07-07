@@ -870,12 +870,12 @@ apply_status (Application * app)
 		if (app->visible_state == VISIBLE_STATE_HIDDEN) {
 			/* Put on panel */
 			emit_signal (appstore, "ApplicationAdded",
-				     g_variant_new ("(sisossss)", newicon,
+				     g_variant_new ("(sisosssss)", newicon,
 			                            get_position(app),
 			                            app->dbus_name, app->menu,
 			                            app->icon_theme_path,
 			                            app->label, app->guide,
-			                            newdesc));
+			                            newdesc, app->id));
 		} else {
 			/* Icon update */
 			gint position = get_position(app);
@@ -1265,11 +1265,12 @@ get_applications (ApplicationServiceAppstore * appstore)
 				continue;
 			}
 
-			g_variant_builder_add (&builder, "(sisossss)", app->icon,
+			g_variant_builder_add (&builder, "(sisosssss)", app->icon,
 			                       position++, app->dbus_name, app->menu,
 			                       app->icon_theme_path, app->label,
 			                       app->guide,
-			                       (app->icon_desc != NULL) ? app->icon_desc : "");
+			                       (app->icon_desc != NULL) ? app->icon_desc : "",
+			                       app->id);
 		}
 
 		out = g_variant_builder_end(&builder);

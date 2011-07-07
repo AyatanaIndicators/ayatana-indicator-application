@@ -149,6 +149,11 @@ register_cb (GObject *object, GAsyncResult *res, gpointer user_data)
 
 	result = g_dbus_proxy_call_finish(proxy, res, &error);
 
+	if (result != NULL) {
+		g_variant_unref(result);
+		result = NULL;
+	}
+
 	if (error != NULL) {
 		g_warning("Unable to register approver: %s", error->message);
 		g_error_free(error);
