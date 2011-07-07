@@ -1,17 +1,23 @@
 #!/usr/bin/make -f
 
+DEB_BUILDDIR = build
+DEB_MAKE_FLAVORS = gtk2 gtk3
+
 include /usr/share/cdbs/1/rules/debhelper.mk
 include /usr/share/cdbs/1/class/gnome.mk
-include /usr/share/cdbs/1/rules/utils.mk
-include /usr/share/cdbs/1/rules/patchsys-quilt.mk
+
+DEB_MAKE_DESTDIRSKEL = $(CURDIR)/debian/tmp/@FLAVOR@
+DEB_DESTDIR = $(CURDIR)/debian/tmp/$(cdbs_make_curflavor)/
+
+DEB_CONFIGURE_FLAGS_gtk2 = --with-gtk=2
+DEB_CONFIGURE_FLAGS_gtk3 = --with-gtk=3
+DEB_CONFIGURE_EXTRA_FLAGS = --disable-static
 
 LDFLAGS += -Wl,-z,defs -Wl,--as-needed
 
-common-binary-predeb-arch:: list-missing
+debian/stamp-autotools/gtk2: cdbs_configure_flags += $(DEB_CONFIGURE_FLAGS_gtk2)
+debian/stamp-autotools/gtk3: cdbs_configure_flags += $(DEB_CONFIGURE_FLAGS_gtk3)
 
-DEB_DH_MAKESHLIBS_ARGS = -Xusr/lib/indicators
-
-binary-install/indicator-application::
-	# remove .a/.la clutter
-	rm -f debian/$(cdbs_curpkg)/usr/lib/indicators/*/*.a
-	rm -f debian/$(cdbs_curpkg)/usr/lib/indicators/*/*.la
+common-install-arch::
+	find debian/tmp -name \*.la -delete
+	find debian/tmp -name \*.a -delete
