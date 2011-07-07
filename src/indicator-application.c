@@ -587,10 +587,10 @@ application_removed (IndicatorApplication * application, gint position)
 		g_object_unref(G_OBJECT(app->entry.menu));
 	}
 	if (app->entry.accessible_desc != NULL) {
-		g_object_unref(G_OBJECT(app->entry.accessible_desc));
+		g_free((gchar *)app->entry.accessible_desc);
 	}
 	if (app->entry.name_hint != NULL) {
-		g_object_unref(G_OBJECT(app->entry.name_hint));
+		g_free((gchar *)app->entry.name_hint);
 	}
 	g_free(app);
 
