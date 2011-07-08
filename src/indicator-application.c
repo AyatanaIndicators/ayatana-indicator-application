@@ -109,14 +109,14 @@ static void indicator_application_dispose    (GObject *object);
 static void indicator_application_finalize   (GObject *object);
 static GList * get_entries (IndicatorObject * io);
 static guint get_location (IndicatorObject * io, IndicatorObjectEntry * entry);
-static void scroll_entry (IndicatorObject * io, IndicatorObjectEntry * entry, gint delta, IndicatorScrollDirection direction);
+static void entry_scrolled (IndicatorObject * io, IndicatorObjectEntry * entry, gint delta, IndicatorScrollDirection direction);
 void connection_changed (IndicatorServiceManager * sm, gboolean connected, IndicatorApplication * application);
 static void connected (IndicatorApplication * application);
 static void disconnected (IndicatorApplication * application);
 static void disconnected_helper (gpointer data, gpointer user_data);
 static gboolean disconnected_kill (gpointer user_data);
 static void disconnected_kill_helper (gpointer data, gpointer user_data);
-static void application_added (IndicatorApplication * application, const gchar * iconname, gint position, const gchar * dbusaddress, const gchar * dbusobject, const gchar * icon_theme_path, const gchar * label, const gchar * guide, const gchar * accessible_desc);
+static void application_added (IndicatorApplication * application, const gchar * iconname, gint position, const gchar * dbusaddress, const gchar * dbusobject, const gchar * icon_theme_path, const gchar * label, const gchar * guide, const gchar * accessible_desc, const gchar * hint);
 static void application_removed (IndicatorApplication * application, gint position);
 static void application_label_changed (IndicatorApplication * application, gint position, const gchar * label, const gchar * guide);
 static void application_icon_changed (IndicatorApplication * application, gint position, const gchar * iconname, const gchar * icondesc);
@@ -144,7 +144,7 @@ indicator_application_class_init (IndicatorApplicationClass *klass)
 
 	io_class->get_entries = get_entries;
 	io_class->get_location = get_location;
-	io_class->scroll_entry = scroll_entry;
+	io_class->entry_scrolled = entry_scrolled;
 
 	return;
 }
@@ -403,7 +403,7 @@ get_location (IndicatorObject * io, IndicatorObjectEntry * entry)
 }
 
 /* Redirect the scroll event to the Application Item */
-static void scroll_entry (IndicatorObject * io, IndicatorObjectEntry * entry, gint delta, IndicatorScrollDirection direction) {
+static void entry_scrolled (IndicatorObject * io, IndicatorObjectEntry * entry, gint delta, IndicatorScrollDirection direction) {
 	
 	g_return_if_fail(IS_INDICATOR_APPLICATION(io));
 
@@ -469,7 +469,7 @@ guess_label_size (ApplicationEntry * app)
    ApplicationEntry and signaling the indicator host that
    we've got a new indicator. */
 static void
-application_added (IndicatorApplication * application, const gchar * iconname, gint position, const gchar * dbusaddress, const gchar * dbusobject, const gchar * icon_theme_path, const gchar * label, const gchar * guide, const gchar * accessible_desc)
+application_added (IndicatorApplication * application, const gchar * iconname, gint position, const gchar * dbusaddress, const gchar * dbusobject, const gchar * icon_theme_path, const gchar * label, const gchar * guide, const gchar * accessible_desc, const gchar * hint)
 {
 	g_return_if_fail(IS_INDICATOR_APPLICATION(application));
 	g_debug("Building new application entry: %s  with icon: %s at position %i", dbusaddress, iconname, position);
@@ -522,6 +522,12 @@ application_added (IndicatorApplication * application, const gchar * iconname, g
 		app->entry.accessible_desc = NULL;
 	} else {
 		app->entry.accessible_desc = g_strdup(accessible_desc);
+	}
+
+	if (hint == NULL || hint[0] == '\0') {
+		app->entry.name_hint = NULL;
+	} else {
+		app->entry.name_hint = g_strdup(hint);
 	}
 
 	app->entry.menu = GTK_MENU(dbusmenu_gtkmenu_new((gchar *)dbusaddress, (gchar *)dbusobject));
@@ -579,6 +585,12 @@ application_removed (IndicatorApplication * application, gint position)
 	}
 	if (app->entry.menu != NULL) {
 		g_object_unref(G_OBJECT(app->entry.menu));
+	}
+	if (app->entry.accessible_desc != NULL) {
+		g_free((gchar *)app->entry.accessible_desc);
+	}
+	if (app->entry.name_hint != NULL) {
+		g_free((gchar *)app->entry.name_hint);
 	}
 	g_free(app);
 
@@ -775,13 +787,14 @@ receive_signal (GDBusProxy * proxy, gchar * sender_name, gchar * signal_name,
 		const gchar * label;
 		const gchar * guide;
 		const gchar * accessible_desc;
-		g_variant_get (parameters, "(&si&s&o&s&s&s&s)", &iconname,
+		const gchar * hint;
+		g_variant_get (parameters, "(&si&s&o&s&s&s&s&s)", &iconname,
 		               &position, &dbusaddress, &dbusobject,
 		               &icon_theme_path, &label, &guide,
-		               &accessible_desc);
+		               &accessible_desc, &hint);
 		application_added(self, iconname, position, dbusaddress,
 		                  dbusobject, icon_theme_path, label, guide,
-		                  accessible_desc);
+		                  accessible_desc, hint);
 	}
 	else if (g_strcmp0(signal_name, "ApplicationRemoved") == 0) {
 		gint position;
@@ -872,11 +885,12 @@ get_applications_helper (IndicatorApplication * self, GVariant * variant)
 	const gchar * label;
 	const gchar * guide;
 	const gchar * accessible_desc;
-	g_variant_get(variant, "(sisossss)", &icon_name, &position,
+	const gchar * hint;
+	g_variant_get(variant, "(sisosssss)", &icon_name, &position,
 	              &dbus_address, &dbus_object, &icon_theme_path, &label,
-	              &guide, &accessible_desc);
+	              &guide, &accessible_desc, &hint);
 
-	return application_added(self, icon_name, position, dbus_address, dbus_object, icon_theme_path, label, guide, accessible_desc);
+	return application_added(self, icon_name, position, dbus_address, dbus_object, icon_theme_path, label, guide, accessible_desc, hint);
 }
 
 /* Unrefs a theme directory.  This may involve removing it from

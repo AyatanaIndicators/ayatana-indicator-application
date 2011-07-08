@@ -1,3 +1,13 @@
+indicator-application (0.3.91-0ubuntu1) oneiric; urgency=low
+
+  * debian/control: updated libindicator requirement
+
+  [ Ted Gould ]
+  * New upstream release.
+    * Build with libindicator 0.4
+
+ -- Sebastien Bacher <seb128@ubuntu.com>  Fri, 08 Jul 2011 12:23:16 +0200
+
 indicator-application (0.3.90-0ubuntu2) oneiric; urgency=low
 
   * Rebuild for libdbusmenu-gtk3-4
