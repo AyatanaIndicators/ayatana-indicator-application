@@ -1,3 +1,9 @@
+indicator-application (0.3.91-0ubuntu2) oneiric; urgency=low
+
+  * Backport upstream fix for a segfault
+
+ -- Sebastien Bacher <seb128@ubuntu.com>  Fri, 08 Jul 2011 21:42:46 +0200
+
 indicator-application (0.3.91-0ubuntu1) oneiric; urgency=low
 
   * debian/control: updated libindicator requirement

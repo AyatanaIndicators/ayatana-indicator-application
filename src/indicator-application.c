@@ -861,7 +861,7 @@ get_applications (GObject * obj, GAsyncResult * res, gpointer user_data)
 	}
 
 	/* Get our new applications that we got in the request */
-	g_variant_get(result, "(a(sisossss))", &iter);
+	g_variant_get(result, "(a(sisosssss))", &iter);
 	while ((child = g_variant_iter_next_value (iter))) {
 		get_applications_helper(self, child);
 		g_variant_unref(child);

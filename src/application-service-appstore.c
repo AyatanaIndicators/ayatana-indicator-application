@@ -1276,9 +1276,9 @@ get_applications (ApplicationServiceAppstore * appstore)
 		out = g_variant_builder_end(&builder);
 	} else {
 		GError * error = NULL;
-		out = g_variant_parse(g_variant_type_new("a(sisossss)"), "[]", NULL, NULL, &error);
+		out = g_variant_parse(g_variant_type_new("a(sisosssss)"), "[]", NULL, NULL, &error);
 		if (error != NULL) {
-			g_warning("Unable to parse '[]' as a 'a(sisossss)': %s", error->message);
+			g_warning("Unable to parse '[]' as a 'a(sisosssss)': %s", error->message);
 			out = NULL;
 			g_error_free(error);
 		}
