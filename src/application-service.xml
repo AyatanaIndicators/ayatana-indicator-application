@@ -38,8 +38,6 @@ with this program.  If not, see <http://www.gnu.org/licenses/>.
 			<arg type="s" name="dbusaddress" direction="in" />
 			<arg type="s" name="dbusobject" direction="in" />
 			<arg type="u" name="time" direction="in" />
-			<arg type="i" name="x" direction="in" />
-			<arg type="i" name="y" direction="in" />
 		</method>
 
 <!-- Signals -->

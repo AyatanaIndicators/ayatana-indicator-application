@@ -110,7 +110,7 @@ static void indicator_application_finalize   (GObject *object);
 static GList * get_entries (IndicatorObject * io);
 static guint get_location (IndicatorObject * io, IndicatorObjectEntry * entry);
 static void entry_scrolled (IndicatorObject * io, IndicatorObjectEntry * entry, gint delta, IndicatorScrollDirection direction);
-static void entry_secondary_activate (IndicatorObject * io, IndicatorObjectEntry * entry, guint time, gint x, gint y, gpointer data);
+static void entry_secondary_activate (IndicatorObject * io, IndicatorObjectEntry * entry, guint time, gpointer data);
 void connection_changed (IndicatorServiceManager * sm, gboolean connected, IndicatorApplication * application);
 static void connected (IndicatorApplication * application);
 static void disconnected (IndicatorApplication * application);
@@ -407,7 +407,7 @@ get_location (IndicatorObject * io, IndicatorObjectEntry * entry)
 /* Redirect the secondary activate to the Application Item */
 static void
 entry_secondary_activate (IndicatorObject * io, IndicatorObjectEntry * entry,
-                              guint time, gint x, gint y, gpointer data)
+                          guint time, gpointer data)
 {
 	g_return_if_fail(IS_INDICATOR_APPLICATION(io));
 
@@ -422,10 +422,10 @@ entry_secondary_activate (IndicatorObject * io, IndicatorObjectEntry * entry,
 
 	if (app && app->dbusaddress && app->dbusobject && priv->service_proxy) {
 		g_dbus_proxy_call(priv->service_proxy, "ApplicationSecondaryActivateEvent",
-			              g_variant_new("(ssuii)", app->dbusaddress,
-			                                       app->dbusobject,
-			                                       time, x, y),
-			              G_DBUS_CALL_FLAGS_NONE, -1, NULL, NULL, NULL);
+		                  g_variant_new("(ssu)", app->dbusaddress,
+		                                         app->dbusobject,
+		                                         time),
+		                  G_DBUS_CALL_FLAGS_NONE, -1, NULL, NULL, NULL);
 	}
 }
 

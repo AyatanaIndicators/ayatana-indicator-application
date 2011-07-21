@@ -300,18 +300,14 @@ bus_method_call (GDBusConnection * connection, const gchar * sender,
 		}
 	} else if (g_strcmp0(method, "ApplicationSecondaryActivateEvent") == 0) {
 		guint time;
-		gint x;
-		gint y;
 
-		g_variant_get (params, "(&s&suii)", &dbusaddress, &dbusmenuobject,
-			                                &time, &x, &y);
-
+		g_variant_get (params, "(&s&su)", &dbusaddress, &dbusmenuobject, &time);
 		app = find_application_by_menu(service, dbusaddress, dbusmenuobject);
 
 		if (app != NULL && app->dbus_proxy != NULL) {
-			g_dbus_proxy_call(app->dbus_proxy, "SecondaryActivate",
-				              g_variant_new("(ii)", x, y),
-				              G_DBUS_CALL_FLAGS_NONE, -1, NULL, NULL, NULL);
+			g_dbus_proxy_call(app->dbus_proxy, "XAyatanaSecondaryActivate",
+			                  g_variant_new("(u)", time),
+			                  G_DBUS_CALL_FLAGS_NONE, -1, NULL, NULL, NULL);
 		}
 	} else {
 		g_warning("Calling method '%s' on the indicator service and it's unknown", method);
