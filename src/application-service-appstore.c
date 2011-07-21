@@ -306,7 +306,7 @@ bus_method_call (GDBusConnection * connection, const gchar * sender,
 
 		if (app != NULL && app->dbus_proxy != NULL) {
 			g_dbus_proxy_call(app->dbus_proxy, "XAyatanaSecondaryActivate",
-			                  g_variant_new("(u)", time),
+			                  g_variant_new_uint32 (time),
 			                  G_DBUS_CALL_FLAGS_NONE, -1, NULL, NULL, NULL);
 		}
 	} else {
