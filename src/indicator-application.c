@@ -110,6 +110,7 @@ static void indicator_application_finalize   (GObject *object);
 static GList * get_entries (IndicatorObject * io);
 static guint get_location (IndicatorObject * io, IndicatorObjectEntry * entry);
 static void entry_scrolled (IndicatorObject * io, IndicatorObjectEntry * entry, gint delta, IndicatorScrollDirection direction);
+static void entry_secondary_activate (IndicatorObject * io, IndicatorObjectEntry * entry, guint time, gpointer data);
 void connection_changed (IndicatorServiceManager * sm, gboolean connected, IndicatorApplication * application);
 static void connected (IndicatorApplication * application);
 static void disconnected (IndicatorApplication * application);
@@ -144,6 +145,7 @@ indicator_application_class_init (IndicatorApplicationClass *klass)
 
 	io_class->get_entries = get_entries;
 	io_class->get_location = get_location;
+	io_class->secondary_activate = entry_secondary_activate;
 	io_class->entry_scrolled = entry_scrolled;
 
 	return;
@@ -402,9 +404,34 @@ get_location (IndicatorObject * io, IndicatorObjectEntry * entry)
 	return g_list_index(priv->applications, entry);
 }
 
+/* Redirect the secondary activate to the Application Item */
+static void
+entry_secondary_activate (IndicatorObject * io, IndicatorObjectEntry * entry,
+                          guint time, gpointer data)
+{
+	g_return_if_fail(IS_INDICATOR_APPLICATION(io));
+
+	IndicatorApplicationPrivate * priv = INDICATOR_APPLICATION_GET_PRIVATE(io);
+	g_return_if_fail(priv->service_proxy);
+
+	GList *l = g_list_find(priv->applications, entry);
+	if (l == NULL)
+		return;
+
+	ApplicationEntry *app = l->data;
+
+	if (app && app->dbusaddress && app->dbusobject && priv->service_proxy) {
+		g_dbus_proxy_call(priv->service_proxy, "ApplicationSecondaryActivateEvent",
+		                  g_variant_new("(ssu)", app->dbusaddress,
+		                                         app->dbusobject,
+		                                         time),
+		                  G_DBUS_CALL_FLAGS_NONE, -1, NULL, NULL, NULL);
+	}
+}
+
 /* Redirect the scroll event to the Application Item */
-static void entry_scrolled (IndicatorObject * io, IndicatorObjectEntry * entry, gint delta, IndicatorScrollDirection direction) {
-	
+static void entry_scrolled (IndicatorObject * io, IndicatorObjectEntry * entry, gint delta, IndicatorScrollDirection direction)
+{
 	g_return_if_fail(IS_INDICATOR_APPLICATION(io));
 
 	IndicatorApplicationPrivate * priv = INDICATOR_APPLICATION_GET_PRIVATE(io);
@@ -418,9 +445,9 @@ static void entry_scrolled (IndicatorObject * io, IndicatorObjectEntry * entry, 
 
 	if (app && app->dbusaddress && app->dbusobject && priv->service_proxy) {
 		g_dbus_proxy_call(priv->service_proxy, "ApplicationScrollEvent",
-			              	g_variant_new("(ssiu)", app->dbusaddress,
-			              	                        app->dbusobject,
-			              	                        delta, direction),
+			              g_variant_new("(ssiu)", app->dbusaddress,
+			                                      app->dbusobject,
+			                                      delta, direction),
 			              G_DBUS_CALL_FLAGS_NONE, -1, NULL, NULL, NULL);
 	}
 }
