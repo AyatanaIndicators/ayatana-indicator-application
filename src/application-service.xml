@@ -34,6 +34,11 @@ with this program.  If not, see <http://www.gnu.org/licenses/>.
 			<arg type="i" name="delta" direction="in" />
 			<arg type="u" name="direction" direction="in" />
 		</method>
+		<method name="ApplicationSecondaryActivateEvent">
+			<arg type="s" name="dbusaddress" direction="in" />
+			<arg type="s" name="dbusobject" direction="in" />
+			<arg type="u" name="time" direction="in" />
+		</method>
 
 <!-- Signals -->
 		<signal name="ApplicationAdded">
