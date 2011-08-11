@@ -1,3 +1,11 @@
+indicator-application (0.3.92-0ubuntu1~ppa1) UNRELEASED; urgency=low
+
+  * New upstream release.
+    * Support middle click actions and send as Ayatana Activates
+    * Fix signature for null sets
+
+ -- Ted Gould <ted@ubuntu.com>  Thu, 11 Aug 2011 11:55:06 -0500
+
 indicator-application (0.3.91-0ubuntu2) oneiric; urgency=low
 
   * Backport upstream fix for a segfault

@@ -142,6 +142,7 @@ static void approver_free (gpointer papprover, gpointer user_data);
 static void check_with_new_approver (gpointer papp, gpointer papprove);
 static void check_with_old_approver (gpointer papprove, gpointer papp);
 static Application * find_application (ApplicationServiceAppstore * appstore, const gchar * address, const gchar * object);
+static Application * find_application_by_menu (ApplicationServiceAppstore * appstore, const gchar * address, const gchar * menuobject);
 static void bus_get_cb (GObject * object, GAsyncResult * res, gpointer user_data);
 static void dbus_proxy_cb (GObject * object, GAsyncResult * res, gpointer user_data);
 static void app_receive_signal (GDBusProxy * proxy, gchar * sender_name, gchar * signal_name, GVariant * parameters, gpointer user_data);
@@ -263,30 +264,19 @@ bus_method_call (GDBusConnection * connection, const gchar * sender,
 {
 	ApplicationServiceAppstore * service = APPLICATION_SERVICE_APPSTORE(user_data);
 	GVariant * retval = NULL;
+	Application *app = NULL;
+	const gchar *dbusaddress;
+	const gchar *dbusmenuobject;
 
 	if (g_strcmp0(method, "GetApplications") == 0) {
 		retval = get_applications(service);
 	} else if (g_strcmp0(method, "ApplicationScrollEvent") == 0) {
-		Application *app = NULL;
-		const gchar *dbusaddress;
-		const gchar *dbusobject;
 		gchar *orientation = NULL;
 		gint delta;
 		guint direction;
 
-		g_variant_get (params, "(&s&siu)", &dbusaddress, &dbusobject,
+		g_variant_get (params, "(&s&siu)", &dbusaddress, &dbusmenuobject,
 		                                   &delta, &direction);
-
-		GList *l;
-		for (l = service->priv->applications; l != NULL; l = l->next) {
-			Application *a = l->data;
-
-			if (g_strcmp0(a->dbus_name, dbusaddress) == 0 &&
-			      g_strcmp0(a->menu, dbusobject) == 0) {
-			   app = a;
-			   break;
-			}
-		}
 
 		switch (direction) {
 			case INDICATOR_OBJECT_SCROLL_UP:
@@ -301,9 +291,22 @@ bus_method_call (GDBusConnection * connection, const gchar * sender,
 				orientation = "horizontal";
 		}
 
+		app = find_application_by_menu(service, dbusaddress, dbusmenuobject);
+
 		if (app != NULL && app->dbus_proxy != NULL && orientation != NULL) {
 			g_dbus_proxy_call(app->dbus_proxy, "Scroll",
-			              	  g_variant_new("(is)", delta, orientation),
+			                  g_variant_new("(is)", delta, orientation),
+			                  G_DBUS_CALL_FLAGS_NONE, -1, NULL, NULL, NULL);
+		}
+	} else if (g_strcmp0(method, "ApplicationSecondaryActivateEvent") == 0) {
+		guint time;
+
+		g_variant_get (params, "(&s&su)", &dbusaddress, &dbusmenuobject, &time);
+		app = find_application_by_menu(service, dbusaddress, dbusmenuobject);
+
+		if (app != NULL && app->dbus_proxy != NULL) {
+			g_dbus_proxy_call(app->dbus_proxy, "XAyatanaSecondaryActivate",
+			                  g_variant_new("(u)", time),
 			                  G_DBUS_CALL_FLAGS_NONE, -1, NULL, NULL, NULL);
 		}
 	} else {
@@ -1193,6 +1196,28 @@ find_application (ApplicationServiceAppstore * appstore, const gchar * address, 
 
 		if (!g_strcmp0(app->dbus_name, address) && !g_strcmp0(app->dbus_object, object)) {
 			return app;
+		}
+	}
+
+	return NULL;
+}
+
+/* Looks for an application in the list of applications with the matching menu */
+static Application *
+find_application_by_menu (ApplicationServiceAppstore * appstore, const gchar * address, const gchar * menuobject)
+{
+	g_return_val_if_fail(appstore, NULL);
+	g_return_val_if_fail(address, NULL);
+	g_return_val_if_fail(menuobject, NULL);
+
+	ApplicationServiceAppstorePrivate * priv = appstore->priv;
+	GList *l;
+
+	for (l = priv->applications; l != NULL; l = l->next) {
+		Application *a = l->data;
+		if (g_strcmp0(a->dbus_name, address) == 0 &&
+		      g_strcmp0(a->menu, menuobject) == 0) {
+			return a;
 		}
 	}
 
