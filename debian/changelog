@@ -1,4 +1,4 @@
-indicator-application (0.3.92-0ubuntu1) UNRELEASED; urgency=low
+indicator-application (0.3.92-0ubuntu1) oneiric; urgency=low
 
   * debian/rules: 
     - update the translations template
@@ -8,7 +8,7 @@ indicator-application (0.3.92-0ubuntu1) UNRELEASED; urgency=low
     * Support middle click actions and send as Ayatana Activates
     * Fix signature for null sets
 
- -- Sebastien Bacher <seb128@ubuntu.com>  Thu, 11 Aug 2011 21:48:13 +0200
+ -- Sebastien Bacher <seb128@ubuntu.com>  Thu, 11 Aug 2011 21:48:41 +0200
 
 indicator-application (0.3.91-0ubuntu2) oneiric; urgency=low
 
