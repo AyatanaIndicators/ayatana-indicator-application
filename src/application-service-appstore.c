@@ -508,6 +508,14 @@ got_all_properties (GObject * source_object, GAsyncResult * res,
 	else {
 		app->validated = TRUE;
 
+		/* It is possible we're coming through a second time and
+		   getting the properties.  So we need to ensure we don't
+		   already have them stored */
+		g_free(app->id);
+		g_free(app->category);
+		g_free(app->icon);
+		g_free(app->menu);
+
 		app->id = g_variant_dup_string(id, NULL);
 		app->category = g_variant_dup_string(category, NULL);
 		app->status = string_to_status(g_variant_get_string(status, NULL));
@@ -516,10 +524,12 @@ got_all_properties (GObject * source_object, GAsyncResult * res,
 
 		/* Now the optional properties */
 
+		g_free(app->aicon);
 		if (aicon_name != NULL) {
 			app->aicon = g_variant_dup_string(aicon_name, NULL);
 		}
 
+		g_free(app->icon_theme_path);
 		if (icon_theme_path != NULL) {
 			app->icon_theme_path = g_variant_dup_string(icon_theme_path, NULL);
 		} else {
@@ -539,12 +549,14 @@ got_all_properties (GObject * source_object, GAsyncResult * res,
 		g_debug("'%s' ordering index is '%X'", app->id, app->ordering_index);
 		app->appstore->priv->applications = g_list_sort_with_data(app->appstore->priv->applications, app_sort_func, NULL);
 
+		g_free(app->label);
 		if (label != NULL) {
 			app->label = g_variant_dup_string(label, NULL);
 		} else {
 			app->label = g_strdup("");
 		}
 
+		g_free(app->guide);
 		if (guide != NULL) {
 			app->guide = g_variant_dup_string(guide, NULL);
 		} else {
