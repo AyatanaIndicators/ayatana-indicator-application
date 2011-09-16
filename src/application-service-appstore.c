@@ -527,6 +527,8 @@ got_all_properties (GObject * source_object, GAsyncResult * res,
 		g_free(app->aicon);
 		if (aicon_name != NULL) {
 			app->aicon = g_variant_dup_string(aicon_name, NULL);
+		} else {
+			app->aicon = NULL;
 		}
 
 		g_free(app->icon_theme_path);
