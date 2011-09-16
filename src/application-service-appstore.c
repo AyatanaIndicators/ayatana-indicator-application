@@ -524,11 +524,27 @@ got_all_properties (GObject * source_object, GAsyncResult * res,
 
 		/* Now the optional properties */
 
+		g_free(app->icon_desc);
+		if (icon_desc != NULL) {
+			app->icon_desc = g_variant_dup_string(icon_desc, NULL);
+		}
+		else {
+			app->icon_desc = g_strdup("");
+		}
+
 		g_free(app->aicon);
 		if (aicon_name != NULL) {
 			app->aicon = g_variant_dup_string(aicon_name, NULL);
 		} else {
-			app->aicon = NULL;
+			app->aicon = g_strdup("");
+		}
+
+		g_free(app->aicon_desc);
+		if (aicon_desc != NULL) {
+			app->aicon_desc = g_variant_dup_string(aicon_desc, NULL);
+		}
+		else {
+			app->aicon_desc = g_strdup("");
 		}
 
 		g_free(app->icon_theme_path);
@@ -749,6 +765,9 @@ application_free (Application * app)
 	}
 	if (app->icon_desc != NULL) {
 		g_free(app->icon_desc);
+	}
+	if (app->aicon != NULL) {
+		g_free(app->aicon);
 	}
 	if (app->aicon_desc != NULL) {
 		g_free(app->aicon_desc);
