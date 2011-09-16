@@ -508,6 +508,18 @@ got_all_properties (GObject * source_object, GAsyncResult * res,
 	else {
 		app->validated = TRUE;
 
+		/* Clear all existing data */
+		g_free(app->id);
+		g_free(app->category);
+		g_free(app->icon);
+		g_free(app->menu);
+		g_free(app->icon_desc);
+		g_free(app->aicon);
+		g_free(app->aicon_desc);
+		g_free(app->icon_theme_path);
+		g_free(app->label);
+		g_free(app->guide);
+
 		app->id = g_variant_dup_string(id, NULL);
 		app->category = g_variant_dup_string(category, NULL);
 		app->status = string_to_status(g_variant_get_string(status, NULL));
@@ -516,8 +528,25 @@ got_all_properties (GObject * source_object, GAsyncResult * res,
 
 		/* Now the optional properties */
 
+		if (icon_desc != NULL) {
+			app->icon_desc = g_variant_dup_string(icon_desc, NULL);
+		}
+		else {
+			app->icon_desc = g_strdup("");
+		}
+
 		if (aicon_name != NULL) {
 			app->aicon = g_variant_dup_string(aicon_name, NULL);
+		}
+		else {
+			app->aicon = g_strdup("");
+		}
+
+		if (aicon_desc != NULL) {
+			app->aicon_desc = g_variant_dup_string(aicon_desc, NULL);
+		}
+		else {
+			app->aicon_desc = g_strdup("");
 		}
 
 		if (icon_theme_path != NULL) {
@@ -735,6 +764,9 @@ application_free (Application * app)
 	}
 	if (app->icon_desc != NULL) {
 		g_free(app->icon_desc);
+	}
+	if (app->aicon != NULL) {
+		g_free(app->aicon);
 	}
 	if (app->aicon_desc != NULL) {
 		g_free(app->aicon_desc);
