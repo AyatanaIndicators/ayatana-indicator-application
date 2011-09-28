@@ -1,4 +1,4 @@
-indicator-application (0.4.0-0ubuntu1~ppa1) oneiric; urgency=low
+indicator-application (0.4.0-0ubuntu1) oneiric; urgency=low
 
   * New upstream release.
     * Fix memory leak (LP: #829961)
