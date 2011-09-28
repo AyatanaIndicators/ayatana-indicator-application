@@ -1,3 +1,10 @@
+indicator-application (0.4.0-0ubuntu1~ppa1) UNRELEASED; urgency=low
+
+  * New upstream release.
+    * Fix memory leak (LP: #829961)
+
+ -- Ted Gould <ted@ubuntu.com>  Wed, 28 Sep 2011 09:53:06 -0500
+
 indicator-application (0.3.92-0ubuntu1~ppa1) oneiric; urgency=low
 
   * New upstream release.
