@@ -5,13 +5,17 @@ indicator-application (0.4.0-0ubuntu1~ppa1) oneiric; urgency=low
 
  -- Ted Gould <ted@ubuntu.com>  Wed, 28 Sep 2011 10:02:11 -0500
 
-indicator-application (0.3.92-0ubuntu1~ppa1) oneiric; urgency=low
+indicator-application (0.3.92-0ubuntu1) oneiric; urgency=low
 
+  * debian/rules: 
+    - update the translations template
+
+  [ Ted Gould ]
   * New upstream release.
     * Support middle click actions and send as Ayatana Activates
     * Fix signature for null sets
 
- -- Ted Gould <ted@ubuntu.com>  Thu, 11 Aug 2011 11:56:32 -0500
+ -- Sebastien Bacher <seb128@ubuntu.com>  Thu, 11 Aug 2011 21:48:41 +0200
 
 indicator-application (0.3.91-0ubuntu2) oneiric; urgency=low
 
