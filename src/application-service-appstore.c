@@ -403,7 +403,7 @@ load_override_file (GHashTable * hash, const gchar * filename)
 		return;
 	}
 
-	gchar * key = keys[0];
+	gchar * key;
 	gint i;
 
 	for (i = 0; (key = keys[i]) != NULL; i++) {
