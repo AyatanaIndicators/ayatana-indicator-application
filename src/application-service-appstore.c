@@ -939,6 +939,9 @@ apply_status (Application * app)
 				     g_variant_new ("(iss)", position, 
 		                                    app->label != NULL ? app->label : "",
 		                                    app->guide != NULL ? app->guide : ""));
+			emit_signal (appstore, "ApplicationTitleChanged",
+				     g_variant_new ("(is)", position,
+		                                    app->title != NULL ? app->title : ""));
 		}
 	}
 
