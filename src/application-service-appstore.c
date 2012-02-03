@@ -50,6 +50,7 @@ static void props_cb (GObject * object, GAsyncResult * res, gpointer user_data);
 #define NOTIFICATION_ITEM_PROP_MENU                  "Menu"
 #define NOTIFICATION_ITEM_PROP_LABEL                 "XAyatanaLabel"
 #define NOTIFICATION_ITEM_PROP_LABEL_GUIDE           "XAyatanaLabelGuide"
+#define NOTIFICATION_ITEM_PROP_TITLE                 "Title"
 #define NOTIFICATION_ITEM_PROP_ORDERING_INDEX        "XAyatanaOrderingIndex"
 
 #define NOTIFICATION_ITEM_SIG_NEW_ICON               "NewIcon"
@@ -108,6 +109,7 @@ struct _Application {
 	gchar * icon_theme_path;
 	gchar * label;
 	gchar * guide;
+	gchar * title;
 	gboolean currently_free;
 	guint ordering_index;
 	GList * approver_cancels;
@@ -440,7 +442,7 @@ got_all_properties (GObject * source_object, GAsyncResult * res,
 	         * status = NULL, * icon_name = NULL, * aicon_name = NULL,
 	         * icon_desc = NULL, * aicon_desc = NULL,
 	         * icon_theme_path = NULL, * index = NULL, * label = NULL,
-	         * guide = NULL;
+	         * guide = NULL, * title = NULL;
 
 	GVariant * properties = g_dbus_proxy_call_finish(G_DBUS_PROXY(source_object), res, &error);
 
@@ -494,6 +496,8 @@ got_all_properties (GObject * source_object, GAsyncResult * res,
 			label = g_variant_ref(value);
 		} else if (g_strcmp0(name, NOTIFICATION_ITEM_PROP_LABEL_GUIDE) == 0) {
 			guide = g_variant_ref(value);
+		} else if (g_strcmp0(name, NOTIFICATION_ITEM_PROP_TITLE) == 0) {
+			title = g_variant_ref(value);
 		} /* else ignore */
 	}
 	g_variant_iter_free (iter);
@@ -581,6 +585,13 @@ got_all_properties (GObject * source_object, GAsyncResult * res,
 			app->guide = g_strdup("");
 		}
 
+		g_free(app->title);
+		if (title != NULL) {
+			app->title = g_variant_dup_string(title, NULL);
+		} else {
+			app->title = g_strdup("");
+		}
+
 		g_list_foreach(priv->approvers, check_with_old_approver, app);
 
 		apply_status(app);
@@ -603,6 +614,7 @@ got_all_properties (GObject * source_object, GAsyncResult * res,
 	if (index)           g_variant_unref (index);
 	if (label)           g_variant_unref (label);
 	if (guide)           g_variant_unref (guide);
+	if (title)           g_variant_unref (title);
 
 	return;
 }
@@ -783,6 +795,9 @@ application_free (Application * app)
 	}
 	if (app->guide != NULL) {
 		g_free(app->guide);
+	}
+	if (app->title != NULL) {
+		g_free(app->title);
 	}
 	if (app->approver_cancels != NULL) {
 		g_list_foreach(app->approver_cancels, (GFunc)g_cancellable_cancel, NULL);
@@ -1039,6 +1054,7 @@ application_service_appstore_application_add (ApplicationServiceAppstore * appst
 	app->icon_theme_path = NULL;
 	app->label = NULL;
 	app->guide = NULL;
+	app->title = NULL;
 	app->currently_free = FALSE;
 	app->ordering_index = 0;
 	app->approver_cancels = NULL;
