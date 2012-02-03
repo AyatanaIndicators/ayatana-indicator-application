@@ -32,11 +32,7 @@ with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <gtk/gtk.h>
 
 /* DBus Stuff */
-#ifdef HAVE_GTK3
-#include <libdbusmenu-gtk3/menu.h>
-#else
 #include <libdbusmenu-gtk/menu.h>
-#endif
 
 /* Indicator Stuff */
 #include <libindicator/indicator.h>
