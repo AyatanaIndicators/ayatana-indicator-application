@@ -58,6 +58,7 @@ static void props_cb (GObject * object, GAsyncResult * res, gpointer user_data);
 #define NOTIFICATION_ITEM_SIG_NEW_STATUS             "NewStatus"
 #define NOTIFICATION_ITEM_SIG_NEW_LABEL              "XAyatanaNewLabel"
 #define NOTIFICATION_ITEM_SIG_NEW_ICON_THEME_PATH    "NewIconThemePath"
+#define NOTIFICATION_ITEM_SIG_NEW_TITLE              "NewTitle"
 
 #define OVERRIDE_GROUP_NAME                          "Ordering Index Overrides"
 #define OVERRIDE_FILE_NAME                           "ordering-override.keyfile"
@@ -1212,6 +1213,10 @@ app_receive_signal (GDBusProxy * proxy, gchar * sender_name, gchar * signal_name
 	}
 	else if (g_strcmp0(signal_name, NOTIFICATION_ITEM_SIG_NEW_AICON) == 0) {
 		/* aicon name isn't provided by signal, so look it up */
+		get_all_properties(app);
+	}
+	else if (g_strcmp0(signal_name, NOTIFICATION_ITEM_SIG_NEW_TITLE) == 0) {
+		/* title name isn't provided by signal, so look it up */
 		get_all_properties(app);
 	}
 	else if (g_strcmp0(signal_name, NOTIFICATION_ITEM_SIG_NEW_STATUS) == 0) {
