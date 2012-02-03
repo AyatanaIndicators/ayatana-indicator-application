@@ -69,5 +69,9 @@ with this program.  If not, see <http://www.gnu.org/licenses/>.
 			<arg type="s" name="label" direction="out" />
 			<arg type="s" name="guide" direction="out" />
 		</signal>
+		<signal name="ApplicationTitleChanged">
+			<arg type="i" name="position" direction="out" />
+			<arg type="s" name="title" direction="out" />
+		</signal>
 	</interface>
 </node>
