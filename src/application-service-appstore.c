@@ -922,12 +922,12 @@ apply_status (Application * app)
 		if (app->visible_state == VISIBLE_STATE_HIDDEN) {
 			/* Put on panel */
 			emit_signal (appstore, "ApplicationAdded",
-				     g_variant_new ("(sisosssss)", newicon,
+				     g_variant_new ("(sisossssss)", newicon,
 			                            get_position(app),
 			                            app->dbus_name, app->menu,
 			                            app->icon_theme_path,
 			                            app->label, app->guide,
-			                            newdesc, app->id));
+			                            newdesc, app->id, app->title));
 		} else {
 			/* Icon update */
 			gint position = get_position(app);
@@ -1347,20 +1347,20 @@ get_applications (ApplicationServiceAppstore * appstore)
 				continue;
 			}
 
-			g_variant_builder_add (&builder, "(sisosssss)", app->icon,
+			g_variant_builder_add (&builder, "(sisossssss)", app->icon,
 			                       position++, app->dbus_name, app->menu,
 			                       app->icon_theme_path, app->label,
 			                       app->guide,
 			                       (app->icon_desc != NULL) ? app->icon_desc : "",
-			                       app->id);
+			                       app->id, app->title);
 		}
 
 		out = g_variant_builder_end(&builder);
 	} else {
 		GError * error = NULL;
-		out = g_variant_parse(g_variant_type_new("a(sisosssss)"), "[]", NULL, NULL, &error);
+		out = g_variant_parse(g_variant_type_new("a(sisossssss)"), "[]", NULL, NULL, &error);
 		if (error != NULL) {
-			g_warning("Unable to parse '[]' as a 'a(sisosssss)': %s", error->message);
+			g_warning("Unable to parse '[]' as a 'a(sisossssss)': %s", error->message);
 			out = NULL;
 			g_error_free(error);
 		}
