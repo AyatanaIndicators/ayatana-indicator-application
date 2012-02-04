@@ -268,8 +268,8 @@ bus_method_call (GDBusConnection * connection, const gchar * sender,
 	ApplicationServiceAppstore * service = APPLICATION_SERVICE_APPSTORE(user_data);
 	GVariant * retval = NULL;
 	Application *app = NULL;
-	gchar *dbusaddress;
-	gchar *dbusmenuobject;
+	gchar *dbusaddress = NULL;
+	gchar *dbusmenuobject = NULL;
 
 	if (g_strcmp0(method, "GetApplications") == 0) {
 		retval = get_applications(service);
