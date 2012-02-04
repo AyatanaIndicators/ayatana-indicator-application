@@ -811,10 +811,11 @@ receive_signal (GDBusProxy * proxy, gchar * sender_name, gchar * signal_name,
 		const gchar * guide;
 		const gchar * accessible_desc;
 		const gchar * hint;
-		g_variant_get (parameters, "(&si&s&o&s&s&s&s&s)", &iconname,
+		const gchar * title;
+		g_variant_get (parameters, "(&si&s&o&s&s&s&s&s&s)", &iconname,
 		               &position, &dbusaddress, &dbusobject,
 		               &icon_theme_path, &label, &guide,
-		               &accessible_desc, &hint);
+		               &accessible_desc, &hint, &title);
 		application_added(self, iconname, position, dbusaddress,
 		                  dbusobject, icon_theme_path, label, guide,
 		                  accessible_desc, hint);
@@ -884,7 +885,7 @@ get_applications (GObject * obj, GAsyncResult * res, gpointer user_data)
 	}
 
 	/* Get our new applications that we got in the request */
-	g_variant_get(result, "(a(sisosssss))", &iter);
+	g_variant_get(result, "(a(sisossssss))", &iter);
 	while ((child = g_variant_iter_next_value (iter))) {
 		get_applications_helper(self, child);
 		g_variant_unref(child);
@@ -909,9 +910,10 @@ get_applications_helper (IndicatorApplication * self, GVariant * variant)
 	const gchar * guide;
 	const gchar * accessible_desc;
 	const gchar * hint;
-	g_variant_get(variant, "(sisosssss)", &icon_name, &position,
+	const gchar * title;
+	g_variant_get(variant, "(sisossssss)", &icon_name, &position,
 	              &dbus_address, &dbus_object, &icon_theme_path, &label,
-	              &guide, &accessible_desc, &hint);
+	              &guide, &accessible_desc, &hint, &title);
 
 	return application_added(self, icon_name, position, dbus_address, dbus_object, icon_theme_path, label, guide, accessible_desc, hint);
 }
