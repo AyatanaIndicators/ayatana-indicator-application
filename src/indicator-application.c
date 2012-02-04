@@ -158,7 +158,7 @@ indicator_application_init (IndicatorApplication *self)
 	priv->theme_dirs = NULL;
 	priv->disconnect_kill = 0;
 
-	priv->sm = indicator_service_manager_new(INDICATOR_APPLICATION_DBUS_ADDR);	
+	priv->sm = indicator_service_manager_new_version(INDICATOR_APPLICATION_DBUS_ADDR, INDICATOR_APPLICATION_SERVICE_VERSION);	
 	g_signal_connect(G_OBJECT(priv->sm), INDICATOR_SERVICE_MANAGER_SIGNAL_CONNECTION_CHANGE, G_CALLBACK(connection_changed), self);
 
 	priv->applications = NULL;

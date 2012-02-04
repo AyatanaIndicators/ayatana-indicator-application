@@ -23,6 +23,7 @@ with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define INDICATOR_APPLICATION_DBUS_ADDR        "com.canonical.indicator.application"
 #define INDICATOR_APPLICATION_DBUS_OBJ         "/com/canonical/indicator/application/service"
 #define INDICATOR_APPLICATION_DBUS_IFACE       "com.canonical.indicator.application.service"
+#define INDICATOR_APPLICATION_SERVICE_VERSION  2
 
 #define NOTIFICATION_WATCHER_DBUS_ADDR    "org.kde.StatusNotifierWatcher"
 #define NOTIFICATION_WATCHER_DBUS_OBJ     "/StatusNotifierWatcher"
