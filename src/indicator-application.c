@@ -802,16 +802,16 @@ receive_signal (GDBusProxy * proxy, gchar * sender_name, gchar * signal_name,
 	}
 
 	if (g_strcmp0(signal_name, "ApplicationAdded") == 0) {
-		gchar * iconname;
+		gchar * iconname = NULL;
 		gint position;
-		gchar * dbusaddress;
-		gchar * dbusobject;
-		gchar * icon_theme_path;
-		gchar * label;
-		gchar * guide;
-		gchar * accessible_desc;
-		gchar * hint;
-		gchar * title;
+		gchar * dbusaddress = NULL;
+		gchar * dbusobject = NULL;
+		gchar * icon_theme_path = NULL;
+		gchar * label = NULL;
+		gchar * guide = NULL;
+		gchar * accessible_desc = NULL;
+		gchar * hint = NULL;
+		gchar * title = NULL;
 		g_variant_get (parameters, "(sisossssss)", &iconname,
 		               &position, &dbusaddress, &dbusobject,
 		               &icon_theme_path, &label, &guide,
@@ -836,8 +836,8 @@ receive_signal (GDBusProxy * proxy, gchar * sender_name, gchar * signal_name,
 	}
 	else if (g_strcmp0(signal_name, "ApplicationIconChanged") == 0) {
 		gint position;
-		gchar * iconname;
-		gchar * icondesc;
+		gchar * iconname = NULL;
+		gchar * icondesc = NULL;
 		g_variant_get (parameters, "(iss)", &position, &iconname, &icondesc);
 		application_icon_changed(self, position, iconname, icondesc);
 		g_free(iconname);
@@ -845,15 +845,15 @@ receive_signal (GDBusProxy * proxy, gchar * sender_name, gchar * signal_name,
 	}
 	else if (g_strcmp0(signal_name, "ApplicationIconThemePathChanged") == 0) {
 		gint position;
-		gchar * icon_theme_path;
+		gchar * icon_theme_path = NULL;
 		g_variant_get (parameters, "(is)", &position, &icon_theme_path);
 		application_icon_theme_path_changed(self, position, icon_theme_path);
 		g_free(icon_theme_path);
 	}
 	else if (g_strcmp0(signal_name, "ApplicationLabelChanged") == 0) {
 		gint position;
-		gchar * label;
-		gchar * guide;
+		gchar * label = NULL;
+		gchar * guide = NULL;
 		g_variant_get (parameters, "(iss)", &position, &label, &guide);
 		application_label_changed(self, position, label, guide);
 		g_free(label);
@@ -915,16 +915,16 @@ get_applications (GObject * obj, GAsyncResult * res, gpointer user_data)
 static void
 get_applications_helper (IndicatorApplication * self, GVariant * variant)
 {
-	gchar * icon_name;
+	gchar * icon_name = NULL;
 	gint position;
-	gchar * dbus_address;
-	gchar * dbus_object;
-	gchar * icon_theme_path;
-	gchar * label;
-	gchar * guide;
-	gchar * accessible_desc;
-	gchar * hint;
-	gchar * title;
+	gchar * dbus_address = NULL;
+	gchar * dbus_object = NULL;
+	gchar * icon_theme_path = NULL;
+	gchar * label = NULL;
+	gchar * guide = NULL;
+	gchar * accessible_desc = NULL;
+	gchar * hint = NULL;
+	gchar * title = NULL;
 	g_variant_get(variant, "(sisossssss)", &icon_name, &position,
 	              &dbus_address, &dbus_object, &icon_theme_path, &label,
 	              &guide, &accessible_desc, &hint, &title);
