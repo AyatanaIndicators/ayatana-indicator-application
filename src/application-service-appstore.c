@@ -1228,19 +1228,19 @@ app_receive_signal (GDBusProxy * proxy, gchar * sender_name, gchar * signal_name
 		get_all_properties(app);
 	}
 	else if (g_strcmp0(signal_name, NOTIFICATION_ITEM_SIG_NEW_STATUS) == 0) {
-		gchar * status;
+		gchar * status = NULL;
 		g_variant_get(parameters, "(s)", &status);
 		new_status(app, status);
 		g_free(status);
 	}
 	else if (g_strcmp0(signal_name, NOTIFICATION_ITEM_SIG_NEW_ICON_THEME_PATH) == 0) {
-		gchar * icon_theme_path;
+		gchar * icon_theme_path = NULL;
 		g_variant_get(parameters, "(s)", &icon_theme_path);
 		new_icon_theme_path(app, icon_theme_path);
 		g_free(icon_theme_path);
 	}
 	else if (g_strcmp0(signal_name, NOTIFICATION_ITEM_SIG_NEW_LABEL) == 0) {
-		gchar * label, * guide;
+		gchar * label = NULL, * guide = NULL;
 		g_variant_get(parameters, "(ss)", &label, &guide);
 		new_label(app, label, guide);
 		g_free(label);
@@ -1569,7 +1569,7 @@ approver_name_changed (GDBusConnection * connection, const gchar * sender_name,
 	Approver * approver = (Approver *)user_data;
 	ApplicationServiceAppstore * appstore = approver->appstore;
 
-	gchar * new_name;
+	gchar * new_name = NULL;
 	g_variant_get(parameters, "(sss)", NULL, NULL, &new_name);
 
 	if (new_name == NULL || new_name[0] == 0) {
@@ -1643,9 +1643,9 @@ approver_receive_signal (GDBusProxy * proxy, gchar * sender_name, gchar * signal
 	Approver * approver = (Approver *)user_data;
 
 	if (g_strcmp0(signal_name, "ReviseJudgement") == 0) {
-		gboolean approved;
-		gchar * address;
-		gchar * path;
+		gboolean approved = FALSE;
+		gchar * address = NULL;
+		gchar * path = NULL;
 		g_variant_get(parameters, "(bso)", &approved, &address, &path);
 		approver_revise_judgement(approver, approved, address, path);
 		g_free(address);
