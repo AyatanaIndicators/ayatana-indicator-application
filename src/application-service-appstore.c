@@ -1099,7 +1099,7 @@ name_changed (GDBusConnection * connection, const gchar * sender_name,
 {
 	Application * app = (Application *)user_data;
 
-	gchar * new_name;
+	gchar * new_name = NULL;
 	g_variant_get(parameters, "(sss)", NULL, NULL, &new_name);
 
 	if (new_name == NULL || new_name[0] == 0)
