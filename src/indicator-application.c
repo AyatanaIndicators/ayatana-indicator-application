@@ -32,11 +32,7 @@ with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <gtk/gtk.h>
 
 /* DBus Stuff */
-#ifdef HAVE_GTK3
-#include <libdbusmenu-gtk3/menu.h>
-#else
 #include <libdbusmenu-gtk/menu.h>
-#endif
 
 /* Indicator Stuff */
 #include <libindicator/indicator.h>
@@ -162,7 +158,7 @@ indicator_application_init (IndicatorApplication *self)
 	priv->theme_dirs = NULL;
 	priv->disconnect_kill = 0;
 
-	priv->sm = indicator_service_manager_new(INDICATOR_APPLICATION_DBUS_ADDR);	
+	priv->sm = indicator_service_manager_new_version(INDICATOR_APPLICATION_DBUS_ADDR, INDICATOR_APPLICATION_SERVICE_VERSION);	
 	g_signal_connect(G_OBJECT(priv->sm), INDICATOR_SERVICE_MANAGER_SIGNAL_CONNECTION_CHANGE, G_CALLBACK(connection_changed), self);
 
 	priv->applications = NULL;
@@ -806,22 +802,32 @@ receive_signal (GDBusProxy * proxy, gchar * sender_name, gchar * signal_name,
 	}
 
 	if (g_strcmp0(signal_name, "ApplicationAdded") == 0) {
-		const gchar * iconname;
+		gchar * iconname = NULL;
 		gint position;
-		const gchar * dbusaddress;
-		const gchar * dbusobject;
-		const gchar * icon_theme_path;
-		const gchar * label;
-		const gchar * guide;
-		const gchar * accessible_desc;
-		const gchar * hint;
-		g_variant_get (parameters, "(&si&s&o&s&s&s&s&s)", &iconname,
+		gchar * dbusaddress = NULL;
+		gchar * dbusobject = NULL;
+		gchar * icon_theme_path = NULL;
+		gchar * label = NULL;
+		gchar * guide = NULL;
+		gchar * accessible_desc = NULL;
+		gchar * hint = NULL;
+		gchar * title = NULL;
+		g_variant_get (parameters, "(sisossssss)", &iconname,
 		               &position, &dbusaddress, &dbusobject,
 		               &icon_theme_path, &label, &guide,
-		               &accessible_desc, &hint);
+		               &accessible_desc, &hint, &title);
 		application_added(self, iconname, position, dbusaddress,
 		                  dbusobject, icon_theme_path, label, guide,
 		                  accessible_desc, hint);
+		g_free(iconname);
+		g_free(dbusaddress);
+		g_free(dbusobject);
+		g_free(icon_theme_path);
+		g_free(label);
+		g_free(guide);
+		g_free(accessible_desc);
+		g_free(hint);
+		g_free(title);
 	}
 	else if (g_strcmp0(signal_name, "ApplicationRemoved") == 0) {
 		gint position;
@@ -830,23 +836,28 @@ receive_signal (GDBusProxy * proxy, gchar * sender_name, gchar * signal_name,
 	}
 	else if (g_strcmp0(signal_name, "ApplicationIconChanged") == 0) {
 		gint position;
-		const gchar * iconname;
-		const gchar * icondesc;
-		g_variant_get (parameters, "(i&s&s)", &position, &iconname, &icondesc);
+		gchar * iconname = NULL;
+		gchar * icondesc = NULL;
+		g_variant_get (parameters, "(iss)", &position, &iconname, &icondesc);
 		application_icon_changed(self, position, iconname, icondesc);
+		g_free(iconname);
+		g_free(icondesc);
 	}
 	else if (g_strcmp0(signal_name, "ApplicationIconThemePathChanged") == 0) {
 		gint position;
-		const gchar * icon_theme_path;
-		g_variant_get (parameters, "(i&s)", &position, &icon_theme_path);
+		gchar * icon_theme_path = NULL;
+		g_variant_get (parameters, "(is)", &position, &icon_theme_path);
 		application_icon_theme_path_changed(self, position, icon_theme_path);
+		g_free(icon_theme_path);
 	}
 	else if (g_strcmp0(signal_name, "ApplicationLabelChanged") == 0) {
 		gint position;
-		const gchar * label;
-		const gchar * guide;
-		g_variant_get (parameters, "(i&s&s)", &position, &label, &guide);
+		gchar * label = NULL;
+		gchar * guide = NULL;
+		g_variant_get (parameters, "(iss)", &position, &label, &guide);
 		application_label_changed(self, position, label, guide);
+		g_free(label);
+		g_free(guide);
 	}
 
 	return;
@@ -888,7 +899,7 @@ get_applications (GObject * obj, GAsyncResult * res, gpointer user_data)
 	}
 
 	/* Get our new applications that we got in the request */
-	g_variant_get(result, "(a(sisosssss))", &iter);
+	g_variant_get(result, "(a(sisossssss))", &iter);
 	while ((child = g_variant_iter_next_value (iter))) {
 		get_applications_helper(self, child);
 		g_variant_unref(child);
@@ -904,20 +915,33 @@ get_applications (GObject * obj, GAsyncResult * res, gpointer user_data)
 static void
 get_applications_helper (IndicatorApplication * self, GVariant * variant)
 {
-	const gchar * icon_name;
+	gchar * icon_name = NULL;
 	gint position;
-	const gchar * dbus_address;
-	const gchar * dbus_object;
-	const gchar * icon_theme_path;
-	const gchar * label;
-	const gchar * guide;
-	const gchar * accessible_desc;
-	const gchar * hint;
-	g_variant_get(variant, "(sisosssss)", &icon_name, &position,
+	gchar * dbus_address = NULL;
+	gchar * dbus_object = NULL;
+	gchar * icon_theme_path = NULL;
+	gchar * label = NULL;
+	gchar * guide = NULL;
+	gchar * accessible_desc = NULL;
+	gchar * hint = NULL;
+	gchar * title = NULL;
+	g_variant_get(variant, "(sisossssss)", &icon_name, &position,
 	              &dbus_address, &dbus_object, &icon_theme_path, &label,
-	              &guide, &accessible_desc, &hint);
+	              &guide, &accessible_desc, &hint, &title);
 
-	return application_added(self, icon_name, position, dbus_address, dbus_object, icon_theme_path, label, guide, accessible_desc, hint);
+	application_added(self, icon_name, position, dbus_address, dbus_object, icon_theme_path, label, guide, accessible_desc, hint);
+
+	g_free(icon_name);
+	g_free(dbus_address);
+	g_free(dbus_object);
+	g_free(icon_theme_path);
+	g_free(label);
+	g_free(guide);
+	g_free(accessible_desc);
+	g_free(hint);
+	g_free(title);
+
+	return;
 }
 
 /* Unrefs a theme directory.  This may involve removing it from

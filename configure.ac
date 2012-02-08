@@ -1,11 +1,11 @@
 
-AC_INIT(indicator-application, 0.4.0, ted@canonical.com)
+AC_INIT(indicator-application, 0.4.90, ted@canonical.com)
 AC_COPYRIGHT([Copyright 2009, 2010 Canonical])
 
 AC_PREREQ(2.53)
 
 AM_CONFIG_HEADER(config.h)
-AM_INIT_AUTOMAKE(indicator-application, 0.4.0)
+AM_INIT_AUTOMAKE(indicator-application, 0.4.90)
 
 AM_MAINTAINER_MODE
 
@@ -33,7 +33,7 @@ GTK_REQUIRED_VERSION=2.18
 GTK3_REQUIRED_VERSION=2.91
 GIO_REQUIRED_VERSION=2.26
 INDICATOR_REQUIRED_VERSION=0.3.5
-DBUSMENUGTK_REQUIRED_VERSION=0.3.91
+DBUSMENUGTK_REQUIRED_VERSION=0.5.90
 JSON_GLIB_REQUIRED_VERSION=0.7.6
 DBUS_GLIB_REQUIRED_VERSION=0.82
 
@@ -69,6 +69,15 @@ AS_IF([test "x$with_gtk" = x3],
       [AC_MSG_FAILURE([Value for --with-gtk was neither 2 nor 3])]
 )
 AM_CONDITIONAL(USE_GTK3, [test "x$with_gtk" = x3])
+
+###########################
+# gcov coverage reporting
+###########################
+m4_include([m4/gcov.m4])
+AC_TDD_GCOV
+AC_SUBST(COVERAGE_CFLAGS)
+AC_SUBST(COVERAGE_CXXFLAGS)
+AC_SUBST(COVERAGE_LDFLAGS)
 
 AC_SUBST(INDICATOR_CFLAGS)
 AC_SUBST(INDICATOR_LIBS)
@@ -134,4 +143,5 @@ Application Indicator Configuration:
 	Prefix:        $prefix
 	Indicator Dir: $INDICATORDIR
 	GTK+ Version:  $with_gtk
+	gcov:          $use_gcov
 ])

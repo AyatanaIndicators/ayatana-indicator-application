@@ -1,3 +1,14 @@
+indicator-application (0.4.90-0ubuntu1~ppa1) UNRELEASED; urgency=low
+
+  * New upstream release.
+    * Adding in a code coverage based build target
+    * Fixing useless variable setting
+    * Fixing variant usage
+    * Adding support for the Title property
+    * Fixing to work with Dbusmenu 0.5.90
+
+ -- Ted Gould <ted@ubuntu.com>  Wed, 08 Feb 2012 11:31:13 -0600
+
 indicator-application (0.4.0-0ubuntu2) precise; urgency=low
 
   * no change rebuild for libindicator7

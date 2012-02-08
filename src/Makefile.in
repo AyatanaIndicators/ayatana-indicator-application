@@ -56,7 +56,10 @@ DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in \
 libexec_PROGRAMS = indicator-application-service$(EXEEXT)
 subdir = src
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
-am__aclocal_m4_deps = $(top_srcdir)/acinclude.m4 \
+am__aclocal_m4_deps = $(top_srcdir)/m4/libtool.m4 \
+	$(top_srcdir)/m4/ltoptions.m4 $(top_srcdir)/m4/ltsugar.m4 \
+	$(top_srcdir)/m4/ltversion.m4 $(top_srcdir)/m4/lt~obsolete.m4 \
+	$(top_srcdir)/acinclude.m4 $(top_srcdir)/m4/gcov.m4 \
 	$(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
@@ -116,7 +119,7 @@ indicator_application_service_DEPENDENCIES = $(am__DEPENDENCIES_1) \
 indicator_application_service_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
 	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CCLD) \
 	$(indicator_application_service_CFLAGS) $(CFLAGS) \
-	$(AM_LDFLAGS) $(LDFLAGS) -o $@
+	$(indicator_application_service_LDFLAGS) $(LDFLAGS) -o $@
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
@@ -163,6 +166,9 @@ AWK = @AWK@
 CC = @CC@
 CCDEPMODE = @CCDEPMODE@
 CFLAGS = @CFLAGS@
+COVERAGE_CFLAGS = @COVERAGE_CFLAGS@
+COVERAGE_CXXFLAGS = @COVERAGE_CXXFLAGS@
+COVERAGE_LDFLAGS = @COVERAGE_LDFLAGS@
 CPP = @CPP@
 CPPFLAGS = @CPPFLAGS@
 CYGPATH_W = @CYGPATH_W@
@@ -178,6 +184,8 @@ ECHO_T = @ECHO_T@
 EGREP = @EGREP@
 EXEEXT = @EXEEXT@
 FGREP = @FGREP@
+GCOVR = @GCOVR@
+GENHTML = @GENHTML@
 GLIB_GENMARSHAL = @GLIB_GENMARSHAL@
 GLIB_MKENUMS = @GLIB_MKENUMS@
 GREP = @GREP@
@@ -190,6 +198,7 @@ INSTALL_DATA = @INSTALL_DATA@
 INSTALL_PROGRAM = @INSTALL_PROGRAM@
 INSTALL_SCRIPT = @INSTALL_SCRIPT@
 INSTALL_STRIP_PROGRAM = @INSTALL_STRIP_PROGRAM@
+LCOV = @LCOV@
 LD = @LD@
 LDFLAGS = @LDFLAGS@
 LIBOBJS = @LIBOBJS@
@@ -223,6 +232,7 @@ RANLIB = @RANLIB@
 SED = @SED@
 SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
+SHTOOL = @SHTOOL@
 STRIP = @STRIP@
 VERSION = @VERSION@
 abs_builddir = @abs_builddir@
@@ -302,6 +312,7 @@ libapplication_la_SOURCES = \
 	indicator-application.c
 
 libapplication_la_CFLAGS = $(INDICATOR_CFLAGS) \
+	$(COVERAGE_CFLAGS) \
 	-Wall \
 	-Wl,-Bsymbolic-functions \
 	-Wl,-z,defs \
@@ -310,7 +321,9 @@ libapplication_la_CFLAGS = $(INDICATOR_CFLAGS) \
 	-DG_LOG_DOMAIN=\"Indicator-Application\"
 
 libapplication_la_LIBADD = $(INDICATOR_LIBS) 
-libapplication_la_LDFLAGS = -module -avoid-version
+libapplication_la_LDFLAGS = $(COVERAGE_LDFLAGS) \
+	-module -avoid-version
+
 indicator_application_service_SOURCES = \
 	application-service.c \
 	application-service-appstore.h \
@@ -326,6 +339,7 @@ indicator_application_service_SOURCES = \
 indicator_application_service_CFLAGS = \
 	$(INDICATOR_CFLAGS) \
 	$(APPINDICATOR_CFLAGS) \
+	$(COVERAGE_CFLAGS) \
 	-DDATADIR="\"$(pkgdatadir)\"" \
 	-Wall -Werror \
 	-DG_LOG_DOMAIN=\"indicator-application-service\"
@@ -333,6 +347,9 @@ indicator_application_service_CFLAGS = \
 indicator_application_service_LDADD = \
 	$(INDICATOR_LIBS) \
 	$(APPINDICATOR_LIBS)
+
+indicator_application_service_LDFLAGS = \
+	$(COVERAGE_LDFLAGS)
 
 glib_marshal_list = application-service-marshal.list
 glib_marshal_prefix = _application_service_marshal
