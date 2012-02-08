@@ -70,6 +70,15 @@ AS_IF([test "x$with_gtk" = x3],
 )
 AM_CONDITIONAL(USE_GTK3, [test "x$with_gtk" = x3])
 
+###########################
+# gcov coverage reporting
+###########################
+m4_include([m4/gcov.m4])
+AC_TDD_GCOV
+AC_SUBST(COVERAGE_CFLAGS)
+AC_SUBST(COVERAGE_CXXFLAGS)
+AC_SUBST(COVERAGE_LDFLAGS)
+
 AC_SUBST(INDICATOR_CFLAGS)
 AC_SUBST(INDICATOR_LIBS)
 
@@ -134,4 +143,5 @@ Application Indicator Configuration:
 	Prefix:        $prefix
 	Indicator Dir: $INDICATORDIR
 	GTK+ Version:  $with_gtk
+	gcov:          $use_gcov
 ])
