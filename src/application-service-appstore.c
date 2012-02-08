@@ -268,8 +268,8 @@ bus_method_call (GDBusConnection * connection, const gchar * sender,
 	ApplicationServiceAppstore * service = APPLICATION_SERVICE_APPSTORE(user_data);
 	GVariant * retval = NULL;
 	Application *app = NULL;
-	const gchar *dbusaddress;
-	const gchar *dbusmenuobject;
+	gchar *dbusaddress = NULL;
+	gchar *dbusmenuobject = NULL;
 
 	if (g_strcmp0(method, "GetApplications") == 0) {
 		retval = get_applications(service);
@@ -278,7 +278,7 @@ bus_method_call (GDBusConnection * connection, const gchar * sender,
 		gint delta;
 		guint direction;
 
-		g_variant_get (params, "(&s&siu)", &dbusaddress, &dbusmenuobject,
+		g_variant_get (params, "(ssiu)", &dbusaddress, &dbusmenuobject,
 		                                   &delta, &direction);
 
 		switch (direction) {
@@ -304,7 +304,7 @@ bus_method_call (GDBusConnection * connection, const gchar * sender,
 	} else if (g_strcmp0(method, "ApplicationSecondaryActivateEvent") == 0) {
 		guint time;
 
-		g_variant_get (params, "(&s&su)", &dbusaddress, &dbusmenuobject, &time);
+		g_variant_get (params, "(ssu)", &dbusaddress, &dbusmenuobject, &time);
 		app = find_application_by_menu(service, dbusaddress, dbusmenuobject);
 
 		if (app != NULL && app->dbus_proxy != NULL) {
@@ -315,6 +315,9 @@ bus_method_call (GDBusConnection * connection, const gchar * sender,
 	} else {
 		g_warning("Calling method '%s' on the indicator service and it's unknown", method);
 	}
+
+	g_free(dbusaddress);
+	g_free(dbusmenuobject);
 
 	g_dbus_method_invocation_return_value(invocation, retval);
 	return;
@@ -1096,11 +1099,13 @@ name_changed (GDBusConnection * connection, const gchar * sender_name,
 {
 	Application * app = (Application *)user_data;
 
-	const gchar * new_name;
-	g_variant_get(parameters, "(&s&s&s)", NULL, NULL, &new_name);
+	gchar * new_name = NULL;
+	g_variant_get(parameters, "(sss)", NULL, NULL, &new_name);
 
 	if (new_name == NULL || new_name[0] == 0)
 		application_died(app);
+
+	g_free(new_name);
 }
 
 /* Callback from trying to create the proxy for the app. */
@@ -1223,19 +1228,23 @@ app_receive_signal (GDBusProxy * proxy, gchar * sender_name, gchar * signal_name
 		get_all_properties(app);
 	}
 	else if (g_strcmp0(signal_name, NOTIFICATION_ITEM_SIG_NEW_STATUS) == 0) {
-		const gchar * status;
-		g_variant_get(parameters, "(&s)", &status);
+		gchar * status = NULL;
+		g_variant_get(parameters, "(s)", &status);
 		new_status(app, status);
+		g_free(status);
 	}
 	else if (g_strcmp0(signal_name, NOTIFICATION_ITEM_SIG_NEW_ICON_THEME_PATH) == 0) {
-		const gchar * icon_theme_path;
-		g_variant_get(parameters, "(&s)", &icon_theme_path);
+		gchar * icon_theme_path = NULL;
+		g_variant_get(parameters, "(s)", &icon_theme_path);
 		new_icon_theme_path(app, icon_theme_path);
+		g_free(icon_theme_path);
 	}
 	else if (g_strcmp0(signal_name, NOTIFICATION_ITEM_SIG_NEW_LABEL) == 0) {
-		const gchar * label, * guide;
-		g_variant_get(parameters, "(&s&s)", &label, &guide);
+		gchar * label = NULL, * guide = NULL;
+		g_variant_get(parameters, "(ss)", &label, &guide);
 		new_label(app, label, guide);
+		g_free(label);
+		g_free(guide);
 	}
 
 	return;
@@ -1560,13 +1569,16 @@ approver_name_changed (GDBusConnection * connection, const gchar * sender_name,
 	Approver * approver = (Approver *)user_data;
 	ApplicationServiceAppstore * appstore = approver->appstore;
 
-	const gchar * new_name;
-	g_variant_get(parameters, "(&s&s&s)", NULL, NULL, &new_name);
+	gchar * new_name = NULL;
+	g_variant_get(parameters, "(sss)", NULL, NULL, &new_name);
 
 	if (new_name == NULL || new_name[0] == 0) {
 		appstore->priv->approvers = g_list_remove(appstore->priv->approvers, approver);
 		approver_free(approver, appstore);
 	}
+
+	g_free(new_name);
+	return;
 }
 
 /* Callback from trying to create the proxy for the approver. */
@@ -1631,11 +1643,13 @@ approver_receive_signal (GDBusProxy * proxy, gchar * sender_name, gchar * signal
 	Approver * approver = (Approver *)user_data;
 
 	if (g_strcmp0(signal_name, "ReviseJudgement") == 0) {
-		gboolean approved;
-		const gchar * address;
-		const gchar * path;
-		g_variant_get(parameters, "(b&s&o)", &approved, &address, &path);
+		gboolean approved = FALSE;
+		gchar * address = NULL;
+		gchar * path = NULL;
+		g_variant_get(parameters, "(bso)", &approved, &address, &path);
 		approver_revise_judgement(approver, approved, address, path);
+		g_free(address);
+		g_free(path);
 	}
 
 	return;
