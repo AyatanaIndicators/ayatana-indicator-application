@@ -50,6 +50,7 @@ static void props_cb (GObject * object, GAsyncResult * res, gpointer user_data);
 #define NOTIFICATION_ITEM_PROP_MENU                  "Menu"
 #define NOTIFICATION_ITEM_PROP_LABEL                 "XAyatanaLabel"
 #define NOTIFICATION_ITEM_PROP_LABEL_GUIDE           "XAyatanaLabelGuide"
+#define NOTIFICATION_ITEM_PROP_TITLE                 "Title"
 #define NOTIFICATION_ITEM_PROP_ORDERING_INDEX        "XAyatanaOrderingIndex"
 
 #define NOTIFICATION_ITEM_SIG_NEW_ICON               "NewIcon"
@@ -57,6 +58,7 @@ static void props_cb (GObject * object, GAsyncResult * res, gpointer user_data);
 #define NOTIFICATION_ITEM_SIG_NEW_STATUS             "NewStatus"
 #define NOTIFICATION_ITEM_SIG_NEW_LABEL              "XAyatanaNewLabel"
 #define NOTIFICATION_ITEM_SIG_NEW_ICON_THEME_PATH    "NewIconThemePath"
+#define NOTIFICATION_ITEM_SIG_NEW_TITLE              "NewTitle"
 
 #define OVERRIDE_GROUP_NAME                          "Ordering Index Overrides"
 #define OVERRIDE_FILE_NAME                           "ordering-override.keyfile"
@@ -108,6 +110,7 @@ struct _Application {
 	gchar * icon_theme_path;
 	gchar * label;
 	gchar * guide;
+	gchar * title;
 	gboolean currently_free;
 	guint ordering_index;
 	GList * approver_cancels;
@@ -265,8 +268,8 @@ bus_method_call (GDBusConnection * connection, const gchar * sender,
 	ApplicationServiceAppstore * service = APPLICATION_SERVICE_APPSTORE(user_data);
 	GVariant * retval = NULL;
 	Application *app = NULL;
-	const gchar *dbusaddress;
-	const gchar *dbusmenuobject;
+	gchar *dbusaddress = NULL;
+	gchar *dbusmenuobject = NULL;
 
 	if (g_strcmp0(method, "GetApplications") == 0) {
 		retval = get_applications(service);
@@ -275,7 +278,7 @@ bus_method_call (GDBusConnection * connection, const gchar * sender,
 		gint delta;
 		guint direction;
 
-		g_variant_get (params, "(&s&siu)", &dbusaddress, &dbusmenuobject,
+		g_variant_get (params, "(ssiu)", &dbusaddress, &dbusmenuobject,
 		                                   &delta, &direction);
 
 		switch (direction) {
@@ -301,7 +304,7 @@ bus_method_call (GDBusConnection * connection, const gchar * sender,
 	} else if (g_strcmp0(method, "ApplicationSecondaryActivateEvent") == 0) {
 		guint time;
 
-		g_variant_get (params, "(&s&su)", &dbusaddress, &dbusmenuobject, &time);
+		g_variant_get (params, "(ssu)", &dbusaddress, &dbusmenuobject, &time);
 		app = find_application_by_menu(service, dbusaddress, dbusmenuobject);
 
 		if (app != NULL && app->dbus_proxy != NULL) {
@@ -312,6 +315,9 @@ bus_method_call (GDBusConnection * connection, const gchar * sender,
 	} else {
 		g_warning("Calling method '%s' on the indicator service and it's unknown", method);
 	}
+
+	g_free(dbusaddress);
+	g_free(dbusmenuobject);
 
 	g_dbus_method_invocation_return_value(invocation, retval);
 	return;
@@ -403,7 +409,7 @@ load_override_file (GHashTable * hash, const gchar * filename)
 		return;
 	}
 
-	gchar * key = keys[0];
+	gchar * key;
 	gint i;
 
 	for (i = 0; (key = keys[i]) != NULL; i++) {
@@ -440,7 +446,7 @@ got_all_properties (GObject * source_object, GAsyncResult * res,
 	         * status = NULL, * icon_name = NULL, * aicon_name = NULL,
 	         * icon_desc = NULL, * aicon_desc = NULL,
 	         * icon_theme_path = NULL, * index = NULL, * label = NULL,
-	         * guide = NULL;
+	         * guide = NULL, * title = NULL;
 
 	GVariant * properties = g_dbus_proxy_call_finish(G_DBUS_PROXY(source_object), res, &error);
 
@@ -494,6 +500,8 @@ got_all_properties (GObject * source_object, GAsyncResult * res,
 			label = g_variant_ref(value);
 		} else if (g_strcmp0(name, NOTIFICATION_ITEM_PROP_LABEL_GUIDE) == 0) {
 			guide = g_variant_ref(value);
+		} else if (g_strcmp0(name, NOTIFICATION_ITEM_PROP_TITLE) == 0) {
+			title = g_variant_ref(value);
 		} /* else ignore */
 	}
 	g_variant_iter_free (iter);
@@ -581,6 +589,13 @@ got_all_properties (GObject * source_object, GAsyncResult * res,
 			app->guide = g_strdup("");
 		}
 
+		g_free(app->title);
+		if (title != NULL) {
+			app->title = g_variant_dup_string(title, NULL);
+		} else {
+			app->title = g_strdup("");
+		}
+
 		g_list_foreach(priv->approvers, check_with_old_approver, app);
 
 		apply_status(app);
@@ -603,6 +618,7 @@ got_all_properties (GObject * source_object, GAsyncResult * res,
 	if (index)           g_variant_unref (index);
 	if (label)           g_variant_unref (label);
 	if (guide)           g_variant_unref (guide);
+	if (title)           g_variant_unref (title);
 
 	return;
 }
@@ -784,6 +800,9 @@ application_free (Application * app)
 	if (app->guide != NULL) {
 		g_free(app->guide);
 	}
+	if (app->title != NULL) {
+		g_free(app->title);
+	}
 	if (app->approver_cancels != NULL) {
 		g_list_foreach(app->approver_cancels, (GFunc)g_cancellable_cancel, NULL);
 		g_list_foreach(app->approver_cancels, (GFunc)g_object_unref, NULL);
@@ -906,12 +925,12 @@ apply_status (Application * app)
 		if (app->visible_state == VISIBLE_STATE_HIDDEN) {
 			/* Put on panel */
 			emit_signal (appstore, "ApplicationAdded",
-				     g_variant_new ("(sisosssss)", newicon,
+				     g_variant_new ("(sisossssss)", newicon,
 			                            get_position(app),
 			                            app->dbus_name, app->menu,
 			                            app->icon_theme_path,
 			                            app->label, app->guide,
-			                            newdesc, app->id));
+			                            newdesc, app->id, app->title));
 		} else {
 			/* Icon update */
 			gint position = get_position(app);
@@ -923,6 +942,9 @@ apply_status (Application * app)
 				     g_variant_new ("(iss)", position, 
 		                                    app->label != NULL ? app->label : "",
 		                                    app->guide != NULL ? app->guide : ""));
+			emit_signal (appstore, "ApplicationTitleChanged",
+				     g_variant_new ("(is)", position,
+		                                    app->title != NULL ? app->title : ""));
 		}
 	}
 
@@ -1039,6 +1061,7 @@ application_service_appstore_application_add (ApplicationServiceAppstore * appst
 	app->icon_theme_path = NULL;
 	app->label = NULL;
 	app->guide = NULL;
+	app->title = NULL;
 	app->currently_free = FALSE;
 	app->ordering_index = 0;
 	app->approver_cancels = NULL;
@@ -1076,11 +1099,13 @@ name_changed (GDBusConnection * connection, const gchar * sender_name,
 {
 	Application * app = (Application *)user_data;
 
-	const gchar * new_name;
-	g_variant_get(parameters, "(&s&s&s)", NULL, NULL, &new_name);
+	gchar * new_name = NULL;
+	g_variant_get(parameters, "(sss)", NULL, NULL, &new_name);
 
 	if (new_name == NULL || new_name[0] == 0)
 		application_died(app);
+
+	g_free(new_name);
 }
 
 /* Callback from trying to create the proxy for the app. */
@@ -1198,20 +1223,28 @@ app_receive_signal (GDBusProxy * proxy, gchar * sender_name, gchar * signal_name
 		/* aicon name isn't provided by signal, so look it up */
 		get_all_properties(app);
 	}
+	else if (g_strcmp0(signal_name, NOTIFICATION_ITEM_SIG_NEW_TITLE) == 0) {
+		/* title name isn't provided by signal, so look it up */
+		get_all_properties(app);
+	}
 	else if (g_strcmp0(signal_name, NOTIFICATION_ITEM_SIG_NEW_STATUS) == 0) {
-		const gchar * status;
-		g_variant_get(parameters, "(&s)", &status);
+		gchar * status = NULL;
+		g_variant_get(parameters, "(s)", &status);
 		new_status(app, status);
+		g_free(status);
 	}
 	else if (g_strcmp0(signal_name, NOTIFICATION_ITEM_SIG_NEW_ICON_THEME_PATH) == 0) {
-		const gchar * icon_theme_path;
-		g_variant_get(parameters, "(&s)", &icon_theme_path);
+		gchar * icon_theme_path = NULL;
+		g_variant_get(parameters, "(s)", &icon_theme_path);
 		new_icon_theme_path(app, icon_theme_path);
+		g_free(icon_theme_path);
 	}
 	else if (g_strcmp0(signal_name, NOTIFICATION_ITEM_SIG_NEW_LABEL) == 0) {
-		const gchar * label, * guide;
-		g_variant_get(parameters, "(&s&s)", &label, &guide);
+		gchar * label = NULL, * guide = NULL;
+		g_variant_get(parameters, "(ss)", &label, &guide);
 		new_label(app, label, guide);
+		g_free(label);
+		g_free(guide);
 	}
 
 	return;
@@ -1323,20 +1356,20 @@ get_applications (ApplicationServiceAppstore * appstore)
 				continue;
 			}
 
-			g_variant_builder_add (&builder, "(sisosssss)", app->icon,
+			g_variant_builder_add (&builder, "(sisossssss)", app->icon,
 			                       position++, app->dbus_name, app->menu,
 			                       app->icon_theme_path, app->label,
 			                       app->guide,
 			                       (app->icon_desc != NULL) ? app->icon_desc : "",
-			                       app->id);
+			                       app->id, app->title);
 		}
 
 		out = g_variant_builder_end(&builder);
 	} else {
 		GError * error = NULL;
-		out = g_variant_parse(g_variant_type_new("a(sisosssss)"), "[]", NULL, NULL, &error);
+		out = g_variant_parse(g_variant_type_new("a(sisossssss)"), "[]", NULL, NULL, &error);
 		if (error != NULL) {
-			g_warning("Unable to parse '[]' as a 'a(sisosssss)': %s", error->message);
+			g_warning("Unable to parse '[]' as a 'a(sisossssss)': %s", error->message);
 			out = NULL;
 			g_error_free(error);
 		}
@@ -1536,13 +1569,16 @@ approver_name_changed (GDBusConnection * connection, const gchar * sender_name,
 	Approver * approver = (Approver *)user_data;
 	ApplicationServiceAppstore * appstore = approver->appstore;
 
-	const gchar * new_name;
-	g_variant_get(parameters, "(&s&s&s)", NULL, NULL, &new_name);
+	gchar * new_name = NULL;
+	g_variant_get(parameters, "(sss)", NULL, NULL, &new_name);
 
 	if (new_name == NULL || new_name[0] == 0) {
 		appstore->priv->approvers = g_list_remove(appstore->priv->approvers, approver);
 		approver_free(approver, appstore);
 	}
+
+	g_free(new_name);
+	return;
 }
 
 /* Callback from trying to create the proxy for the approver. */
@@ -1607,11 +1643,13 @@ approver_receive_signal (GDBusProxy * proxy, gchar * sender_name, gchar * signal
 	Approver * approver = (Approver *)user_data;
 
 	if (g_strcmp0(signal_name, "ReviseJudgement") == 0) {
-		gboolean approved;
-		const gchar * address;
-		const gchar * path;
-		g_variant_get(parameters, "(b&s&o)", &approved, &address, &path);
+		gboolean approved = FALSE;
+		gchar * address = NULL;
+		gchar * path = NULL;
+		g_variant_get(parameters, "(bso)", &approved, &address, &path);
 		approver_revise_judgement(approver, approved, address, path);
+		g_free(address);
+		g_free(path);
 	}
 
 	return;

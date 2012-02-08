@@ -22,6 +22,7 @@ libapplication_la_SOURCES = \
 	dbus-shared.h \
 	indicator-application.c
 libapplication_la_CFLAGS = $(INDICATOR_CFLAGS) \
+	$(COVERAGE_CFLAGS) \
 	-Wall \
 	-Wl,-Bsymbolic-functions \
 	-Wl,-z,defs \
@@ -29,7 +30,8 @@ libapplication_la_CFLAGS = $(INDICATOR_CFLAGS) \
 	-Werror \
 	-DG_LOG_DOMAIN=\"Indicator-Application\"
 libapplication_la_LIBADD = $(INDICATOR_LIBS) 
-libapplication_la_LDFLAGS = -module -avoid-version
+libapplication_la_LDFLAGS = $(COVERAGE_LDFLAGS) \
+	-module -avoid-version
 
 ##################################
 # Service
@@ -57,6 +59,7 @@ indicator_application_service_SOURCES = \
 indicator_application_service_CFLAGS = \
 	$(INDICATOR_CFLAGS) \
 	$(APPINDICATOR_CFLAGS) \
+	$(COVERAGE_CFLAGS) \
 	-DDATADIR="\"$(pkgdatadir)\"" \
 	-Wall -Werror \
 	-DG_LOG_DOMAIN=\"indicator-application-service\"
@@ -64,6 +67,9 @@ indicator_application_service_CFLAGS = \
 indicator_application_service_LDADD = \
 	$(INDICATOR_LIBS) \
 	$(APPINDICATOR_LIBS)
+
+indicator_application_service_LDFLAGS = \
+	$(COVERAGE_LDFLAGS)
 
 glib_marshal_list = application-service-marshal.list
 glib_marshal_prefix = _application_service_marshal
