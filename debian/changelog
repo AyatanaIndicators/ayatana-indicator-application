@@ -1,4 +1,4 @@
-indicator-application (0.4.90-0ubuntu1~ppa1) precise; urgency=low
+indicator-application (0.4.90-0ubuntu1) precise; urgency=low
 
   * New upstream release.
     * Adding in a code coverage based build target
