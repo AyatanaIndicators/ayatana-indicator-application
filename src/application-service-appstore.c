@@ -1466,6 +1466,7 @@ approver_request_cb (GObject *object, GAsyncResult *res, gpointer user_data)
 	if (error == NULL) {
 		g_variant_get(result, "(b)", &approved);
 		g_debug("Approver responded: %s", approved ? "approve" : "rejected");
+		g_variant_unref(result);
 	}
 	else {
 		g_debug("Approver responded error: %s", error->message);
@@ -1654,4 +1655,3 @@ approver_receive_signal (GDBusProxy * proxy, gchar * sender_name, gchar * signal
 
 	return;
 }
-
