@@ -1348,7 +1348,7 @@ get_applications (ApplicationServiceAppstore * appstore)
 		GList * listpntr;
 		gint position = 0;
 
-		g_variant_builder_init(&builder, G_VARIANT_TYPE_ARRAY);
+		g_variant_builder_init(&builder, G_VARIANT_TYPE ("a(sisossssss)"));
 
 		for (listpntr = priv->applications; listpntr != NULL; listpntr = g_list_next(listpntr)) {
 			Application * app = (Application *)listpntr->data;
