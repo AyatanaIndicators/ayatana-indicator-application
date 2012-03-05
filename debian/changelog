@@ -1,8 +1,8 @@
-indicator-application (0.4.91-0ubuntu2) UNRELEASED; urgency=low
+indicator-application (0.4.91-0ubuntu2) precise; urgency=low
 
   * Backport an upstream fix for a gvariant misuse, thanks desrt for it!
 
- -- Sebastien Bacher <seb128@ubuntu.com>  Mon, 05 Mar 2012 10:38:46 +0100
+ -- Sebastien Bacher <seb128@ubuntu.com>  Mon, 05 Mar 2012 10:39:25 +0100
 
 indicator-application (0.4.91-0ubuntu1) precise; urgency=low
 
