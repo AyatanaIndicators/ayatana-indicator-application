@@ -284,14 +284,23 @@ bus_method_call (GDBusConnection * connection, const gchar * sender,
 		switch (direction) {
 			case INDICATOR_OBJECT_SCROLL_UP:
 				delta = -delta;
-			case INDICATOR_OBJECT_SCROLL_DOWN:
 				orientation = "vertical";
 				break;
-
+			case INDICATOR_OBJECT_SCROLL_DOWN:
+				/* delta unchanged */
+				orientation = "vertical";
+				break;
 			case INDICATOR_OBJECT_SCROLL_LEFT:
 				delta = -delta;
-			case INDICATOR_OBJECT_SCROLL_RIGHT:
 				orientation = "horizontal";
+				break;
+			case INDICATOR_OBJECT_SCROLL_RIGHT:
+				/* delta unchanged */
+				orientation = "horizontal";
+				break;
+			default:
+				g_assert_not_reached();
+				break;
 		}
 
 		app = find_application_by_menu(service, dbusaddress, dbusmenuobject);
