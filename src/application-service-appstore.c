@@ -284,14 +284,23 @@ bus_method_call (GDBusConnection * connection, const gchar * sender,
 		switch (direction) {
 			case INDICATOR_OBJECT_SCROLL_UP:
 				delta = -delta;
-			case INDICATOR_OBJECT_SCROLL_DOWN:
 				orientation = "vertical";
 				break;
-
+			case INDICATOR_OBJECT_SCROLL_DOWN:
+				/* delta unchanged */
+				orientation = "vertical";
+				break;
 			case INDICATOR_OBJECT_SCROLL_LEFT:
 				delta = -delta;
-			case INDICATOR_OBJECT_SCROLL_RIGHT:
 				orientation = "horizontal";
+				break;
+			case INDICATOR_OBJECT_SCROLL_RIGHT:
+				/* delta unchanged */
+				orientation = "horizontal";
+				break;
+			default:
+				g_assert_not_reached();
+				break;
 		}
 
 		app = find_application_by_menu(service, dbusaddress, dbusmenuobject);
@@ -1348,7 +1357,7 @@ get_applications (ApplicationServiceAppstore * appstore)
 		GList * listpntr;
 		gint position = 0;
 
-		g_variant_builder_init(&builder, G_VARIANT_TYPE_ARRAY);
+		g_variant_builder_init(&builder, G_VARIANT_TYPE ("a(sisossssss)"));
 
 		for (listpntr = priv->applications; listpntr != NULL; listpntr = g_list_next(listpntr)) {
 			Application * app = (Application *)listpntr->data;
