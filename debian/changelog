@@ -1,7 +1,13 @@
-indicator-application (0.4.91-0ubuntu1~ppa1) precise; urgency=low
+indicator-application (0.4.91-0ubuntu2) precise; urgency=low
+
+  * Backport an upstream fix for a gvariant misuse, thanks desrt for it!
+
+ -- Sebastien Bacher <seb128@ubuntu.com>  Mon, 05 Mar 2012 10:39:25 +0100
+
+indicator-application (0.4.91-0ubuntu1) precise; urgency=low
 
   * New upstream release.
-    * Unref approval data after use
+    * Unref approval data after use (lp: #930291)
 
  -- Ted Gould <ted@ubuntu.com>  Wed, 15 Feb 2012 12:08:30 -0600
 
