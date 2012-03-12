@@ -1,3 +1,11 @@
+indicator-application (0.4.92-0ubuntu1~ppa1) precise; urgency=low
+
+  * New upstream release.
+    * Explicitly specifying GVariant Builder types
+    * Cleaning up a switch statement (LP: #944236)
+
+ -- Ted Gould <ted@ubuntu.com>  Fri, 09 Mar 2012 15:15:19 -0600
+
 indicator-application (0.4.91-0ubuntu2) precise; urgency=low
 
   * Backport an upstream fix for a gvariant misuse, thanks desrt for it!
