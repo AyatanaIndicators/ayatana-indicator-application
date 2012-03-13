@@ -26,10 +26,10 @@ with this program.  If not, see <http://www.gnu.org/licenses/>.
 guint32
 generate_id (const AppIndicatorCategory catenum, const gchar * id)
 {
-	guchar category = 0;
-	guchar first = 0;
-	guchar second = 0;
-	guchar third = 0;
+	guint32 category = 0;
+	guint32 first = 0;
+	guint32 second = 0;
+	guint32 third = 0;
 
 	switch (catenum) {
 	case APP_INDICATOR_CATEGORY_OTHER:
