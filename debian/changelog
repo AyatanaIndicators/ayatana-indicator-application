@@ -1,10 +1,10 @@
-indicator-application (0.4.93-0ubuntu1~ppa) UNRELEASED; urgency=low
+indicator-application (0.4.93-0ubuntu1~ppa) precise; urgency=low
 
   * New upstream release.
     * Fix a dbus memory leak. (LP: #953585)
     * Fix potential integer overflow (LP: #944234)
 
- -- charles <charles.kerr@canonical.com>  Tue, 13 Mar 2012 15:53:17 -0500
+ -- Charles Kerr <charles.kerr@canonical.com>  Tue, 13 Mar 2012 16:31:54 -0500
 
 indicator-application (0.4.92-0ubuntu1) precise; urgency=low
 
