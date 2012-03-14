@@ -249,9 +249,11 @@ _notification_watcher_server_register_status_notifier_item (ApplicationServiceWa
 	ApplicationServiceWatcherPrivate * priv = APPLICATION_SERVICE_WATCHER_GET_PRIVATE(appwatcher);
 
 	if (service[0] == '/') {
+		char * sender = dbus_g_method_get_sender(method);
 		application_service_appstore_application_add(priv->appstore,
-		                                             dbus_g_method_get_sender(method),
+		                                             sender,
 		                                             service);
+		g_free(sender);
 	} else {
 		application_service_appstore_application_add(priv->appstore,
 		                                             service,
@@ -293,9 +295,11 @@ _notification_watcher_server_x_ayatana_register_notification_approver (Applicati
 {
 	ApplicationServiceWatcherPrivate * priv = APPLICATION_SERVICE_WATCHER_GET_PRIVATE(appwatcher);
 
+	char * sender = dbus_g_method_get_sender(method);
 	application_service_appstore_approver_add(priv->appstore,
-	                                          dbus_g_method_get_sender(method),
+	                                          sender,
 	                                          path);
+	g_free(sender);
 
 	dbus_g_method_return(method, G_TYPE_NONE);
 	return TRUE;
