@@ -122,6 +122,7 @@ static void get_applications (GObject * obj, GAsyncResult * res, gpointer user_d
 static void get_applications_helper (IndicatorApplication * self, GVariant * variant);
 static void theme_dir_unref(IndicatorApplication * ia, const gchar * dir);
 static void theme_dir_ref(IndicatorApplication * ia, const gchar * dir);
+static void icon_theme_remove_dir_from_search_path (const char * dir);
 static void service_proxy_cb (GObject * object, GAsyncResult * res, gpointer user_data);
 static void receive_signal (GDBusProxy * proxy, gchar * sender_name, gchar * signal_name, GVariant * parameters, gpointer user_data);
 
@@ -207,9 +208,11 @@ indicator_application_dispose (GObject *object)
 	}
 
 	if (priv->theme_dirs != NULL) {
-		while (g_hash_table_size(priv->theme_dirs)) {
-			GList * keys = g_hash_table_get_keys(priv->theme_dirs);
-			theme_dir_unref(INDICATOR_APPLICATION(object), (gchar *)keys->data);
+		gpointer directory;
+		GHashTableIter iter;
+		g_hash_table_iter_init (&iter, priv->theme_dirs);
+		while (g_hash_table_iter_next (&iter, &directory, NULL)) {
+			icon_theme_remove_dir_from_search_path (directory);
 		}
 		g_hash_table_destroy(priv->theme_dirs);
 		priv->theme_dirs = NULL;
@@ -951,24 +954,23 @@ theme_dir_unref(IndicatorApplication * ia, const gchar * dir)
 {
 	IndicatorApplicationPrivate * priv = INDICATOR_APPLICATION_GET_PRIVATE(ia);
 
-	/* Grab the count for this dir */
-	int count = GPOINTER_TO_INT(g_hash_table_lookup(priv->theme_dirs, dir));
-
-	/* Is this a simple deprecation, if so, we can just lower the
-	   number and move on. */
-	if (count > 1) {
-		count--;
-		g_hash_table_insert(priv->theme_dirs, g_strdup(dir), GINT_TO_POINTER(count));
-		return;
+	if (!g_hash_table_contains (priv->theme_dirs, dir)) {
+		g_warning("Unref'd a directory '%s' that wasn't in the theme dir hash table.", dir);
+	} else {
+		int count = GPOINTER_TO_INT(g_hash_table_lookup(priv->theme_dirs, dir));
+		if (count > 1) {
+			count--;
+			g_hash_table_insert(priv->theme_dirs, g_strdup(dir), GINT_TO_POINTER(count));
+		} else {
+			icon_theme_remove_dir_from_search_path (dir);
+			g_hash_table_remove (priv->theme_dirs, dir);
+		}
 	}
+}
 
-	/* Try to remove it from the hash table, this makes sure
-	   that it existed */
-	if (!g_hash_table_remove(priv->theme_dirs, dir)) {
-		g_warning("Unref'd a directory that wasn't in the theme dir hash table.");
-		return;
-	}
-
+static void
+icon_theme_remove_dir_from_search_path (const char * dir)
+{
 	GtkIconTheme * icon_theme = gtk_icon_theme_get_default();
 	gchar ** paths;
 	gint path_count;
