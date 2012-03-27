@@ -38,10 +38,10 @@ coverage-gcovr: clean-gcda
 	
 generate-coverage-gcovr:
 	@echo Generating coverage GCOVR report
-	$(GCOVR) -x -r $(top_builddir) -o $(top_builddir)/coverage.gcovr
+	$(GCOVR) -x -r $(top_builddir) -o $(top_builddir)/coverage.xml
 	
 clean-coverage-gcovr: clean-gcda
-	-rm -rf $(top_builddir)/coverage.gcovr
+	-rm -rf $(top_builddir)/coverage.xml
 
 endif # HAVE_GCOVR
 
