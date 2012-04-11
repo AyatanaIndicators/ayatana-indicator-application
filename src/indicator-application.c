@@ -503,6 +503,7 @@ application_added (IndicatorApplication * application, const gchar * iconname, g
 
 	ApplicationEntry * app = g_new0(ApplicationEntry, 1);
 
+	app->entry.parent_object = INDICATOR_OBJECT(application);
 	app->old_service = FALSE;
 	app->icon_theme_path = NULL;
 	if (icon_theme_path != NULL && icon_theme_path[0] != '\0') {
