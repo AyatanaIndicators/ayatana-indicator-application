@@ -1,4 +1,4 @@
-indicator-application (0.5.0-0ubuntu1~ppa1) precise; urgency=low
+indicator-application (0.5.0-0ubuntu1) precise; urgency=low
 
   * New upstream release.
     * Improved gcov rules in our Automake files.
