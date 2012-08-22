@@ -1,11 +1,11 @@
-indicator-application (12.10.0-0ubuntu1) UNRELEASED; urgency=low
+indicator-application (12.10.0-0ubuntu1) quantal; urgency=low
 
   * New upstream release:
     - Require GTK3 in Indicators (lp: #996607)
   * Dropped GTK2 build
   * Updated packaging to the current standards
 
- -- Sebastien Bacher <seb128@ubuntu.com>  Wed, 22 Aug 2012 13:41:13 +0200
+ -- Sebastien Bacher <seb128@ubuntu.com>  Wed, 22 Aug 2012 14:00:10 +0200
 
 indicator-application (0.5.0-0ubuntu1) precise; urgency=low
 
