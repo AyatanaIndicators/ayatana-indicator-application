@@ -1,25 +1,9 @@
 #!/usr/bin/make -f
 
-DEB_BUILDDIR = build
-DEB_MAKE_FLAVORS = gtk2 gtk3
+%:
+	dh $@ --with translations
 
-include /usr/share/cdbs/1/rules/debhelper.mk
-include /usr/share/cdbs/1/class/gnome.mk
-
-DEB_MAKE_DESTDIRSKEL = $(CURDIR)/debian/tmp/@FLAVOR@
-DEB_DESTDIR = $(CURDIR)/debian/tmp/$(cdbs_make_curflavor)/
-
-DEB_CONFIGURE_FLAGS_gtk2 = --with-gtk=2
-DEB_CONFIGURE_FLAGS_gtk3 = --with-gtk=3
-DEB_CONFIGURE_EXTRA_FLAGS = --disable-static
-
-LDFLAGS += -Wl,-z,defs -Wl,--as-needed
-
-debian/stamp-autotools/gtk2: cdbs_configure_flags += $(DEB_CONFIGURE_FLAGS_gtk2)
-debian/stamp-autotools/gtk3: cdbs_configure_flags += $(DEB_CONFIGURE_FLAGS_gtk3)
-
-common-install-arch::
-	find debian/tmp -name \*.la -delete
-	find debian/tmp -name \*.a -delete
-	cd po; intltool-update --pot --verbose
-
+override_dh_install:
+	find debian/indicator-application/usr/lib -name *.la -delete
+	find debian/indicator-application/usr/lib -name *.a -delete
+	dh_install --fail-missing

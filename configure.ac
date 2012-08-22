@@ -1,11 +1,11 @@
 
-AC_INIT(indicator-application, 0.5.0, ted@canonical.com)
+AC_INIT(indicator-application, 12.10.0, ted@canonical.com)
 AC_COPYRIGHT([Copyright 2009, 2010 Canonical])
 
 AC_PREREQ(2.53)
 
 AM_CONFIG_HEADER(config.h)
-AM_INIT_AUTOMAKE(indicator-application, 0.5.0)
+AM_INIT_AUTOMAKE(indicator-application, 12.10.0)
 
 AM_MAINTAINER_MODE
 
@@ -29,8 +29,7 @@ PKG_PROG_PKG_CONFIG
 # Dependencies
 ###########################
 
-GTK_REQUIRED_VERSION=2.18
-GTK3_REQUIRED_VERSION=2.91
+GTK_REQUIRED_VERSION=3.0.0
 GIO_REQUIRED_VERSION=2.26
 INDICATOR_REQUIRED_VERSION=0.3.5
 DBUSMENUGTK_REQUIRED_VERSION=0.5.90
@@ -39,36 +38,13 @@ DBUS_GLIB_REQUIRED_VERSION=0.82
 
 LIBAPPINDICATOR_REQUIRED_VERSION=0.2.9
 
-AC_ARG_WITH([gtk],
-  [AS_HELP_STRING([--with-gtk],
-    [Which version of gtk to use @<:@default=3@:>@])],
-  [],
-  [with_gtk=3])
-AS_IF([test "x$with_gtk" = x3],
-        [PKG_CHECK_MODULES(INDICATOR,  gtk+-3.0 >= $GTK3_REQUIRED_VERSION
-                                       gio-2.0 >= $GIO_REQUIRED_VERSION
-                                       indicator3-0.4 >= $INDICATOR_REQUIRED_VERSION
-                                       json-glib-1.0 >= $JSON_GLIB_REQUIRED_VERSION
-                                       dbus-glib-1 >= $DBUS_GLIB_REQUIRED_VERSION
-                                       dbusmenu-gtk3-0.4 >= $DBUSMENUGTK_REQUIRED_VERSION)
-
-         PKG_CHECK_MODULES(APPINDICATOR, appindicator3-0.1 >= $LIBAPPINDICATOR_REQUIRED_VERSION)
-
-         AC_DEFINE(HAVE_GTK3, 1, [whether gtk3 is available])
-        ],
-      [test "x$with_gtk" = x2],
-        [PKG_CHECK_MODULES(INDICATOR,  gtk+-2.0 >= $GTK_REQUIRED_VERSION
-                                       gio-2.0 >= $GIO_REQUIRED_VERSION
-                                       indicator-0.4 >= $INDICATOR_REQUIRED_VERSION 
-                                       json-glib-1.0 >= $JSON_GLIB_REQUIRED_VERSION
-                                       dbus-glib-1 >= $DBUS_GLIB_REQUIRED_VERSION
-                                       dbusmenu-gtk-0.4 >= $DBUSMENUGTK_REQUIRED_VERSION)
-
-         PKG_CHECK_MODULES(APPINDICATOR, appindicator-0.1 >= $LIBAPPINDICATOR_REQUIRED_VERSION)
-        ],
-      [AC_MSG_FAILURE([Value for --with-gtk was neither 2 nor 3])]
-)
-AM_CONDITIONAL(USE_GTK3, [test "x$with_gtk" = x3])
+PKG_CHECK_MODULES(INDICATOR,  gtk+-3.0 >= $GTK_REQUIRED_VERSION
+                              gio-2.0 >= $GIO_REQUIRED_VERSION
+                              indicator3-0.4 >= $INDICATOR_REQUIRED_VERSION
+                              json-glib-1.0 >= $JSON_GLIB_REQUIRED_VERSION
+                              dbus-glib-1 >= $DBUS_GLIB_REQUIRED_VERSION
+                              dbusmenu-gtk3-0.4 >= $DBUSMENUGTK_REQUIRED_VERSION)
+PKG_CHECK_MODULES(APPINDICATOR, appindicator3-0.1 >= $LIBAPPINDICATOR_REQUIRED_VERSION)
 
 ###########################
 # gcov coverage reporting
@@ -142,6 +118,5 @@ Application Indicator Configuration:
 
 	Prefix:        $prefix
 	Indicator Dir: $INDICATORDIR
-	GTK+ Version:  $with_gtk
 	gcov:          $use_gcov
 ])
