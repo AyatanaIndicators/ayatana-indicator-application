@@ -2,6 +2,7 @@ indicator-application (12.10.1-0ubuntu1) UNRELEASED; urgency=low
 
   * debian/control:
     - Update style to match other indicator packages.
+    - Reorganize Build-Depends for consistency with other indicator packages.
     - Add dh-autoreconf to Build-Depends.
   * debian/rules:
     - Use dh_autoreconf with dh sequencer.
