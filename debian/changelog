@@ -6,6 +6,7 @@ indicator-application (12.10.1-0ubuntu1) UNRELEASED; urgency=low
   * debian/rules:
     - Use dh_autoreconf with dh sequencer.
     - Override dh_autoreconf to call autogen.sh and not call configure.
+    - Add and export DPKG_GENSYMBOLS_CHECK_LEVEL.
 
  -- Mathieu Trudel-Lapierre <mathieu-tl@ubuntu.com>  Tue, 20 Nov 2012 13:53:41 -0500
 

@@ -1,5 +1,7 @@
 #!/usr/bin/make -f
 
+export DPKG_GENSYMBOLS_CHECK_LEVEL=4
+
 %:
 	dh $@ --with translations,autoreconf
 
