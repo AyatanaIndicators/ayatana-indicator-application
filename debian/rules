@@ -3,6 +3,9 @@
 %:
 	dh $@ --with translations,autoreconf
 
+override_dh_autoreconf:
+	NOCONFIGURE=1 dh_autoreconf ./autogen.sh
+
 override_dh_install:
 	find debian/indicator-application/usr/lib -name *.la -delete
 	find debian/indicator-application/usr/lib -name *.a -delete
