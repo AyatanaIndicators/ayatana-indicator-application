@@ -5,6 +5,7 @@ indicator-application (12.10.1-0ubuntu1) UNRELEASED; urgency=low
     - Reorganize Build-Depends for consistency with other indicator packages.
     - Add dh-autoreconf to Build-Depends.
     - Add gnome-common to Build-Depends.
+    - Update Vcs-Bzr, Vcs-Browser and add a notice to uploaders.
   * debian/rules:
     - Use dh_autoreconf with dh sequencer.
     - Override dh_autoreconf to call autogen.sh and not call configure.

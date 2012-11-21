@@ -18,7 +18,11 @@ Build-Depends: debhelper (>= 9.0),
                libdbusmenu-gtk3-dev (>= 0.5.90),
 Standards-Version: 3.9.3
 Homepage: https://launchpad.net/indicator-application
-Vcs-Bzr: http://bazaar.launchpad.net/~ubuntu-desktop/indicator-application/ubuntu
+# If you aren't a member of ~indicator-applet-developers but need to upload
+# packaging changes, just go ahead.  ~indicator-applet-developers will notice
+# and sync up the code again.
+Vcs-Bzr: https://code.launchpad.net/~indicator-applet-developers/indicator-application/trunk.13.04
+Vcs-Browser: https://bazaar.launchpad.net/~indicator-applet-developers/indicator-application/trunk.13.04/files
 
 Package: indicator-application
 Architecture: any
