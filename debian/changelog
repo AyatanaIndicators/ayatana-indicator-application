@@ -1,5 +1,6 @@
 indicator-application (12.10.1-0ubuntu1) UNRELEASED; urgency=low
 
+  [ Mathieu Trudel-Lapierre ]
   * debian/control:
     - Update style to match other indicator packages.
     - Reorganize Build-Depends for consistency with other indicator packages.
@@ -11,6 +12,9 @@ indicator-application (12.10.1-0ubuntu1) UNRELEASED; urgency=low
     - Override dh_autoreconf to call autogen.sh and not call configure.
     - Add and export DPKG_GENSYMBOLS_CHECK_LEVEL.
   * debian/copyright: simplify into one File: stanza.
+
+  [ Didier Roche ]
+  * Automatic snapshot from revision 235 (bootstrap)
 
  -- Mathieu Trudel-Lapierre <mathieu-tl@ubuntu.com>  Tue, 20 Nov 2012 13:53:41 -0500
 
