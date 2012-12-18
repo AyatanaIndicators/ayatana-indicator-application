@@ -69,7 +69,6 @@ struct _ApplicationServiceAppstorePrivate {
 	GDBusConnection * bus;
 	guint dbus_registration;
 	GList * applications;
-	GList * approvers;
 	GHashTable * ordering_overrides;
 };
 
@@ -79,14 +78,6 @@ typedef enum {
 } visible_state_t;
 
 #define STATE2STRING(x)  ((x) == VISIBLE_STATE_HIDDEN ? "hidden" : "visible")
-
-typedef struct _Approver Approver;
-struct _Approver {
-	ApplicationServiceAppstore * appstore; /* not ref'd */
-	GCancellable * proxy_cancel;
-	GDBusProxy * proxy;
-	guint name_watcher;
-};
 
 typedef struct _Application Application;
 struct _Application {
@@ -113,8 +104,6 @@ struct _Application {
 	gchar * title;
 	gboolean currently_free;
 	guint ordering_index;
-	GList * approver_cancels;
-	GList * approved_by;
 	visible_state_t visible_state;
 	guint name_watcher;
 };
@@ -141,16 +130,11 @@ static void load_override_file (GHashTable * hash, const gchar * filename);
 static AppIndicatorStatus string_to_status(const gchar * status_string);
 static void apply_status (Application * app);
 static AppIndicatorCategory string_to_cat(const gchar * cat_string);
-static void approver_free (gpointer papprover, gpointer user_data);
-static void check_with_new_approver (gpointer papp, gpointer papprove);
-static void check_with_old_approver (gpointer papprove, gpointer papp);
 static Application * find_application (ApplicationServiceAppstore * appstore, const gchar * address, const gchar * object);
 static Application * find_application_by_menu (ApplicationServiceAppstore * appstore, const gchar * address, const gchar * menuobject);
 static void bus_get_cb (GObject * object, GAsyncResult * res, gpointer user_data);
 static void dbus_proxy_cb (GObject * object, GAsyncResult * res, gpointer user_data);
 static void app_receive_signal (GDBusProxy * proxy, gchar * sender_name, gchar * signal_name, GVariant * parameters, gpointer user_data);
-static void approver_proxy_cb (GObject * object, GAsyncResult * res, gpointer user_data);
-static void approver_receive_signal (GDBusProxy * proxy, gchar * sender_name, gchar * signal_name, GVariant * parameters, gpointer user_data);
 static void get_all_properties (Application * app);
 static void application_free (Application * app);
 
@@ -195,7 +179,6 @@ application_service_appstore_init (ApplicationServiceAppstore *self)
 	ApplicationServiceAppstorePrivate * priv = APPLICATION_SERVICE_APPSTORE_GET_PRIVATE (self);
 
 	priv->applications = NULL;
-	priv->approvers = NULL;
 	priv->bus_cancel = NULL;
 	priv->dbus_registration = 0;
 
@@ -341,12 +324,6 @@ application_service_appstore_dispose (GObject *object)
 		application_service_appstore_application_remove(APPLICATION_SERVICE_APPSTORE(object),
 		                                           ((Application *)priv->applications->data)->dbus_name,
 		                                           ((Application *)priv->applications->data)->dbus_object);
-	}
-
-	if (priv->approvers != NULL) {
-		g_list_foreach(priv->approvers, approver_free, object);
-		g_list_free(priv->approvers);
-		priv->approvers = NULL;
 	}
 
 	if (priv->dbus_registration != 0) {
@@ -605,8 +582,6 @@ got_all_properties (GObject * source_object, GAsyncResult * res,
 			app->title = g_strdup("");
 		}
 
-		g_list_foreach(priv->approvers, check_with_old_approver, app);
-
 		apply_status(app);
 
 		if (app->queued_props) {
@@ -646,15 +621,6 @@ get_all_properties (Application * app)
 		g_debug("Queuing a properties check");
 		app->queued_props = TRUE;
 	}
-}
-
-/* Check the application against an approver */
-static void
-check_with_old_approver (gpointer papprove, gpointer papp)
-{
-	/* Funny the parallels, eh? */
-	check_with_new_approver(papp, papprove);
-	return;
 }
 
 /* Simple translation function -- could be optimized */
@@ -812,14 +778,6 @@ application_free (Application * app)
 	if (app->title != NULL) {
 		g_free(app->title);
 	}
-	if (app->approver_cancels != NULL) {
-		g_list_foreach(app->approver_cancels, (GFunc)g_cancellable_cancel, NULL);
-		g_list_foreach(app->approver_cancels, (GFunc)g_object_unref, NULL);
-		g_list_free(app->approver_cancels);
-	}
-	if (app->approved_by != NULL) {
-		g_list_free(app->approved_by);
-	}
 
 	g_free(app);
 	return;
@@ -883,14 +841,12 @@ static void
 apply_status (Application * app)
 {
 	ApplicationServiceAppstore * appstore = app->appstore;
-	ApplicationServiceAppstorePrivate * priv = appstore->priv;
 
-	/* g_debug("Applying status.  Status: %d  Approved by: %d  Approvers: %d  Visible: %d", app->status, g_list_length(app->approved_by), g_list_length(priv->approvers), app->visible_state); */
+	/* g_debug("Applying status.  Status: %d  Visible: %d", app->status, app->visible_state); */
 
 	visible_state_t goal_state = VISIBLE_STATE_HIDDEN;
 
-	if (app->status != APP_INDICATOR_STATUS_PASSIVE && 
-			g_list_length(app->approved_by) >= g_list_length(priv->approvers)) {
+	if (app->status != APP_INDICATOR_STATUS_PASSIVE) {
 		goal_state = VISIBLE_STATE_SHOWN;
 	}
 
@@ -1073,8 +1029,6 @@ application_service_appstore_application_add (ApplicationServiceAppstore * appst
 	app->title = NULL;
 	app->currently_free = FALSE;
 	app->ordering_index = 0;
-	app->approver_cancels = NULL;
-	app->approved_by = NULL;
 	app->visible_state = VISIBLE_STATE_HIDDEN;
 	app->name_watcher = 0;
 	app->props_cancel = NULL;
@@ -1389,278 +1343,4 @@ get_applications (ApplicationServiceAppstore * appstore)
 	} else {
 		return NULL;
 	}
-}
-
-/* Removes and approver from our list of approvers and
-   then sees if that changes our status.  Most likely this
-   could make us visible if this approver rejected us. */
-static void
-remove_approver (gpointer papp, gpointer pproxy)
-{
-	Application * app = (Application *)papp;
-
-	/* Check for any pending approvals and cancel them */
-	GList * iter = app->approver_cancels;
-	while (iter != NULL) {
-		GCancellable * cancel = (GCancellable *)iter->data;
-		GDBusProxy * proxy = (GDBusProxy *)g_object_get_data(G_OBJECT(cancel), "proxy");
-		if (proxy == pproxy) {
-			g_cancellable_cancel(cancel);
-			g_object_unref(cancel);
-
-			GList * next = iter->next;
-			app->approver_cancels = g_list_delete_link(app->approver_cancels, iter);
-			iter = next;
-		} else {
-			iter = iter->next;
-		}
-	}
-
-	app->approved_by = g_list_remove(app->approved_by, pproxy);
-	apply_status(app);
-	return;
-}
-
-/* Frees the data associated with an approver */
-static void
-approver_free (gpointer papprover, gpointer user_data)
-{
-	Approver * approver = (Approver *)papprover;
-	g_return_if_fail(approver != NULL);
-
-	ApplicationServiceAppstore * appstore = APPLICATION_SERVICE_APPSTORE(user_data);
-	g_list_foreach(appstore->priv->applications, remove_approver, approver->proxy);
-	
-	if (approver->name_watcher != 0) {
-		g_dbus_connection_signal_unsubscribe(g_dbus_proxy_get_connection(approver->proxy), approver->name_watcher);
-		approver->name_watcher = 0;
-	}
-
-	if (approver->proxy != NULL) {
-		g_object_unref(approver->proxy);
-		approver->proxy = NULL;
-	}
-
-	if (approver->proxy_cancel != NULL) {
-		g_cancellable_cancel(approver->proxy_cancel);
-		g_object_unref(approver->proxy_cancel);
-		approver->proxy_cancel = NULL;
-	}
-
-	g_free(approver);
-	return;
-}
-
-/* What did the approver tell us? */
-static void
-approver_request_cb (GObject *object, GAsyncResult *res, gpointer user_data)
-{
-	GDBusProxy * proxy = G_DBUS_PROXY(object);
-	GCancellable * cancel = (GCancellable *)user_data;
-	GError * error = NULL;
-	gboolean approved = TRUE; /* default to approved */
-	GVariant * result;
-
-	result = g_dbus_proxy_call_finish(proxy, res, &error);
-
-	if (g_error_matches (error, G_IO_ERROR, G_IO_ERROR_CANCELLED)) {
-		g_error_free (error);
-		return; // Must exit before accessing freed memory
-	}
-
-	Application * app = (Application *)g_object_get_data(G_OBJECT(cancel), "app");
-	app->approver_cancels = g_list_remove(app->approver_cancels, cancel);
-	g_object_unref(cancel);
-
-	if (error == NULL) {
-		g_variant_get(result, "(b)", &approved);
-		g_debug("Approver responded: %s", approved ? "approve" : "rejected");
-		g_variant_unref(result);
-	}
-	else {
-		g_debug("Approver responded error: %s", error->message);
-		g_error_free (error);
-	}
-
-	if (approved) {
-		app->approved_by = g_list_prepend(app->approved_by, proxy);
-	} else {
-		app->approved_by = g_list_remove(app->approved_by, proxy);
-	}
-
-	apply_status(app);
-	return;
-}
-
-/* Run the applications through the new approver */
-static void
-check_with_new_approver (gpointer papp, gpointer papprove)
-{
-	Application * app = (Application *)papp;
-	Approver * approver = (Approver *)papprove;
-	GCancellable * cancel = NULL;
-
-	cancel = g_cancellable_new();
-	g_object_set_data(G_OBJECT(cancel), "app", app);
-	g_object_set_data(G_OBJECT(cancel), "proxy", approver->proxy);
-	app->approver_cancels = g_list_prepend(app->approver_cancels, cancel);
-
-	g_dbus_proxy_call(approver->proxy, "ApproveItem",
-	                  g_variant_new("(ssuso)", app->id, app->category,
-	                                0, app->dbus_name, app->dbus_object),
-	                  G_DBUS_CALL_FLAGS_NONE, -1, cancel,
-	                  approver_request_cb, cancel);
-
-	return;
-}
-
-/* A signal when an approver changes the why that it thinks about
-   a particular indicator. */
-void
-approver_revise_judgement (Approver * approver, gboolean new_status, const gchar * address, const gchar * path)
-{
-	g_return_if_fail(address != NULL && address[0] != '\0');
-	g_return_if_fail(path != NULL && path[0] != '\0');
-
-	Application * app = find_application(approver->appstore, address, path);
-
-	if (app == NULL) {
-		g_warning("Unable to update approver status of application (%s:%s) as it was not found", address, path);
-		return;
-	}
-
-	if (new_status) {
-		app->approved_by = g_list_prepend(app->approved_by, approver->proxy);
-	} else {
-		app->approved_by = g_list_remove(app->approved_by, approver->proxy);
-	}
-	apply_status(app);
-
-	return;
-}
-
-/* Adds a new approver to the app store */
-void
-application_service_appstore_approver_add (ApplicationServiceAppstore * appstore, const gchar * dbus_name, const gchar * dbus_object)
-{
-	g_return_if_fail(IS_APPLICATION_SERVICE_APPSTORE(appstore));
-	g_return_if_fail(dbus_name != NULL);
-	g_return_if_fail(dbus_object != NULL);
-	ApplicationServiceAppstorePrivate * priv = APPLICATION_SERVICE_APPSTORE_GET_PRIVATE (appstore);
-
-	Approver * approver = g_new0(Approver, 1);
-	approver->appstore = appstore;
-	approver->proxy_cancel = NULL;
-	approver->proxy = NULL;
-	approver->name_watcher = 0;
-
-	approver->proxy_cancel = g_cancellable_new();
-	g_dbus_proxy_new_for_bus(G_BUS_TYPE_SESSION,
-			         G_DBUS_PROXY_FLAGS_NONE,
-			         NULL,
-	                         dbus_name,
-	                         dbus_object,
-	                         NOTIFICATION_APPROVER_DBUS_IFACE,
-			         approver->proxy_cancel,
-			         approver_proxy_cb,
-		                 approver);
-
-	priv->approvers = g_list_prepend(priv->approvers, approver);
-
-	return;
-}
-
-static void
-approver_name_changed (GDBusConnection * connection, const gchar * sender_name,
-                       const gchar * object_path, const gchar * interface_name,
-                       const gchar * signal_name, GVariant * parameters,
-                       gpointer user_data)
-{
-	Approver * approver = (Approver *)user_data;
-	ApplicationServiceAppstore * appstore = approver->appstore;
-
-	gchar * new_name = NULL;
-	g_variant_get(parameters, "(sss)", NULL, NULL, &new_name);
-
-	if (new_name == NULL || new_name[0] == 0) {
-		appstore->priv->approvers = g_list_remove(appstore->priv->approvers, approver);
-		approver_free(approver, appstore);
-	}
-
-	g_free(new_name);
-	return;
-}
-
-/* Callback from trying to create the proxy for the approver. */
-static void
-approver_proxy_cb (GObject * object, GAsyncResult * res, gpointer user_data)
-{
-	GError * error = NULL;
-
-	Approver * approver = (Approver *)user_data;
-	g_return_if_fail(approver != NULL);
-
-	GDBusProxy * proxy = g_dbus_proxy_new_for_bus_finish(res, &error);
-
-	if (g_error_matches (error, G_IO_ERROR, G_IO_ERROR_CANCELLED)) {
-		g_error_free (error);
-		return; // Must exit before accessing freed memory
-	}
-
-	ApplicationServiceAppstorePrivate * priv = APPLICATION_SERVICE_APPSTORE_GET_PRIVATE (approver->appstore);
-
-	if (approver->proxy_cancel != NULL) {
-		g_object_unref(approver->proxy_cancel);
-		approver->proxy_cancel = NULL;
-	}
-
-	if (error != NULL) {
-		g_critical("Could not grab DBus proxy for approver: %s", error->message);
-		g_error_free(error);
-		return;
-	}
-
-	/* Okay, we're good to grab the proxy at this point, we're
-	sure that it's ours. */
-	approver->proxy = proxy;
-
-	/* We've got it, let's watch it for destruction */
-	approver->name_watcher = g_dbus_connection_signal_subscribe(
-	                                   g_dbus_proxy_get_connection(proxy),
-	                                   "org.freedesktop.DBus",
-	                                   "org.freedesktop.DBus",
-	                                   "NameOwnerChanged",
-	                                   "/org/freedesktop/DBus",
-	                                   g_dbus_proxy_get_name(proxy),
-	                                   G_DBUS_SIGNAL_FLAGS_NONE,
-	                                   approver_name_changed,
-	                                   approver,
-	                                   NULL);
-
-	g_signal_connect(proxy, "g-signal", G_CALLBACK(approver_receive_signal),
-	                 approver);
-
-	g_list_foreach(priv->applications, check_with_new_approver, approver);
-
-	return;
-}
-
-/* Receives all signals from the service, routed to the appropriate functions */
-static void
-approver_receive_signal (GDBusProxy * proxy, gchar * sender_name, gchar * signal_name,
-                         GVariant * parameters, gpointer user_data)
-{
-	Approver * approver = (Approver *)user_data;
-
-	if (g_strcmp0(signal_name, "ReviseJudgement") == 0) {
-		gboolean approved = FALSE;
-		gchar * address = NULL;
-		gchar * path = NULL;
-		g_variant_get(parameters, "(bso)", &approved, &address, &path);
-		approver_revise_judgement(approver, approved, address, path);
-		g_free(address);
-		g_free(path);
-	}
-
-	return;
 }

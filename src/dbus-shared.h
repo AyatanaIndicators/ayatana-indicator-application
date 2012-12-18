@@ -31,6 +31,3 @@ with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #define NOTIFICATION_ITEM_DBUS_IFACE      "org.kde.StatusNotifierItem"
 #define NOTIFICATION_ITEM_DEFAULT_OBJ     "/StatusNotifierItem"
-
-#define NOTIFICATION_APPROVER_DBUS_IFACE  "com.canonical.StatusNotifierApprover"
-
