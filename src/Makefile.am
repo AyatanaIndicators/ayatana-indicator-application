@@ -73,8 +73,7 @@ glib_marshal_prefix = _application_service_marshal
 ##################################
 
 GDBUS_SPECS = \
-	application-service.xml \
-	notification-approver.xml
+	application-service.xml
 
 DBUS_SPECS = \
 	notification-watcher.xml
@@ -107,9 +106,7 @@ BUILT_SOURCES += \
 	$(DBUS_SPECS:.xml=-client.h) \
 	$(DBUS_SPECS:.xml=-server.h) \
 	gen-application-service.xml.c \
-	gen-application-service.xml.h \
-	gen-notification-approver.xml.c \
-	gen-notification-approver.xml.h
+	gen-application-service.xml.h
 
 CLEANFILES += $(BUILT_SOURCES)
 

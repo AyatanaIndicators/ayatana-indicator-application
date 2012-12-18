@@ -104,13 +104,9 @@ docs/reference/libappindicator-decl.txt.bak
 docs/reference/libappindicator-decl-list.txt.bak
 src/AppIndicator-0.1.vapi
 bindings/mono/policy.appindicator-sharp.dll
-src/notification-approver-client.h
-src/notification-approver-server.h
 tests/test-approver
 tests/test-approver-tester
 bindings/mono/policy.0.0.appindicator-sharp.config
 bindings/mono/policy.0.0.appindicator-sharp.dll
 src/libapplication_la-generate-id.lo
 src/libappindicator_la-generate-id.lo
-gen-notification-approver.xml.c
-gen-notification-approver.xml.h

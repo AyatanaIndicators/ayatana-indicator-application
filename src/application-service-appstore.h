@@ -63,9 +63,6 @@ void  application_service_appstore_application_add        (ApplicationServiceApp
 void  application_service_appstore_application_remove     (ApplicationServiceAppstore *   appstore,
                                                            const gchar *             dbus_name,
                                                            const gchar *             dbus_object);
-void  application_service_appstore_approver_add           (ApplicationServiceAppstore *   appstore,
-                                                           const gchar *             dbus_name,
-                                                           const gchar *             dbus_object);
 gchar** application_service_appstore_application_get_list (ApplicationServiceAppstore *   appstore);
 
 G_END_DECLS
