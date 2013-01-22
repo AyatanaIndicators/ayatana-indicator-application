@@ -29,6 +29,7 @@ PKG_PROG_PKG_CONFIG
 # Dependencies
 ###########################
 
+GLIB_REQUIRED_VERSION=2.35.4
 GTK_REQUIRED_VERSION=3.0.0
 GIO_REQUIRED_VERSION=2.26
 INDICATOR_REQUIRED_VERSION=0.3.5
@@ -38,8 +39,9 @@ DBUS_GLIB_REQUIRED_VERSION=0.82
 
 LIBAPPINDICATOR_REQUIRED_VERSION=0.2.9
 
-PKG_CHECK_MODULES(INDICATOR,  gtk+-3.0 >= $GTK_REQUIRED_VERSION
+PKG_CHECK_MODULES(INDICATOR,  glib-2.0 >= $GLIB_REQUIRED_VERSION
                               gio-2.0 >= $GIO_REQUIRED_VERSION
+                              gtk+-3.0 >= $GTK_REQUIRED_VERSION
                               indicator3-0.4 >= $INDICATOR_REQUIRED_VERSION
                               json-glib-1.0 >= $JSON_GLIB_REQUIRED_VERSION
                               dbus-glib-1 >= $DBUS_GLIB_REQUIRED_VERSION

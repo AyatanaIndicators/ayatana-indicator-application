@@ -52,8 +52,6 @@ service_disconnected (IndicatorService * service, gpointer data)
 int
 main (int argc, char ** argv)
 {
-	g_type_init();
-
 	/* Bring us up as a basic indicator service */
 	service = indicator_service_new_version(INDICATOR_APPLICATION_DBUS_ADDR, INDICATOR_APPLICATION_SERVICE_VERSION);
 	g_signal_connect(G_OBJECT(service), INDICATOR_SERVICE_SIGNAL_SHUTDOWN, G_CALLBACK(service_disconnected), NULL);
