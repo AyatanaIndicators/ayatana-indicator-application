@@ -1,3 +1,14 @@
+indicator-application (12.10.1daily13.01.25-0ubuntu1) raring; urgency=low
+
+  [ Charles Kerr ]
+  * indicators call deprecated glib function g_type_init() (LP:
+    #1103087)
+
+  [ Automatic PS uploader ]
+  * Automatic snapshot from revision 239
+
+ -- Automatic PS uploader <ps-jenkins@lists.canonical.com>  Fri, 25 Jan 2013 02:01:09 +0000
+
 indicator-application (12.10.1daily13.01.11-0ubuntu1) raring; urgency=low
 
   [ Mathieu Trudel-Lapierre ]
