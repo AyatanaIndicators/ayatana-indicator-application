@@ -286,5 +286,32 @@ get_name_cb (DBusGProxy * proxy, guint status, GError * error, gpointer data)
 		return;
 	}
 
+	GError * spawn_error = NULL;
+	gchar * argv[] = {
+	          "initctl",
+	          "--session",
+	          "--user",
+	          "emit",
+	          "--no-wait",
+	          "appindicators-start",
+	          NULL,
+	          };
+
+	g_spawn_async(NULL, /* Working Directory */
+	              argv,
+	              NULL, /* environment */
+	              G_SPAWN_SEARCH_PATH,
+	              NULL, NULL, /* child setup function */
+	              NULL, /* Pid */
+	              &spawn_error);
+
+	if (spawn_error != NULL) {
+		/* NOTE: When we get to the point where we can start
+		   assuming upstart user sessions this can be escillated
+		   to a warning or higher */
+		g_debug("Unable to signal appindicators-start to upstart: %s", spawn_error->message);
+		g_error_free(spawn_error);
+	}
+
 	return;
 }
