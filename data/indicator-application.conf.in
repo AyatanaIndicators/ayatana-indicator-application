@@ -1,0 +1,16 @@
+description "Indicator Application Service"
+author "Ted Gould <ted@canonical.com>"
+
+start on indicators-loaded
+stop on desktop-end
+
+emits appindicators-start appindicators-end
+
+env G_MESSAGES_DEBUG=all
+export G_MESSAGES_DEBUG
+
+respawn
+
+exec @libexecdir@/indicator-application-service
+
+pre-stop initctl emit appindicators-end

@@ -5,13 +5,21 @@ dbus_services_DATA = indicator-application.service
 %.service: %.service.in
 	sed -e "s|\@libexecdir\@|$(libexecdir)|" $< > $@
 
+upstart_jobsdir = $(datadir)/upstart/sessions/
+upstart_jobs_DATA = indicator-application.conf
+
+%.conf: %.conf.in
+	sed -e "s|\@libexecdir\@|$(libexecdir)|" $< > $@
+
 overridedir = $(pkgdatadir)
 override_DATA = ordering-override.keyfile
 
 EXTRA_DIST = \
 	indicator-application.service.in \
+	indicator-application.conf.in \
 	ordering-override.keyfile
 
 CLEANFILES = \
-	indicator-application.service
+	indicator-application.service \
+	indicator-application.conf
 
