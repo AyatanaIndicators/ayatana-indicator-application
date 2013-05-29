@@ -1,10 +1,4 @@
 
-dbus_servicesdir = $(DBUSSERVICEDIR)
-dbus_services_DATA = indicator-application.service
-
-%.service: %.service.in
-	sed -e "s|\@libexecdir\@|$(libexecdir)|" $< > $@
-
 upstart_jobsdir = $(datadir)/upstart/sessions/
 upstart_jobs_DATA = indicator-application.conf
 
