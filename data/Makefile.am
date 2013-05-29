@@ -9,11 +9,9 @@ overridedir = $(pkgdatadir)
 override_DATA = ordering-override.keyfile
 
 EXTRA_DIST = \
-	indicator-application.service.in \
 	indicator-application.conf.in \
 	ordering-override.keyfile
 
 CLEANFILES = \
-	indicator-application.service \
 	indicator-application.conf
 
