@@ -286,6 +286,10 @@ get_name_cb (DBusGProxy * proxy, guint status, GError * error, gpointer data)
 		return;
 	}
 
+	/* After we've got the name we can request upstart to trigger
+	   the jobs of any application indicators that need to start
+	   at desktop init time. */
+
 	GError * spawn_error = NULL;
 	gchar * argv[] = {
 	          "initctl",
