@@ -16,4 +16,4 @@ respawn
 
 exec @libexecdir@/indicator-application-service
 
-pre-stop initctl emit appindicators-end
+pre-stop exec initctl emit appindicators-end
