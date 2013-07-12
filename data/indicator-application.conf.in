@@ -5,7 +5,7 @@ author "Ted Gould <ted@canonical.com>"
 # dbusmenu.  That can be lifted after it is ported to GMenu
 
 start on (indicators-loaded or indicator-services-start) and xsession SESSION=ubuntu
-stop on desktop-end
+stop on desktop-end or indicator-services-end
 
 emits appindicators-start appindicators-end
 
