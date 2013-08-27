@@ -1,5 +1,4 @@
 description "Indicator Application Service"
-author "Ted Gould <ted@canonical.com>"
 
 # NOTE: Limiting only to Unity 7 right now as it's still using
 # dbusmenu.  That can be lifted after it is ported to GMenu
@@ -8,9 +7,6 @@ start on (indicators-loaded or indicator-services-start) and xsession SESSION=ub
 stop on desktop-end or indicator-services-end
 
 emits appindicators-start appindicators-end
-
-env G_MESSAGES_DEBUG=all
-export G_MESSAGES_DEBUG
 
 respawn
 
