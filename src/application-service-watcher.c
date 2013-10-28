@@ -24,6 +24,7 @@ with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "config.h"
 #endif
 
+#include <stdlib.h>
 #include <dbus/dbus-glib.h>
 #include <dbus/dbus-glib-lowlevel.h>
 #include <dbus/dbus-glib-bindings.h>
@@ -158,8 +159,9 @@ application_service_watcher_init (ApplicationServiceWatcher *self)
 	GError * error = NULL;
 	DBusGConnection * session_bus = dbus_g_bus_get(DBUS_BUS_SESSION, &error);
 	if (error != NULL) {
-		g_error("Unable to get session bus: %s", error->message);
+		g_warning("Unable to get session bus: %s", error->message);
 		g_error_free(error);
+		exit(0);
 		return;
 	}
 
