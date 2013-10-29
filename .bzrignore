@@ -111,3 +111,4 @@ bindings/mono/policy.0.0.appindicator-sharp.dll
 src/libapplication_la-generate-id.lo
 src/libappindicator_la-generate-id.lo
 indicator-application.conf
+indicator-application.desktop
