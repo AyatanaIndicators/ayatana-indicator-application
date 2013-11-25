@@ -1,3 +1,20 @@
+indicator-application (12.10.1+14.04.20131125-0ubuntu1) trusty; urgency=low
+
+  [ Charles Kerr ]
+  * When we can't get a handle to the system bus, exit gracefully
+    instead of crashing. (LP: #1197788)
+
+  [ Ted Gould ]
+  * Switch indicator application over to having an upstart job for
+    managing the service. Also make it emit it's own event for when
+    application indicators should be started so we can clean up the boot
+    sequence. (LP: #1185565)
+
+  [ Ubuntu daily release ]
+  * Automatic snapshot from revision 242
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Mon, 25 Nov 2013 03:55:09 +0000
+
 indicator-application (12.10.1daily13.01.25-0ubuntu1) raring; urgency=low
 
   [ Charles Kerr ]
