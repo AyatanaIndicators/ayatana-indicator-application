@@ -21,7 +21,7 @@ libapplication_la_CFLAGS = $(INDICATOR_CFLAGS) \
 	-Wl,-Bsymbolic-functions \
 	-Wl,-z,defs \
 	-Wl,--as-needed \
-	-Werror \
+	-Werror -Wno-error=deprecated-declarations \
 	-DG_LOG_DOMAIN=\"Indicator-Application\"
 libapplication_la_LIBADD = $(INDICATOR_LIBS) 
 libapplication_la_LDFLAGS = $(COVERAGE_LDFLAGS) \
@@ -55,7 +55,7 @@ indicator_application_service_CFLAGS = \
 	$(APPINDICATOR_CFLAGS) \
 	$(COVERAGE_CFLAGS) \
 	-DDATADIR="\"$(pkgdatadir)\"" \
-	-Wall -Werror \
+	-Wall -Werror -Wno-error=deprecated-declarations \
 	-DG_LOG_DOMAIN=\"indicator-application-service\"
 
 indicator_application_service_LDADD = \
