@@ -1,3 +1,13 @@
+indicator-application (12.10.1+14.04.20140117-0ubuntu1) trusty; urgency=low
+
+  [ Sebastien Bacher ]
+  * don't error out on deprecated declarations.
+
+  [ Ubuntu daily release ]
+  * Automatic snapshot from revision 244
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Fri, 17 Jan 2014 17:43:55 +0000
+
 indicator-application (12.10.1+14.04.20131125-0ubuntu1) trusty; urgency=low
 
   [ Charles Kerr ]
