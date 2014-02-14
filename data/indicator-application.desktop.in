@@ -2,8 +2,5 @@
 Type=Application
 Name=Indicator Application
 Exec=@libexecdir@/indicator-application-service
-NotShowIn=Unity;
-NoDisplay=true
 StartupNotify=false
 Terminal=false
-
