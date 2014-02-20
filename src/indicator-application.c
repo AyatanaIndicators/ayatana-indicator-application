@@ -37,7 +37,6 @@ with this program.  If not, see <http://www.gnu.org/licenses/>.
 /* Indicator Stuff */
 #include <libindicator/indicator.h>
 #include <libindicator/indicator-object.h>
-#include <libindicator/indicator-service-manager.h>
 #include <libindicator/indicator-image-helper.h>
 
 /* Local Stuff */
@@ -76,13 +75,13 @@ INDICATOR_SET_TYPE(INDICATOR_APPLICATION_TYPE)
 
 typedef struct _IndicatorApplicationPrivate IndicatorApplicationPrivate;
 struct _IndicatorApplicationPrivate {
-	IndicatorServiceManager * sm;
 	GCancellable * service_proxy_cancel;
 	GDBusProxy * service_proxy;
 	GList * applications;
 	GHashTable * theme_dirs;
 	guint disconnect_kill;
 	GCancellable * get_apps_cancel;
+	guint watch;
 };
 
 typedef struct _ApplicationEntry ApplicationEntry;
@@ -107,9 +106,8 @@ static GList * get_entries (IndicatorObject * io);
 static guint get_location (IndicatorObject * io, IndicatorObjectEntry * entry);
 static void entry_scrolled (IndicatorObject * io, IndicatorObjectEntry * entry, gint delta, IndicatorScrollDirection direction);
 static void entry_secondary_activate (IndicatorObject * io, IndicatorObjectEntry * entry, guint time, gpointer data);
-void connection_changed (IndicatorServiceManager * sm, gboolean connected, IndicatorApplication * application);
-static void connected (IndicatorApplication * application);
-static void disconnected (IndicatorApplication * application);
+static void connected (GDBusConnection * con, const gchar * name, const gchar * owner, gpointer user_data);
+static void disconnected (GDBusConnection * con, const gchar * name, gpointer user_data);
 static void disconnected_helper (gpointer data, gpointer user_data);
 static gboolean disconnected_kill (gpointer user_data);
 static void disconnected_kill_helper (gpointer data, gpointer user_data);
@@ -159,8 +157,13 @@ indicator_application_init (IndicatorApplication *self)
 	priv->theme_dirs = NULL;
 	priv->disconnect_kill = 0;
 
-	priv->sm = indicator_service_manager_new_version(INDICATOR_APPLICATION_DBUS_ADDR, INDICATOR_APPLICATION_SERVICE_VERSION);	
-	g_signal_connect(G_OBJECT(priv->sm), INDICATOR_SERVICE_MANAGER_SIGNAL_CONNECTION_CHANGE, G_CALLBACK(connection_changed), self);
+	priv->watch = g_bus_watch_name(G_BUS_TYPE_SESSION,
+		INDICATOR_APPLICATION_DBUS_ADDR,
+		G_BUS_NAME_WATCHER_FLAGS_NONE,
+		connected,
+		disconnected,
+		self,
+		NULL);
 
 	priv->applications = NULL;
 
@@ -191,11 +194,6 @@ indicator_application_dispose (GObject *object)
 		                    0);
 	}
 
-	if (priv->sm != NULL) {
-		g_object_unref(priv->sm);
-		priv->sm = NULL;
-	}
-
 	if (priv->service_proxy != NULL) {
 		g_object_unref(G_OBJECT(priv->service_proxy));
 		priv->service_proxy = NULL;
@@ -218,6 +216,11 @@ indicator_application_dispose (GObject *object)
 		priv->theme_dirs = NULL;
 	}
 
+	if (priv->watch != 0) {
+		g_bus_unwatch_name(priv->watch);
+		priv->watch = 0;
+	}
+
 	G_OBJECT_CLASS (indicator_application_parent_class)->dispose (object);
 	return;
 }
@@ -230,25 +233,14 @@ indicator_application_finalize (GObject *object)
 	return;
 }
 
-/* Responds to connection change event from the service manager and
-   splits it into two. */
-void
-connection_changed (IndicatorServiceManager * sm, gboolean connect, IndicatorApplication * application)
-{
-	g_return_if_fail(IS_INDICATOR_APPLICATION(application));
-	if (connect) {
-		connected(application);
-	} else {
-		disconnected(application);
-	}
-	return;
-}
-
 /* Brings up the connection to a service that has just come onto the
    bus, or is atleast new to us. */
-void
-connected (IndicatorApplication * application)
+static void
+connected (GDBusConnection * con, const gchar * name, const gchar * owner, gpointer user_data)
 {
+	IndicatorApplication * application = INDICATOR_APPLICATION(user_data);
+	g_return_if_fail(application != NULL);
+
 	IndicatorApplicationPrivate * priv = INDICATOR_APPLICATION_GET_PRIVATE(application);
 	g_debug("Connected to Application Indicator Service.");
 
@@ -323,8 +315,11 @@ service_proxy_cb (GObject * object, GAsyncResult * res, gpointer user_data)
    service so that we can delete it if it doesn't come back.
    Also, sets up a timeout on comming back. */
 static void
-disconnected (IndicatorApplication * application)
+disconnected (GDBusConnection * con, const gchar * name, gpointer user_data)
 {
+	IndicatorApplication * application = INDICATOR_APPLICATION(user_data);
+	g_return_if_fail(application != NULL);
+
 	IndicatorApplicationPrivate * priv = INDICATOR_APPLICATION_GET_PRIVATE(application);
 	g_list_foreach(priv->applications, disconnected_helper, application);
 	/* I'll like this to be a little shorter, but it's a bit
