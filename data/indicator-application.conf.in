@@ -11,6 +11,6 @@ emits appindicators-start appindicators-end
 respawn
 respawn limit 2 10
 
-exec @libexecdir@/indicator-application-service
+exec @pkglibexecdir@/indicator-application-service
 
 pre-stop exec initctl emit appindicators-end
