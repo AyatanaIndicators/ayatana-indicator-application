@@ -5,13 +5,13 @@ upstart_jobsdir = $(datadir)/upstart/sessions/
 upstart_jobs_DATA = indicator-application.conf
 
 %.conf: %.conf.in
-	sed -e "s|\@pkglibexecdir\@|$(pkglibexecdir)|" $< > $@
+	$(AM_V_GEN) sed -e "s|\@pkglibexecdir\@|$(pkglibexecdir)|" $< > $@
 
 xdg_autostartdir = /etc/xdg/autostart
 xdg_autostart_DATA = indicator-application.desktop
 
 %.desktop: %.desktop.in
-	sed -e "s|\@pkglibexecdir\@|$(pkglibexecdir)|" $< > $@
+	$(AM_V_GEN) sed -e "s|\@pkglibexecdir\@|$(pkglibexecdir)|" $< > $@
 
 overridedir = $(pkgdatadir)
 override_DATA = ordering-override.keyfile
@@ -22,5 +22,6 @@ EXTRA_DIST = \
 	ordering-override.keyfile
 
 CLEANFILES = \
-	indicator-application.conf
+	indicator-application.conf \
+	indicator-application.desktop
 

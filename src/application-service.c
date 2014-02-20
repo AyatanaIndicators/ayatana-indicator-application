@@ -32,30 +32,12 @@ static GMainLoop * mainloop = NULL;
 static ApplicationServiceAppstore * appstore = NULL;
 /* Interface for applications */
 static ApplicationServiceWatcher * watcher = NULL;
-/* The service management interface */
-static IndicatorService * service = NULL;
 
-/* Recieves the disonnection signal from the service
-   object and closes the mainloop. */
-static void
-service_disconnected (IndicatorService * service, gpointer data)
-{
-	g_debug("Service disconnected");
-	if (mainloop != NULL) {
-		g_main_loop_quit(mainloop);
-	}
-	return;
-}
- 
 /* Builds up the core objects and puts us spinning into
    a main loop. */
 int
 main (int argc, char ** argv)
 {
-	/* Bring us up as a basic indicator service */
-	service = indicator_service_new_version(INDICATOR_APPLICATION_DBUS_ADDR, INDICATOR_APPLICATION_SERVICE_VERSION);
-	g_signal_connect(G_OBJECT(service), INDICATOR_SERVICE_SIGNAL_SHUTDOWN, G_CALLBACK(service_disconnected), NULL);
-
 	/* Building our app store */
 	appstore = application_service_appstore_new();
 
@@ -69,7 +51,6 @@ main (int argc, char ** argv)
 	/* Unref'ing all the objects */
 	g_object_unref(G_OBJECT(watcher));
 	g_object_unref(G_OBJECT(appstore));
-	g_object_unref(G_OBJECT(service));
 
 	return 0;
 }
