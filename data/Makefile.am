@@ -1,4 +1,6 @@
 
+SUBDIRS = upstart
+
 upstart_jobsdir = $(datadir)/upstart/sessions/
 upstart_jobs_DATA = indicator-application.conf
 
