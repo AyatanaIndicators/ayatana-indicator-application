@@ -21,7 +21,7 @@ with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 
-#include "libindicator/indicator-service.h"
+#include <gio/gio.h>
 #include "application-service-appstore.h"
 #include "application-service-watcher.h"
 #include "dbus-shared.h"
@@ -32,44 +32,60 @@ static GMainLoop * mainloop = NULL;
 static ApplicationServiceAppstore * appstore = NULL;
 /* Interface for applications */
 static ApplicationServiceWatcher * watcher = NULL;
-/* The service management interface */
-static IndicatorService * service = NULL;
 
-/* Recieves the disonnection signal from the service
-   object and closes the mainloop. */
+/* Make sure we can set up all our objects before we get the name */
 static void
-service_disconnected (IndicatorService * service, gpointer data)
+bus_acquired (GDBusConnection * con, const gchar * name, gpointer user_data)
 {
-	g_debug("Service disconnected");
-	if (mainloop != NULL) {
-		g_main_loop_quit(mainloop);
-	}
-	return;
-}
- 
-/* Builds up the core objects and puts us spinning into
-   a main loop. */
-int
-main (int argc, char ** argv)
-{
-	/* Bring us up as a basic indicator service */
-	service = indicator_service_new_version(INDICATOR_APPLICATION_DBUS_ADDR, INDICATOR_APPLICATION_SERVICE_VERSION);
-	g_signal_connect(G_OBJECT(service), INDICATOR_SERVICE_SIGNAL_SHUTDOWN, G_CALLBACK(service_disconnected), NULL);
+	g_debug("Bus Acquired, building objects");
 
 	/* Building our app store */
 	appstore = application_service_appstore_new();
 
 	/* Adding a watcher for the Apps coming up */
 	watcher = application_service_watcher_new(appstore);
+}
+
+/* Nice to know, but we're not doing anything special */
+static void
+name_acquired (GDBusConnection * con, const gchar * name, gpointer user_data)
+{
+	g_debug("Name Acquired");
+}
+
+/* Shouldn't happen under normal usage */
+static void
+name_lost (GDBusConnection * con, const gchar * name, gpointer user_data)
+{
+	g_warning("Name Lost");
+	g_main_loop_quit(mainloop);
+}
+
+/* Builds up the core objects and puts us spinning into
+   a main loop. */
+int
+main (int argc, char ** argv)
+{
+	guint nameownership = g_bus_own_name(G_BUS_TYPE_SESSION,
+		INDICATOR_APPLICATION_DBUS_ADDR,
+		G_BUS_NAME_OWNER_FLAGS_NONE,
+		bus_acquired,
+		name_acquired,
+		name_lost,
+		NULL, NULL);
 
 	/* Building and executing our main loop */
 	mainloop = g_main_loop_new(NULL, FALSE);
 	g_main_loop_run(mainloop);
 
+	g_debug("Finishing Main Loop");
+
+	g_bus_unown_name(nameownership);
+
 	/* Unref'ing all the objects */
+	g_main_loop_unref(mainloop);
 	g_object_unref(G_OBJECT(watcher));
 	g_object_unref(G_OBJECT(appstore));
-	g_object_unref(G_OBJECT(service));
 
 	return 0;
 }

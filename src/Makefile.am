@@ -31,7 +31,7 @@ libapplication_la_LDFLAGS = $(COVERAGE_LDFLAGS) \
 # Service
 ##################################
 
-libexec_PROGRAMS = indicator-application-service
+pkglibexec_PROGRAMS = indicator-application-service
 
 BUILT_SOURCES += \
 	application-service-marshal.h \

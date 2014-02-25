@@ -3,13 +3,14 @@ description "Indicator Application Service"
 # NOTE: Limiting only to Unity 7 right now as it's still using
 # dbusmenu.  That can be lifted after it is ported to GMenu
 
-start on (indicators-loaded or indicator-services-start) and xsession SESSION=ubuntu
+start on indicator-services-start and xsession SESSION=ubuntu
 stop on desktop-end or indicator-services-end
 
 emits appindicators-start appindicators-end
 
 respawn
+respawn limit 2 10
 
-exec @libexecdir@/indicator-application-service
+exec @pkglibexecdir@/indicator-application-service
 
 pre-stop exec initctl emit appindicators-end
