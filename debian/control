@@ -30,6 +30,5 @@ Architecture: any
 Depends: ${shlibs:Depends}, 
          ${misc:Depends},
 Description: Application Indicators
- A library and indicator to take menus from applications and place them in
- the panel.
+ An indicator to take menus from applications and place them in the panel.
 
