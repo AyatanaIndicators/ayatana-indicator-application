@@ -1,3 +1,13 @@
+indicator-application (12.10.1+14.04.20140324-0ubuntu1) trusty; urgency=low
+
+  [ Ted Gould ]
+  * Synchronize process management across indicators.
+
+  [ Sebastien Bacher ]
+  * Don't mention "library", that's a separate source nowadays
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Mon, 24 Mar 2014 10:07:59 +0000
+
 indicator-application (12.10.1+14.04.20140117-0ubuntu1) trusty; urgency=low
 
   [ Sebastien Bacher ]
