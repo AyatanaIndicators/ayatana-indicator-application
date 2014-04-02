@@ -1006,7 +1006,7 @@ application_service_appstore_application_add (ApplicationServiceAppstore * appst
 	Application * app = find_application(appstore, dbus_name, dbus_object);
 
 	if (app != NULL) {
-		g_warning("Application already exists, re-requesting properties.");
+		g_debug("Application already exists, re-requesting properties.");
 		get_all_properties(app);
 		return;
 	}
