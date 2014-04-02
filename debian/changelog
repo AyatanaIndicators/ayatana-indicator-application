@@ -1,3 +1,11 @@
+indicator-application (12.10.1+14.04.20140402-0ubuntu1) trusty; urgency=low
+
+  [ Sebastien Bacher ]
+  * Don't output warnings about properties re-requests, debug is enough
+    (LP: #1297437)
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Wed, 02 Apr 2014 15:17:39 +0000
+
 indicator-application (12.10.1+14.04.20140324-0ubuntu1) trusty; urgency=low
 
   [ Ted Gould ]
