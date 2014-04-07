@@ -1,3 +1,10 @@
+indicator-application (12.10.1+14.04.20140407-0ubuntu1) trusty; urgency=low
+
+  [ Ted Gould ]
+  * Fix the upstart job and desktop config for GNOME2 (LP: #1302123)
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Mon, 07 Apr 2014 13:39:45 +0000
+
 indicator-application (12.10.1+14.04.20140402-0ubuntu1) trusty; urgency=low
 
   [ Sebastien Bacher ]
