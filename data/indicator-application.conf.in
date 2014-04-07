@@ -12,7 +12,7 @@ pre-start script
 	# NOTE: Limiting only to Unity 7 right now as it's still using
 	# dbusmenu.  That can be lifted after it is ported to GMenu
 
-	if [ "x$DESKTOP_SESSION" == "xubuntu-touch" ] ; then
+	if [ "x$DESKTOP_SESSION" = "xubuntu-touch" ] ; then
 		stop; exit 0
 	fi
 end script
