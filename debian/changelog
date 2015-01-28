@@ -1,3 +1,10 @@
+indicator-application (12.10.1+15.04.20150128-0ubuntu1) vivid; urgency=low
+
+  [ Ted Gould ]
+  * Remove XFCE from the OnlyShowIn list (LP: #1411959)
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Wed, 28 Jan 2015 21:13:37 +0000
+
 indicator-application (12.10.1+14.04.20140407-0ubuntu1) trusty; urgency=low
 
   [ Ted Gould ]
