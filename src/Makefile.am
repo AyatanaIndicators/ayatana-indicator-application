@@ -10,73 +10,73 @@ include $(top_srcdir)/Makefile.am.marshal
 ##################################
 
 applicationlibdir = $(INDICATORDIR)
-applicationlib_LTLIBRARIES = libapplication.la
-libapplication_la_SOURCES = \
-	application-service-marshal.c \
+applicationlib_LTLIBRARIES = libayatana-application.la
+libayatana_application_la_SOURCES = \
+	ayatana-application-service-marshal.c \
 	dbus-shared.h \
 	indicator-application.c
-libapplication_la_CFLAGS = $(INDICATOR_CFLAGS) \
+libayatana_application_la_CFLAGS = $(INDICATOR_CFLAGS) \
 	$(COVERAGE_CFLAGS) \
 	-Wall \
 	-Wl,-Bsymbolic-functions \
 	-Wl,-z,defs \
 	-Wl,--as-needed \
 	-Werror -Wno-error=deprecated-declarations \
-	-DG_LOG_DOMAIN=\"Indicator-Application\"
-libapplication_la_LIBADD = $(INDICATOR_LIBS) 
-libapplication_la_LDFLAGS = $(COVERAGE_LDFLAGS) \
+	-DG_LOG_DOMAIN=\"Ayatana-Indicator-Application\"
+libayatana_application_la_LIBADD = $(INDICATOR_LIBS) 
+libayatana_application_la_LDFLAGS = $(COVERAGE_LDFLAGS) \
 	-module -avoid-version
 
 ##################################
 # Service
 ##################################
 
-pkglibexec_PROGRAMS = indicator-application-service
+pkglibexec_PROGRAMS = ayatana-indicator-application-service
 
 BUILT_SOURCES += \
-	application-service-marshal.h \
-	application-service-marshal.c \
-	notification-watcher-server.h
+	ayatana-application-service-marshal.h \
+	ayatana-application-service-marshal.c \
+	ayatana-notification-watcher-server.h
 
-indicator_application_service_SOURCES = \
+ayatana_indicator_application_service_SOURCES = \
 	application-service.c \
 	application-service-appstore.h \
 	application-service-appstore.c \
-	application-service-marshal.c \
+	ayatana-application-service-marshal.c \
 	application-service-watcher.h \
 	application-service-watcher.c \
-	gen-application-service.xml.c \
+	gen-ayatana-application-service.xml.c \
 	dbus-shared.h \
 	generate-id.h \
 	generate-id.c
 
-indicator_application_service_CFLAGS = \
+ayatana_indicator_application_service_CFLAGS = \
 	$(INDICATOR_CFLAGS) \
 	$(APPINDICATOR_CFLAGS) \
 	$(COVERAGE_CFLAGS) \
 	-DDATADIR="\"$(pkgdatadir)\"" \
 	-Wall -Werror -Wno-error=deprecated-declarations \
-	-DG_LOG_DOMAIN=\"indicator-application-service\"
+	-DG_LOG_DOMAIN=\"ayatana-indicator-application-service\"
 
-indicator_application_service_LDADD = \
+ayatana_indicator_application_service_LDADD = \
 	$(INDICATOR_LIBS) \
 	$(APPINDICATOR_LIBS)
 
-indicator_application_service_LDFLAGS = \
+ayatana_indicator_application_service_LDFLAGS = \
 	$(COVERAGE_LDFLAGS)
 
-glib_marshal_list = application-service-marshal.list
-glib_marshal_prefix = _application_service_marshal
+glib_marshal_list = ayatana-application-service-marshal.list
+glib_marshal_prefix = _ayatana_application_service_marshal
 
 ##################################
 # DBus Specs
 ##################################
 
 GDBUS_SPECS = \
-	application-service.xml
+	ayatana-application-service.xml
 
 DBUS_SPECS = \
-	notification-watcher.xml
+	ayatana-notification-watcher.xml
 
 %-client.h: %.xml
 	dbus-binding-tool \
@@ -105,8 +105,8 @@ gen-%.xml.h: %.xml
 BUILT_SOURCES += \
 	$(DBUS_SPECS:.xml=-client.h) \
 	$(DBUS_SPECS:.xml=-server.h) \
-	gen-application-service.xml.c \
-	gen-application-service.xml.h
+	gen-ayatana-application-service.xml.c \
+	gen-ayatana-application-service.xml.h
 
 CLEANFILES += $(BUILT_SOURCES)
 

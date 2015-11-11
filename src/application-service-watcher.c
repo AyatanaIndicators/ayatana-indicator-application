@@ -47,11 +47,11 @@ enum {
 
 #define CURRENT_PROTOCOL_VERSION 0
 
-static gboolean _notification_watcher_server_register_status_notifier_item (ApplicationServiceWatcher * appwatcher, const gchar * service, DBusGMethodInvocation * method);
-static gboolean _notification_watcher_server_register_status_notifier_host (ApplicationServiceWatcher * appwatcher, const gchar * host);
+static gboolean _ayatana_notification_watcher_server_register_status_notifier_item (ApplicationServiceWatcher * appwatcher, const gchar * service, DBusGMethodInvocation * method);
+static gboolean _ayatana_notification_watcher_server_register_status_notifier_host (ApplicationServiceWatcher * appwatcher, const gchar * host);
 static void get_name_cb (DBusGProxy * proxy, guint status, GError * error, gpointer data);
 
-#include "notification-watcher-server.h"
+#include "ayatana-notification-watcher-server.h"
 
 /* Private Stuff */
 typedef struct _ApplicationServiceWatcherPrivate ApplicationServiceWatcherPrivate;
@@ -144,7 +144,7 @@ application_service_watcher_class_init (ApplicationServiceWatcherClass *klass)
 	                                           G_TYPE_NONE, 0, G_TYPE_NONE);
 
 	dbus_g_object_type_install_info(APPLICATION_SERVICE_WATCHER_TYPE,
-	                                &dbus_glib__notification_watcher_server_object_info);
+	                                &dbus_glib__ayatana_notification_watcher_server_object_info);
 
 	return;
 }
@@ -245,7 +245,7 @@ application_service_watcher_new (ApplicationServiceAppstore * appstore)
 }
 
 static gboolean
-_notification_watcher_server_register_status_notifier_item (ApplicationServiceWatcher * appwatcher, const gchar * service, DBusGMethodInvocation * method)
+_ayatana_notification_watcher_server_register_status_notifier_item (ApplicationServiceWatcher * appwatcher, const gchar * service, DBusGMethodInvocation * method)
 {
 	ApplicationServiceWatcherPrivate * priv = APPLICATION_SERVICE_WATCHER_GET_PRIVATE(appwatcher);
 
@@ -266,7 +266,7 @@ _notification_watcher_server_register_status_notifier_item (ApplicationServiceWa
 }
 
 static gboolean
-_notification_watcher_server_register_status_notifier_host (ApplicationServiceWatcher * appwatcher, const gchar * host)
+_ayatana_notification_watcher_server_register_status_notifier_host (ApplicationServiceWatcher * appwatcher, const gchar * host)
 {
 
 	return FALSE;

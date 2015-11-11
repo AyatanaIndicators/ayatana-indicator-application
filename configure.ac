@@ -1,17 +1,19 @@
 
-AC_INIT(indicator-application, 12.10.0, ted@canonical.com)
-AC_COPYRIGHT([Copyright 2009, 2010 Canonical])
+AC_INIT(ayatana-indicator-application, 0.5.1, mike.gabriel@das-netzwerkteam.de)
+AC_COPYRIGHT([Copyright 2009, 2010 Canonical
+Copyright 2015 Arctica Project])
 
 AC_PREREQ(2.53)
 
 AM_CONFIG_HEADER(config.h)
-AM_INIT_AUTOMAKE(indicator-application, 12.10.0)
+AM_INIT_AUTOMAKE(ayatana-indicator-application, 0.5.1)
 
 AM_MAINTAINER_MODE
 
 AC_ISC_POSIX
 AC_PROG_CC
 AM_PROG_CC_C_O
+AM_PROG_AR
 AC_STDC_HEADERS
 AC_PROG_LIBTOOL
 
@@ -32,21 +34,21 @@ PKG_PROG_PKG_CONFIG
 GLIB_REQUIRED_VERSION=2.35.4
 GTK_REQUIRED_VERSION=3.0.0
 GIO_REQUIRED_VERSION=2.26
-INDICATOR_REQUIRED_VERSION=0.3.5
+INDICATOR_REQUIRED_VERSION=0.6.0
 DBUSMENUGTK_REQUIRED_VERSION=0.5.90
 JSON_GLIB_REQUIRED_VERSION=0.7.6
 DBUS_GLIB_REQUIRED_VERSION=0.82
 
-LIBAPPINDICATOR_REQUIRED_VERSION=0.2.9
+LIBAPPINDICATOR_REQUIRED_VERSION=0.5.0
 
 PKG_CHECK_MODULES(INDICATOR,  glib-2.0 >= $GLIB_REQUIRED_VERSION
                               gio-2.0 >= $GIO_REQUIRED_VERSION
                               gtk+-3.0 >= $GTK_REQUIRED_VERSION
-                              indicator3-0.4 >= $INDICATOR_REQUIRED_VERSION
+                              ayatana-indicator3-0.4 >= $INDICATOR_REQUIRED_VERSION
                               json-glib-1.0 >= $JSON_GLIB_REQUIRED_VERSION
                               dbus-glib-1 >= $DBUS_GLIB_REQUIRED_VERSION
                               dbusmenu-gtk3-0.4 >= $DBUSMENUGTK_REQUIRED_VERSION)
-PKG_CHECK_MODULES(APPINDICATOR, appindicator3-0.1 >= $LIBAPPINDICATOR_REQUIRED_VERSION)
+PKG_CHECK_MODULES(APPINDICATOR, ayatana-appindicator3-0.1 >= $LIBAPPINDICATOR_REQUIRED_VERSION)
 
 ###########################
 # gcov coverage reporting
@@ -76,14 +78,14 @@ AC_ARG_ENABLE(localinstall, AS_HELP_STRING([--enable-localinstall], [install all
 ###########################
 
 if test "x$with_localinstall" = "xyes"; then
-	INDICATORDIR="${libdir}/indicators/2/"
-	INDICATORICONSDIR="${datadir}/libindicate/icons/"
+	INDICATORDIR="${libdir}/ayatana-indicators/2/"
+	INDICATORICONSDIR="${datadir}/libayatana-indicate/icons/"
 elif test "x$with_gtk" = x2; then
-	INDICATORDIR=`$PKG_CONFIG --variable=indicatordir indicator-0.4`
-	INDICATORICONSDIR=`$PKG_CONFIG --variable=iconsdir indicator-0.4`
+	INDICATORDIR=`$PKG_CONFIG --variable=indicatordir ayatana-indicator-0.4`
+	INDICATORICONSDIR=`$PKG_CONFIG --variable=iconsdir ayatana-indicator-0.4`
 else
-	INDICATORDIR=`$PKG_CONFIG --variable=indicatordir indicator3-0.4`
-	INDICATORICONSDIR=`$PKG_CONFIG --variable=iconsdir indicator3-0.4`
+	INDICATORDIR=`$PKG_CONFIG --variable=indicatordir ayatana-indicator3-0.4`
+	INDICATORICONSDIR=`$PKG_CONFIG --variable=iconsdir ayatana-indicator3-0.4`
 fi
 AC_SUBST(INDICATORDIR)
 AC_SUBST(INDICATORICONSDIR)

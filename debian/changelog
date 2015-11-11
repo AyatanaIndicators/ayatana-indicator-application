@@ -1,3 +1,9 @@
+ayatana-indicator-application (0.5.1-0) UNRELEASED; urgency=medium
+
+  * Fork from Ubuntu's indicator-application code project.
+
+ -- Mike Gabriel <mike.gabriel@das-netzwerkteam.de>  Wed, 11 Nov 2015 05:47:58 +0100
+
 indicator-application (12.10.1+15.04.20150128-0ubuntu1) vivid; urgency=low
 
   [ Ted Gould ]

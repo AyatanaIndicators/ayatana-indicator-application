@@ -24,11 +24,11 @@ with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "config.h"
 #endif
 
-#include <libindicator/indicator-object.h>
-#include "libappindicator/app-indicator.h"
-#include "libappindicator/app-indicator-enum-types.h"
+#include <libayatana-indicator/indicator-object.h>
+#include <libayatana-appindicator/app-indicator.h>
+#include <libayatana-appindicator/app-indicator-enum-types.h>
 #include "application-service-appstore.h"
-#include "application-service-marshal.h"
+#include "ayatana-application-service-marshal.h"
 #include "dbus-shared.h"
 #include "generate-id.h"
 
@@ -37,7 +37,7 @@ static GVariant * get_applications (ApplicationServiceAppstore * appstore);
 static void bus_method_call (GDBusConnection * connection, const gchar * sender, const gchar * path, const gchar * interface, const gchar * method, GVariant * params, GDBusMethodInvocation * invocation, gpointer user_data);
 static void props_cb (GObject * object, GAsyncResult * res, gpointer user_data);
 
-#include "gen-application-service.xml.h"
+#include "gen-ayatana-application-service.xml.h"
 
 #define NOTIFICATION_ITEM_PROP_ID                    "Id"
 #define NOTIFICATION_ITEM_PROP_CATEGORY              "Category"
@@ -154,7 +154,7 @@ application_service_appstore_class_init (ApplicationServiceAppstoreClass *klass)
 	if (node_info == NULL) {
 		GError * error = NULL;
 
-		node_info = g_dbus_node_info_new_for_xml(_application_service, &error);
+		node_info = g_dbus_node_info_new_for_xml(_ayatana_application_service, &error);
 		if (error != NULL) {
 			g_critical("Unable to parse Application Service Interface description: %s", error->message);
 			g_error_free(error);

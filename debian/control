@@ -1,9 +1,8 @@
-Source: indicator-application
+Source: ayatana-indicator-application
 Section: gnome
 Priority: optional
-Maintainer: Ubuntu Desktop Team <ubuntu-desktop@lists.ubuntu.com>
+Maintainer: Mike Gabriel <mike.gabriel@das-netzwerkteam.de>
 Build-Depends: debhelper (>= 9.0),
-               dh-translations,
                dh-autoreconf,
                dbus-test-runner,
                gnome-common,
@@ -13,22 +12,18 @@ Build-Depends: debhelper (>= 9.0),
                libdbus-glib-1-dev (>= 0.82),
                libjson-glib-dev,
                intltool,
-               libappindicator3-dev (>= 0.2.91),
-               libindicator3-dev (>= 0.3.90),
+               libayatana-appindicator3-dev (>= 0.5.0~),
+               libayatana-indicator3-dev (>= 0.6.0~),
                libdbusmenu-glib-dev (>= 0.5.90),
                libdbusmenu-gtk3-dev (>= 0.5.90),
-Standards-Version: 3.9.3
-Homepage: https://launchpad.net/indicator-application
-# If you aren't a member of ~indicator-applet-developers but need to upload
-# packaging changes, just go ahead.  ~indicator-applet-developers will notice
-# and sync up the code again.
-Vcs-Bzr: https://code.launchpad.net/~indicator-applet-developers/indicator-application/trunk.13.04
-Vcs-Browser: https://bazaar.launchpad.net/~indicator-applet-developers/indicator-application/trunk.13.04/files
+Standards-Version: 3.9.6
+Homepage: https://github.com/ArcticaProject/ayatana-indicator-application
+Vcs-Git: git://cgit.arctica-project.org/ayatana/ayatana-indicator-application.git
+Vcs-Browser: https://cgit.arctica-project.org/ayatana/ayatana-indicator-application.git/
 
-Package: indicator-application
+Package: ayatana-indicator-application
 Architecture: any
 Depends: ${shlibs:Depends}, 
          ${misc:Depends},
-Description: Application Indicators
+Description: Ayatana Application Indicators
  An indicator to take menus from applications and place them in the panel.
-

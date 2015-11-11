@@ -35,14 +35,14 @@ with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <libdbusmenu-gtk/menu.h>
 
 /* Indicator Stuff */
-#include <libindicator/indicator.h>
-#include <libindicator/indicator-object.h>
-#include <libindicator/indicator-image-helper.h>
+#include <libayatana-indicator/indicator.h>
+#include <libayatana-indicator/indicator-object.h>
+#include <libayatana-indicator/indicator-image-helper.h>
 
 /* Local Stuff */
 #include "dbus-shared.h"
-#include "gen-application-service.xml.h"
-#include "application-service-marshal.h"
+#include "gen-ayatana-application-service.xml.h"
+#include "ayatana-application-service-marshal.h"
 
 #define PANEL_ICON_SUFFIX  "panel"
 
