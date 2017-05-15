@@ -16,6 +16,7 @@ Build-Depends: debhelper (>= 9.0),
                libayatana-indicator3-dev (>= 0.6.0~),
                libdbusmenu-glib-dev (>= 0.5.90),
                libdbusmenu-gtk3-dev (>= 0.5.90),
+               systemd,
 Standards-Version: 3.9.6
 Homepage: https://github.com/ArcticaProject/ayatana-indicator-application
 Vcs-Git: git://cgit.arctica-project.org/ayatana/ayatana-indicator-application.git
@@ -25,5 +26,6 @@ Package: ayatana-indicator-application
 Architecture: any
 Depends: ${shlibs:Depends}, 
          ${misc:Depends},
+         ayatana-indicator-common,
 Description: Ayatana Application Indicators
  An indicator to take menus from applications and place them in the panel.
