@@ -17,6 +17,6 @@ pre-start script
 	fi
 end script
 
-exec @pkglibexecdir@/indicator-application-service
+exec $SNAP@pkglibexecdir@/indicator-application-service
 
 pre-stop exec initctl emit appindicators-end
