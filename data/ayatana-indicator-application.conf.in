@@ -1,9 +1,9 @@
-description "Indicator Application Service"
+description "Ayatana Indicator Application Service"
 
-start on indicator-services-start
-stop on desktop-end or indicator-services-end
+start on ayatana-indicator-services-start
+stop on desktop-end or ayatana-indicator-services-end
 
-emits appindicators-start appindicators-end
+emits ayatana-appindicators-start ayatana-appindicators-end
 
 respawn
 respawn limit 2 10
@@ -17,6 +17,6 @@ pre-start script
 	fi
 end script
 
-exec $SNAP@pkglibexecdir@/indicator-application-service
+exec $SNAP@pkglibexecdir@/ayatana-indicator-application-service
 
-pre-stop exec initctl emit appindicators-end
+pre-stop exec initctl emit ayatana-appindicators-end
