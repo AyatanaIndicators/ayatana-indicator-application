@@ -5,7 +5,7 @@ Maintainer: Mike Gabriel <mike.gabriel@das-netzwerkteam.de>
 Build-Depends: debhelper (>= 9.0),
                dh-autoreconf,
                dbus-test-runner,
-               gnome-common,
+               mate-common,
                xvfb,
                libglib2.0-dev (>= 2.35.4),
                libgtk-3-dev (>= 2.91),
