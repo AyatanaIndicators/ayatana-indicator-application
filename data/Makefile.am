@@ -17,7 +17,7 @@ overridedir = $(pkgdatadir)
 override_DATA = ordering-override.keyfile
 
 %.service: %.service.in
-        $(AM_V_GEN) sed -e "s|\@pkglibexecdir\@|$(pkglibexecdir)|" $< > $@
+	$(AM_V_GEN) sed -e "s|\@pkglibexecdir\@|$(pkglibexecdir)|" $< > $@
  
 systemddir = $(SYSTEMD_USERDIR)
 systemd_DATA = ayatana-indicator-application.service
