@@ -4,6 +4,5 @@ Name=Ayatana Indicator Application
 Exec=@pkglibexecdir@/ayatana-indicator-application-service
 StartupNotify=false
 Terminal=false
-OnlyShowIn=Unity;GNOME;MATE;
+OnlyShowIn=Unity;MATE;
 NoDisplay=true
-AutostartCondition=GNOME3 unless-session gnome
