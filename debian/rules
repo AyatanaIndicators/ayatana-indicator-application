@@ -12,3 +12,6 @@ override_dh_install:
 	find debian/ayatana-indicator-application/usr/lib -name *.la -delete
 	find debian/ayatana-indicator-application/usr/lib -name *.a -delete
 	dh_install --fail-missing
+
+get-orig-source:
+	uscan --noconf --force-download --rename --download-current-version --destdir=..
