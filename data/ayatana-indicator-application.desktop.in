@@ -4,5 +4,5 @@ Name=Ayatana Indicator Application
 Exec=@pkglibexecdir@/ayatana-indicator-application-service
 StartupNotify=false
 Terminal=false
-OnlyShowIn=Unity;MATE;XFCE;
+OnlyShowIn=Unity;MATE;XFCE;Budgie;
 NoDisplay=true
