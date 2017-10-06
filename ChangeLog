@@ -1,13 +1,49 @@
-2017-05-29 11:36:24 +0200 Mike Gabriel (4d9432e)
+2017-10-06 11:34:04 +0200 Mike Gabriel (2401b05)
 
-	* release 0.5.1 (HEAD -> release-builds, master)
+	* release 0.5.2 (HEAD -> master)
+
+2017-09-26 09:13:03 +0200 Mike Gabriel (1fb04e5)
+
+	* data/ayatana-indicator-application.desktop.in: Add Budgie as
+          candidate for launching ayatana-indicator-application.
+          (origin/master)
+
+2017-09-26 09:10:35 +0200 Mike Gabriel (6f0baea)
+
+	* data/ayatana-indicator-application.desktop.in: Add XFCE as
+          candidate for launching ayatana-indicator-application.
+
+2017-06-07 23:05:00 +0200 Mike Gabriel (9ea282b)
+
+	* debian/{rules/watch}: Add get-orig-source rule and watch file to
+          make upstream packaging as close to official Debian
+          packaging.
+
+2017-06-07 22:13:27 +0200 Mike Gabriel (7a0de9b)
+
+	* debian/upstream: Add GnuPG pubkey for upstream devs.
+
+2017-06-07 22:13:06 +0200 Mike Gabriel (5810507)
+
+	* debian/patches: Add README for patches/ subfolder.
+
+2017-05-31 15:01:28 +0200 Mike Gabriel (7ce7832)
+
+	* data/ayatana-indicator-application.desktop.in
+
+2017-05-30 14:21:51 +0200 Mike Gabriel (630f47c)
+
+	* XDG-autostart this indicator in MATE, too.
+
+2017-05-29 11:36:24 +0200 Mike Gabriel (21a3517)
+
+	* release 0.5.1 (tag: 0.5.1, origin/release-builds, release-builds)
 
 2017-05-26 01:30:59 +0200 Mike Gabriel (af351b0)
 
 	* src/application-service-watcher.c: Comment out upstart specific
           code for now. We can reintroduce it once we know if our
           session is upstart-managed (or systemd-managed).
-          (origin/master)
 
 2017-05-15 13:27:27 +0200 Mike Gabriel (0858a56)
 
@@ -52,9 +88,8 @@
 
 2015-01-28 21:13:37 +0000 CI Train Bot (6935795)
 
-	* Releasing 12.10.1+15.04.20150128-0ubuntu1 (tag:
-          12.10.1+15.04.20150128-0ubuntu1,
-          refs/bzr/origin/tags/12.10.1+15.04.20150128-0ubuntu1,
+	* Releasing 12.10.1+15.04.20150128-0ubuntu1
+          (refs/bzr/origin/tags/12.10.1+15.04.20150128-0ubuntu1,
           refs/bzr/origin/heads/master)
 
 2015-01-28 21:13:25 +0000 Ted Gould (61f83a5)
@@ -72,9 +107,8 @@
 
 2014-04-07 13:39:46 +0000 CI bot (f08a10d)
 
-	* Releasing 12.10.1+14.04.20140407-0ubuntu1 (tag:
-          12.10.1+14.04.20140407-0ubuntu1,
-          refs/bzr/origin/tags/12.10.1+14.04.20140407-0ubuntu1)
+	* Releasing 12.10.1+14.04.20140407-0ubuntu1
+          (refs/bzr/origin/tags/12.10.1+14.04.20140407-0ubuntu1)
 
 2014-04-07 13:39:36 +0000 Ted Gould (72e1242)
 
@@ -86,9 +120,8 @@
 
 2014-04-02 15:17:39 +0000 CI bot (b3b0fc8)
 
-	* Releasing 12.10.1+14.04.20140402-0ubuntu1 (tag:
-          12.10.1+14.04.20140402-0ubuntu1,
-          refs/bzr/origin/tags/12.10.1+14.04.20140402-0ubuntu1)
+	* Releasing 12.10.1+14.04.20140402-0ubuntu1
+          (refs/bzr/origin/tags/12.10.1+14.04.20140402-0ubuntu1)
 
 2014-04-02 15:17:28 +0000 Sebastien Bacher (343963f)
 
@@ -105,9 +138,8 @@
 
 2014-03-24 10:07:59 +0000 CI bot (4b29e70)
 
-	* Releasing 12.10.1+14.04.20140324-0ubuntu1 (tag:
-          12.10.1+14.04.20140324-0ubuntu1,
-          refs/bzr/origin/tags/12.10.1+14.04.20140324-0ubuntu1)
+	* Releasing 12.10.1+14.04.20140324-0ubuntu1
+          (refs/bzr/origin/tags/12.10.1+14.04.20140324-0ubuntu1)
 
 2014-03-24 10:07:51 +0000 Sebastien Bacher (2906f8d)
 
@@ -168,9 +200,8 @@
 2014-01-17 19:34:45 +0000 Automatic PS uploader (ae7db09)
 
 	* Releasing 12.10.1+14.04.20140117-0ubuntu1 (revision 244 from
-          lp:indicator-application). (tag:
-          12.10.1+14.04.20140117-0ubuntu1,
-          refs/bzr/origin/tags/12.10.1+14.04.20140117-0ubuntu1)
+          lp:indicator-application).
+          (refs/bzr/origin/tags/12.10.1+14.04.20140117-0ubuntu1)
 
 2014-01-17 17:43:55 +0000 Automatic PS uploader (bd2e50e)
 
@@ -377,7 +408,7 @@
 
 2012-08-21 23:34:39 -0500 Charles Kerr (90e5ec8)
 
-	* 12.10.0 (tag: 12.10.0, refs/bzr/origin/tags/12.10.0)
+	* 12.10.0 (refs/bzr/origin/tags/12.10.0)
 
 2012-06-22 14:01:30 +0000 Charles Kerr (f2ace01)
 
