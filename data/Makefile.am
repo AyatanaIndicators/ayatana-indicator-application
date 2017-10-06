@@ -16,11 +16,13 @@ xdg_autostart_DATA = ayatana-indicator-application.desktop
 overridedir = $(pkgdatadir)
 override_DATA = ordering-override.keyfile
 
+#if defined(HAVE_SYSTEMD)
 %.service: %.service.in
 	$(AM_V_GEN) sed -e "s|\@pkglibexecdir\@|$(pkglibexecdir)|" $< > $@
- 
+
 systemddir = $(SYSTEMD_USERDIR)
 systemd_DATA = ayatana-indicator-application.service
+#endif
 
 upstartsystemdoverridedir = $(datadir)/upstart/systemd-session/upstart
 upstartsystemdoverride_DATA = ayatana-indicator-application.override

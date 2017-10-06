@@ -50,8 +50,18 @@ PKG_CHECK_MODULES(INDICATOR,  glib-2.0 >= $GLIB_REQUIRED_VERSION
                               dbusmenu-gtk3-0.4 >= $DBUSMENUGTK_REQUIRED_VERSION)
 PKG_CHECK_MODULES(APPINDICATOR, ayatana-appindicator3-0.1 >= $LIBAPPINDICATOR_REQUIRED_VERSION)
 
-SYSTEMD_USERDIR=`$PKG_CONFIG --variable=systemduserunitdir systemd`
-AC_SUBST(SYSTEMD_USERDIR)
+#########################
+# Check for systemd
+#########################
+PKG_CHECK_MODULES(SYSTEMD,  systemd,
+    [has_systemd=yes],
+    []
+)
+if test "x$has_systemd" = "xyes"; then
+       SYSTEMD_USERDIR=`$PKG_CONFIG --variable=systemduserunitdir systemd`
+       AC_SUBST(SYSTEMD_USERDIR)
+       AC_DEFINE(HAVE_SYSTEMD, 1, [create ayatana-indicator-application.service for systemd])
+fi
 
 ###########################
 # gcov coverage reporting
