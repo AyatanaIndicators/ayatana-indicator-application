@@ -1,4 +1,3 @@
-
 AC_INIT(ayatana-indicator-application, 0.5.2, mike.gabriel@das-netzwerkteam.de)
 AC_COPYRIGHT([Copyright 2009, 2010 Canonical
 Copyright 2015 Arctica Project])
