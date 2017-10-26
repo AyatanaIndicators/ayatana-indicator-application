@@ -80,20 +80,10 @@ AC_SUBST(APPINDICATOR_CFLAGS)
 AC_SUBST(APPINDICATOR_LIBS)
 
 ###########################
-# Check to see if we're local
-###########################
-
-with_localinstall="no"
-AC_ARG_ENABLE(localinstall, AS_HELP_STRING([--enable-localinstall], [install all of the files localy instead of system directories (for distcheck)]), with_localinstall=$enableval, with_localinstall=no)
-
-###########################
 # Indicator Info
 ###########################
 
-if test "x$with_localinstall" = "xyes"; then
-	INDICATORDIR="${libdir}/ayatana-indicators/2/"
-	INDICATORICONSDIR="${datadir}/libayatana-indicate/icons/"
-elif test "x$with_gtk" = x2; then
+if test "x$with_gtk" = x2; then
 	INDICATORDIR=`$PKG_CONFIG --variable=indicatordir ayatana-indicator-0.4`
 	INDICATORICONSDIR=`$PKG_CONFIG --variable=iconsdir ayatana-indicator-0.4`
 else
