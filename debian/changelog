@@ -1,8 +1,15 @@
-ayatana-indicator-application (0.5.1-0) UNRELEASED; urgency=medium
+ayatana-indicator-application (0.5.2-0) unstable; urgency=medium
+
+  * Upstream-provided Debian package for ayatana-indicator-application.
+    See upstream ChangeLog for recent changes.
+
+ -- Mike Gabriel <mike.gabriel@das-netzwerkteam.de>  Fri, 06 Oct 2017 11:34:04 +0200
+
+ayatana-indicator-application (0.5.1-0) unstable; urgency=medium
 
   * Fork from Ubuntu's indicator-application code project.
 
- -- Mike Gabriel <mike.gabriel@das-netzwerkteam.de>  Wed, 11 Nov 2015 05:47:58 +0100
+ -- Mike Gabriel <mike.gabriel@das-netzwerkteam.de>  Mon, 05 May 2017 11:36:24 +0200
 
 indicator-application (12.10.1+15.04.20150128-0ubuntu1) vivid; urgency=low
 
