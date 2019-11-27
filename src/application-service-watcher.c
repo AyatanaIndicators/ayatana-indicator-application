@@ -54,14 +54,10 @@ static void get_name_cb (DBusGProxy * proxy, guint status, GError * error, gpoin
 #include "ayatana-notification-watcher-server.h"
 
 /* Private Stuff */
-typedef struct _ApplicationServiceWatcherPrivate ApplicationServiceWatcherPrivate;
-struct _ApplicationServiceWatcherPrivate {
+typedef struct {
 	ApplicationServiceAppstore * appstore;
 	DBusGProxy * dbus_proxy;
-};
-
-#define APPLICATION_SERVICE_WATCHER_GET_PRIVATE(o) \
-(G_TYPE_INSTANCE_GET_PRIVATE ((o), APPLICATION_SERVICE_WATCHER_TYPE, ApplicationServiceWatcherPrivate))
+} ApplicationServiceWatcherPrivate;
 
 /* Signals Stuff */
 enum {
@@ -81,14 +77,12 @@ static void application_service_watcher_finalize   (GObject *object);
 static void application_service_watcher_set_property (GObject * object, guint prop_id, const GValue * value, GParamSpec * pspec);
 static void application_service_watcher_get_property (GObject * object, guint prop_id, GValue * value, GParamSpec * pspec);
 
-G_DEFINE_TYPE (ApplicationServiceWatcher, application_service_watcher, G_TYPE_OBJECT);
+G_DEFINE_TYPE_WITH_PRIVATE (ApplicationServiceWatcher, application_service_watcher, G_TYPE_OBJECT);
 
 static void
 application_service_watcher_class_init (ApplicationServiceWatcherClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
-
-	g_type_class_add_private (klass, sizeof (ApplicationServiceWatcherPrivate));
 
 	object_class->dispose = application_service_watcher_dispose;
 	object_class->finalize = application_service_watcher_finalize;
@@ -152,7 +146,7 @@ application_service_watcher_class_init (ApplicationServiceWatcherClass *klass)
 static void
 application_service_watcher_init (ApplicationServiceWatcher *self)
 {
-	ApplicationServiceWatcherPrivate * priv = APPLICATION_SERVICE_WATCHER_GET_PRIVATE(self);
+	ApplicationServiceWatcherPrivate * priv = application_service_watcher_get_instance_private(self);
 
 	priv->appstore = NULL;
 
@@ -192,7 +186,7 @@ application_service_watcher_init (ApplicationServiceWatcher *self)
 static void
 application_service_watcher_dispose (GObject *object)
 {
-	ApplicationServiceWatcherPrivate * priv = APPLICATION_SERVICE_WATCHER_GET_PRIVATE(object);
+	ApplicationServiceWatcherPrivate * priv = application_service_watcher_get_instance_private(APPLICATION_SERVICE_WATCHER(object));
 	
 	if (priv->appstore != NULL) {
 		g_object_unref(G_OBJECT(priv->appstore));
@@ -220,7 +214,7 @@ application_service_watcher_set_property (GObject * object, guint prop_id, const
 static void
 application_service_watcher_get_property (GObject * object, guint prop_id, GValue * value, GParamSpec * pspec)
 {
-	ApplicationServiceWatcherPrivate * priv = APPLICATION_SERVICE_WATCHER_GET_PRIVATE(object);
+	ApplicationServiceWatcherPrivate * priv = application_service_watcher_get_instance_private(APPLICATION_SERVICE_WATCHER(object));
 	switch (prop_id) {
 	case PROP_PROTOCOL_VERSION:
 		g_value_set_int (value, CURRENT_PROTOCOL_VERSION);
@@ -238,7 +232,7 @@ ApplicationServiceWatcher *
 application_service_watcher_new (ApplicationServiceAppstore * appstore)
 {
 	GObject * obj = g_object_new(APPLICATION_SERVICE_WATCHER_TYPE, NULL);
-	ApplicationServiceWatcherPrivate * priv = APPLICATION_SERVICE_WATCHER_GET_PRIVATE(obj);
+	ApplicationServiceWatcherPrivate * priv = application_service_watcher_get_instance_private(APPLICATION_SERVICE_WATCHER(obj));
 	priv->appstore = appstore;
 	g_object_ref(G_OBJECT(priv->appstore));
 	return APPLICATION_SERVICE_WATCHER(obj);
@@ -247,7 +241,7 @@ application_service_watcher_new (ApplicationServiceAppstore * appstore)
 static gboolean
 _ayatana_notification_watcher_server_register_status_notifier_item (ApplicationServiceWatcher * appwatcher, const gchar * service, DBusGMethodInvocation * method)
 {
-	ApplicationServiceWatcherPrivate * priv = APPLICATION_SERVICE_WATCHER_GET_PRIVATE(appwatcher);
+	ApplicationServiceWatcherPrivate * priv = application_service_watcher_get_instance_private(appwatcher);
 
 	if (service[0] == '/') {
 		char * sender = dbus_g_method_get_sender(method);

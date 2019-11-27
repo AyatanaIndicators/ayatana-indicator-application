@@ -73,8 +73,7 @@ INDICATOR_SET_TYPE(INDICATOR_APPLICATION_TYPE)
 #include "config.h"
 #endif
 
-typedef struct _IndicatorApplicationPrivate IndicatorApplicationPrivate;
-struct _IndicatorApplicationPrivate {
+typedef struct {
 	GCancellable * service_proxy_cancel;
 	GDBusProxy * service_proxy;
 	GList * applications;
@@ -82,7 +81,7 @@ struct _IndicatorApplicationPrivate {
 	guint disconnect_kill;
 	GCancellable * get_apps_cancel;
 	guint watch;
-};
+} IndicatorApplicationPrivate;
 
 typedef struct _ApplicationEntry ApplicationEntry;
 struct _ApplicationEntry {
@@ -94,9 +93,6 @@ struct _ApplicationEntry {
 	gchar * guide;
 	gchar * longname;
 };
-
-#define INDICATOR_APPLICATION_GET_PRIVATE(o) \
-(G_TYPE_INSTANCE_GET_PRIVATE ((o), INDICATOR_APPLICATION_TYPE, IndicatorApplicationPrivate))
 
 static void indicator_application_class_init (IndicatorApplicationClass *klass);
 static void indicator_application_init       (IndicatorApplication *self);
@@ -124,14 +120,12 @@ static void icon_theme_remove_dir_from_search_path (const char * dir);
 static void service_proxy_cb (GObject * object, GAsyncResult * res, gpointer user_data);
 static void receive_signal (GDBusProxy * proxy, gchar * sender_name, gchar * signal_name, GVariant * parameters, gpointer user_data);
 
-G_DEFINE_TYPE (IndicatorApplication, indicator_application, INDICATOR_OBJECT_TYPE);
+G_DEFINE_TYPE_WITH_PRIVATE (IndicatorApplication, indicator_application, INDICATOR_OBJECT_TYPE);
 
 static void
 indicator_application_class_init (IndicatorApplicationClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
-
-	g_type_class_add_private (klass, sizeof (IndicatorApplicationPrivate));
 
 	object_class->dispose = indicator_application_dispose;
 	object_class->finalize = indicator_application_finalize;
@@ -149,7 +143,7 @@ indicator_application_class_init (IndicatorApplicationClass *klass)
 static void
 indicator_application_init (IndicatorApplication *self)
 {
-	IndicatorApplicationPrivate * priv = INDICATOR_APPLICATION_GET_PRIVATE(self);
+	IndicatorApplicationPrivate * priv = indicator_application_get_instance_private(self);
 
 	/* These are built in the connection phase */
 	priv->service_proxy_cancel = NULL;
@@ -177,7 +171,7 @@ indicator_application_init (IndicatorApplication *self)
 static void
 indicator_application_dispose (GObject *object)
 {
-	IndicatorApplicationPrivate * priv = INDICATOR_APPLICATION_GET_PRIVATE(object);
+	IndicatorApplicationPrivate * priv = indicator_application_get_instance_private(INDICATOR_APPLICATION(object));
 
 	if (priv->disconnect_kill != 0) {
 		g_source_remove(priv->disconnect_kill);
@@ -241,7 +235,8 @@ connected (GDBusConnection * con, const gchar * name, const gchar * owner, gpoin
 	IndicatorApplication * application = INDICATOR_APPLICATION(user_data);
 	g_return_if_fail(application != NULL);
 
-	IndicatorApplicationPrivate * priv = INDICATOR_APPLICATION_GET_PRIVATE(application);
+	IndicatorApplicationPrivate * priv = indicator_application_get_instance_private(application);
+
 	g_debug("Connected to Application Indicator Service.");
 
 	if (priv->service_proxy_cancel == NULL && priv->service_proxy == NULL) {
@@ -272,7 +267,8 @@ service_proxy_cb (GObject * object, GAsyncResult * res, gpointer user_data)
 	IndicatorApplication * self = INDICATOR_APPLICATION(user_data);
 	g_return_if_fail(self != NULL);
 
-	IndicatorApplicationPrivate * priv = INDICATOR_APPLICATION_GET_PRIVATE(self);
+	IndicatorApplicationPrivate * priv = indicator_application_get_instance_private(self);
+
 	GDBusProxy * proxy = g_dbus_proxy_new_for_bus_finish(res, &error);
 
 	if (priv->service_proxy_cancel != NULL) {
@@ -320,7 +316,7 @@ disconnected (GDBusConnection * con, const gchar * name, gpointer user_data)
 	IndicatorApplication * application = INDICATOR_APPLICATION(user_data);
 	g_return_if_fail(application != NULL);
 
-	IndicatorApplicationPrivate * priv = INDICATOR_APPLICATION_GET_PRIVATE(application);
+	IndicatorApplicationPrivate * priv = indicator_application_get_instance_private(application);
 	g_list_foreach(priv->applications, disconnected_helper, application);
 	/* I'll like this to be a little shorter, but it's a bit
 	   inpractical to make it so.  This means that the user will
@@ -345,7 +341,8 @@ static gboolean
 disconnected_kill (gpointer user_data)
 {
 	g_return_val_if_fail(IS_INDICATOR_APPLICATION(user_data), FALSE);
-	IndicatorApplicationPrivate * priv = INDICATOR_APPLICATION_GET_PRIVATE(user_data);
+	IndicatorApplicationPrivate * priv = indicator_application_get_instance_private(INDICATOR_APPLICATION(user_data));
+
 	priv->disconnect_kill = 0;
 	g_list_foreach(priv->applications, disconnected_kill_helper, user_data);
 	return FALSE;
@@ -357,7 +354,7 @@ static void
 disconnected_kill_helper (gpointer data, gpointer user_data)
 {
 	g_return_if_fail(IS_INDICATOR_APPLICATION(user_data));
-	IndicatorApplicationPrivate * priv = INDICATOR_APPLICATION_GET_PRIVATE(user_data);
+	IndicatorApplicationPrivate * priv = indicator_application_get_instance_private(INDICATOR_APPLICATION(user_data));
 	ApplicationEntry * entry = (ApplicationEntry *)data;
 	if (entry->old_service) {
 		application_removed(INDICATOR_APPLICATION(user_data), g_list_index(priv->applications, data));
@@ -373,7 +370,8 @@ get_entries (IndicatorObject * io)
 {
 	g_return_val_if_fail(IS_INDICATOR_APPLICATION(io), NULL);
 
-	IndicatorApplicationPrivate * priv = INDICATOR_APPLICATION_GET_PRIVATE(io);
+	IndicatorApplicationPrivate * priv = indicator_application_get_instance_private(INDICATOR_APPLICATION(io));
+
 	GList * retval = NULL;
 	GList * apppointer = NULL;
 
@@ -394,7 +392,7 @@ static guint
 get_location (IndicatorObject * io, IndicatorObjectEntry * entry)
 {
 	g_return_val_if_fail(IS_INDICATOR_APPLICATION(io), 0);
-	IndicatorApplicationPrivate * priv = INDICATOR_APPLICATION_GET_PRIVATE(io);
+	IndicatorApplicationPrivate * priv = indicator_application_get_instance_private(INDICATOR_APPLICATION(io));
 	return g_list_index(priv->applications, entry);
 }
 
@@ -405,7 +403,7 @@ entry_secondary_activate (IndicatorObject * io, IndicatorObjectEntry * entry,
 {
 	g_return_if_fail(IS_INDICATOR_APPLICATION(io));
 
-	IndicatorApplicationPrivate * priv = INDICATOR_APPLICATION_GET_PRIVATE(io);
+	IndicatorApplicationPrivate * priv = indicator_application_get_instance_private(INDICATOR_APPLICATION(io));
 	g_return_if_fail(priv->service_proxy);
 
 	GList *l = g_list_find(priv->applications, entry);
@@ -428,7 +426,7 @@ static void entry_scrolled (IndicatorObject * io, IndicatorObjectEntry * entry, 
 {
 	g_return_if_fail(IS_INDICATOR_APPLICATION(io));
 
-	IndicatorApplicationPrivate * priv = INDICATOR_APPLICATION_GET_PRIVATE(io);
+	IndicatorApplicationPrivate * priv = indicator_application_get_instance_private(INDICATOR_APPLICATION(io));
 	g_return_if_fail(priv->service_proxy);
 
 	GList *l = g_list_find(priv->applications, entry);
@@ -494,7 +492,7 @@ application_added (IndicatorApplication * application, const gchar * iconname, g
 {
 	g_return_if_fail(IS_INDICATOR_APPLICATION(application));
 	g_debug("Building new application entry: %s  with icon: %s at position %i", dbusaddress, iconname, position);
-	IndicatorApplicationPrivate * priv = INDICATOR_APPLICATION_GET_PRIVATE(application);
+	IndicatorApplicationPrivate * priv = indicator_application_get_instance_private(application);
 
 	ApplicationEntry * app = g_new0(ApplicationEntry, 1);
 
@@ -572,7 +570,7 @@ static void
 application_removed (IndicatorApplication * application, gint position)
 {
 	g_return_if_fail(IS_INDICATOR_APPLICATION(application));
-	IndicatorApplicationPrivate * priv = INDICATOR_APPLICATION_GET_PRIVATE(application);
+	IndicatorApplicationPrivate * priv = indicator_application_get_instance_private(application);
 	ApplicationEntry * app = (ApplicationEntry *)g_list_nth_data(priv->applications, position);
 
 	if (app == NULL) {
@@ -624,7 +622,7 @@ application_removed (IndicatorApplication * application, gint position)
 static void
 application_label_changed (IndicatorApplication * application, gint position, const gchar * label, const gchar * guide)
 {
-	IndicatorApplicationPrivate * priv = INDICATOR_APPLICATION_GET_PRIVATE(application);
+	IndicatorApplicationPrivate * priv = indicator_application_get_instance_private(application);
 	ApplicationEntry * app = (ApplicationEntry *)g_list_nth_data(priv->applications, position);
 	gboolean signal_reload = FALSE;
 
@@ -705,7 +703,7 @@ application_label_changed (IndicatorApplication * application, gint position, co
 static void
 application_icon_changed (IndicatorApplication * application, gint position, const gchar * iconname, const gchar * icondesc)
 {
-	IndicatorApplicationPrivate * priv = INDICATOR_APPLICATION_GET_PRIVATE(application);
+	IndicatorApplicationPrivate * priv = indicator_application_get_instance_private(application);
 	ApplicationEntry * app = (ApplicationEntry *)g_list_nth_data(priv->applications, position);
 
 	if (app == NULL) {
@@ -753,7 +751,7 @@ application_icon_changed (IndicatorApplication * application, gint position, con
 static void
 application_icon_theme_path_changed (IndicatorApplication * application, gint position, const gchar * icon_theme_path)
 {
-	IndicatorApplicationPrivate * priv = INDICATOR_APPLICATION_GET_PRIVATE(application);
+	IndicatorApplicationPrivate * priv = indicator_application_get_instance_private(application);
 	ApplicationEntry * app = (ApplicationEntry *)g_list_nth_data(priv->applications, position);
 
 	if (app == NULL) {
@@ -783,7 +781,7 @@ receive_signal (GDBusProxy * proxy, gchar * sender_name, gchar * signal_name,
                 GVariant * parameters, gpointer user_data)
 {
 	IndicatorApplication * self = INDICATOR_APPLICATION(user_data);
-	IndicatorApplicationPrivate * priv = INDICATOR_APPLICATION_GET_PRIVATE(self);
+	IndicatorApplicationPrivate * priv = indicator_application_get_instance_private(self);
 
 	/* If we're in the middle of a GetApplications call and we get
 	   any of these our state is probably going to just be confused.  Let's
@@ -868,7 +866,7 @@ static void
 get_applications (GObject * obj, GAsyncResult * res, gpointer user_data)
 {
 	IndicatorApplication * self = INDICATOR_APPLICATION(user_data);
-	IndicatorApplicationPrivate * priv = INDICATOR_APPLICATION_GET_PRIVATE(self);
+	IndicatorApplicationPrivate * priv = indicator_application_get_instance_private(self);
 	GError * error = NULL;
 	GVariant * result;
 	GVariant * child;
@@ -948,7 +946,7 @@ get_applications_helper (IndicatorApplication * self, GVariant * variant)
 static void
 theme_dir_unref(IndicatorApplication * ia, const gchar * dir)
 {
-	IndicatorApplicationPrivate * priv = INDICATOR_APPLICATION_GET_PRIVATE(ia);
+	IndicatorApplicationPrivate * priv = indicator_application_get_instance_private(ia);
 
 	if (!g_hash_table_contains (priv->theme_dirs, dir)) {
 		g_warning("Unref'd a directory '%s' that wasn't in the theme dir hash table.", dir);
@@ -1007,7 +1005,7 @@ icon_theme_remove_dir_from_search_path (const char * dir)
 static void
 theme_dir_ref(IndicatorApplication * ia, const gchar * dir)
 {
-	IndicatorApplicationPrivate * priv = INDICATOR_APPLICATION_GET_PRIVATE(ia);
+	IndicatorApplicationPrivate * priv = indicator_application_get_instance_private(ia);
 
 	int count = 0;
 	if ((count = GPOINTER_TO_INT(g_hash_table_lookup(priv->theme_dirs, dir))) != 0) {

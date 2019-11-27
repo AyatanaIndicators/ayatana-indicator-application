@@ -64,13 +64,13 @@ static void props_cb (GObject * object, GAsyncResult * res, gpointer user_data);
 #define OVERRIDE_FILE_NAME                           "ordering-override.keyfile"
 
 /* Private Stuff */
-struct _ApplicationServiceAppstorePrivate {
+typedef struct {
 	GCancellable * bus_cancel;
 	GDBusConnection * bus;
 	guint dbus_registration;
 	GList * applications;
 	GHashTable * ordering_overrides;
-};
+} ApplicationServiceAppstorePrivate;
 
 typedef enum {
 	VISIBLE_STATE_HIDDEN,
@@ -108,9 +108,6 @@ struct _Application {
 	guint name_watcher;
 };
 
-#define APPLICATION_SERVICE_APPSTORE_GET_PRIVATE(o) \
-			(G_TYPE_INSTANCE_GET_PRIVATE ((o), APPLICATION_SERVICE_APPSTORE_TYPE, ApplicationServiceAppstorePrivate))
-
 /* GDBus Stuff */
 static GDBusNodeInfo *      node_info = NULL;
 static GDBusInterfaceInfo * interface_info = NULL;
@@ -138,14 +135,12 @@ static void app_receive_signal (GDBusProxy * proxy, gchar * sender_name, gchar *
 static void get_all_properties (Application * app);
 static void application_free (Application * app);
 
-G_DEFINE_TYPE (ApplicationServiceAppstore, application_service_appstore, G_TYPE_OBJECT);
+G_DEFINE_TYPE_WITH_PRIVATE (ApplicationServiceAppstore, application_service_appstore, G_TYPE_OBJECT);
 
 static void
 application_service_appstore_class_init (ApplicationServiceAppstoreClass *klass)
 {
 	GObjectClass *object_class = G_OBJECT_CLASS (klass);
-
-	g_type_class_add_private (klass, sizeof (ApplicationServiceAppstorePrivate));
 
 	object_class->dispose = application_service_appstore_dispose;
 	object_class->finalize = application_service_appstore_finalize;
@@ -176,7 +171,7 @@ static void
 application_service_appstore_init (ApplicationServiceAppstore *self)
 {
     
-	ApplicationServiceAppstorePrivate * priv = APPLICATION_SERVICE_APPSTORE_GET_PRIVATE (self);
+	ApplicationServiceAppstorePrivate * priv = application_service_appstore_get_instance_private(self);
 
 	priv->applications = NULL;
 	priv->bus_cancel = NULL;
@@ -195,8 +190,6 @@ application_service_appstore_init (ApplicationServiceAppstore *self)
 	          bus_get_cb,
 	          self);
 
-	self->priv = priv;
-
 	return;
 }
 
@@ -212,7 +205,7 @@ bus_get_cb (GObject * object, GAsyncResult * res, gpointer user_data)
 		return;
 	}
 
-	ApplicationServiceAppstorePrivate * priv = APPLICATION_SERVICE_APPSTORE_GET_PRIVATE (user_data);
+	ApplicationServiceAppstorePrivate * priv = application_service_appstore_get_instance_private(APPLICATION_SERVICE_APPSTORE(user_data));
 
 	g_warn_if_fail(priv->bus == NULL);
 	priv->bus = connection;
@@ -318,7 +311,7 @@ bus_method_call (GDBusConnection * connection, const gchar * sender,
 static void
 application_service_appstore_dispose (GObject *object)
 {
-	ApplicationServiceAppstorePrivate * priv = APPLICATION_SERVICE_APPSTORE(object)->priv;
+	ApplicationServiceAppstorePrivate * priv = application_service_appstore_get_instance_private(APPLICATION_SERVICE_APPSTORE(object));
 
 	while (priv->applications != NULL) {
 		application_service_appstore_application_remove(APPLICATION_SERVICE_APPSTORE(object),
@@ -350,7 +343,7 @@ application_service_appstore_dispose (GObject *object)
 static void
 application_service_appstore_finalize (GObject *object)
 {
-	ApplicationServiceAppstorePrivate * priv = APPLICATION_SERVICE_APPSTORE(object)->priv;
+	ApplicationServiceAppstorePrivate * priv = application_service_appstore_get_instance_private(APPLICATION_SERVICE_APPSTORE(object));
 
 	if (priv->ordering_overrides != NULL) {
 		g_hash_table_destroy(priv->ordering_overrides);
@@ -454,7 +447,7 @@ got_all_properties (GObject * source_object, GAsyncResult * res,
 		return;
 	}
 
-	ApplicationServiceAppstorePrivate * priv = app->appstore->priv;
+	ApplicationServiceAppstorePrivate * priv = application_service_appstore_get_instance_private(app->appstore);
 
 	/* Grab all properties from variant */
 	GVariantIter * iter = NULL;
@@ -559,7 +552,7 @@ got_all_properties (GObject * source_object, GAsyncResult * res,
 			app->ordering_index = GPOINTER_TO_UINT(ordering_index_over);
 		}
 		g_debug("'%s' ordering index is '%X'", app->id, app->ordering_index);
-		app->appstore->priv->applications = g_list_sort_with_data(app->appstore->priv->applications, app_sort_func, NULL);
+		priv->applications = g_list_sort_with_data(priv->applications, app_sort_func, NULL);
 
 		g_free(app->label);
 		if (label != NULL) {
@@ -670,8 +663,7 @@ string_to_cat(const gchar * cat_string)
    in the app list of the applications that are visible. */
 static gint 
 get_position (Application * app) {
-	ApplicationServiceAppstore * appstore = app->appstore;
-	ApplicationServiceAppstorePrivate * priv = appstore->priv;
+	ApplicationServiceAppstorePrivate * priv = application_service_appstore_get_instance_private(app->appstore);
 
 	GList * lapp;
 	gint count;
@@ -710,9 +702,11 @@ application_free (Application * app)
 	   the proxy objects. */
 	if (app->currently_free) return;
 	app->currently_free = TRUE;
+
+	ApplicationServiceAppstorePrivate * priv = application_service_appstore_get_instance_private(app->appstore);
 	
 	/* Remove from the application list */
-	app->appstore->priv->applications = g_list_remove(app->appstore->priv->applications, app);
+	priv->applications = g_list_remove(priv->applications, app);
 
 	if (app->name_watcher != 0) {
 		g_dbus_connection_signal_unsubscribe(g_dbus_proxy_get_connection(app->dbus_proxy), app->name_watcher);
@@ -814,7 +808,8 @@ static void
 emit_signal (ApplicationServiceAppstore * appstore, const gchar * name,
              GVariant * variant)
 {
-	ApplicationServiceAppstorePrivate * priv = appstore->priv;
+	ApplicationServiceAppstorePrivate * priv = application_service_appstore_get_instance_private(appstore);
+
 	GError * error = NULL;
 
 	g_dbus_connection_emit_signal (priv->bus,
@@ -1047,7 +1042,8 @@ application_service_appstore_application_add (ApplicationServiceAppstore * appst
 			         dbus_proxy_cb,
 		                 app);
 
-	appstore->priv->applications = g_list_insert_sorted_with_data (appstore->priv->applications, app, app_sort_func, NULL);
+	ApplicationServiceAppstorePrivate * priv = application_service_appstore_get_instance_private(app->appstore);
+	priv->applications = g_list_insert_sorted_with_data (priv->applications, app, app_sort_func, NULL);
 
 	/* We're returning, nothing is yet added until the properties
 	   come back and give us more info. */
@@ -1217,7 +1213,8 @@ app_receive_signal (GDBusProxy * proxy, gchar * sender_name, gchar * signal_name
 static Application *
 find_application (ApplicationServiceAppstore * appstore, const gchar * address, const gchar * object)
 {
-	ApplicationServiceAppstorePrivate * priv = appstore->priv;
+	ApplicationServiceAppstorePrivate * priv = application_service_appstore_get_instance_private(appstore);
+
 	GList * listpntr;
 
 	for (listpntr = priv->applications; listpntr != NULL; listpntr = g_list_next(listpntr)) {
@@ -1239,7 +1236,8 @@ find_application_by_menu (ApplicationServiceAppstore * appstore, const gchar * a
 	g_return_val_if_fail(address, NULL);
 	g_return_val_if_fail(menuobject, NULL);
 
-	ApplicationServiceAppstorePrivate * priv = appstore->priv;
+	ApplicationServiceAppstorePrivate * priv = application_service_appstore_get_instance_private(appstore);
+
 	GList *l;
 
 	for (l = priv->applications; l != NULL; l = l->next) {
@@ -1275,7 +1273,8 @@ application_service_appstore_application_remove (ApplicationServiceAppstore * ap
 gchar**
 application_service_appstore_application_get_list (ApplicationServiceAppstore * appstore)
 {
-	ApplicationServiceAppstorePrivate * priv = appstore->priv;
+	ApplicationServiceAppstorePrivate * priv = application_service_appstore_get_instance_private(appstore);
+
 	gchar ** out;
 	gchar ** outpntr;
 	GList * listpntr;
@@ -1303,7 +1302,8 @@ application_service_appstore_new (void)
 static GVariant *
 get_applications (ApplicationServiceAppstore * appstore)
 {
-	ApplicationServiceAppstorePrivate * priv = appstore->priv;
+	ApplicationServiceAppstorePrivate * priv = application_service_appstore_get_instance_private(appstore);
+
 	GVariant * out = NULL;
 
 	if (g_list_length(priv->applications) > 0) {
