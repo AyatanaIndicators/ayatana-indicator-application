@@ -1,11 +1,11 @@
-AC_INIT(ayatana-indicator-application, 0.5.2, mike.gabriel@das-netzwerkteam.de)
+AC_INIT(ayatana-indicator-application, 0.5.3, mike.gabriel@das-netzwerkteam.de)
 AC_COPYRIGHT([Copyright 2009, 2010 Canonical
 Copyright 2015 Arctica Project])
 
 AC_PREREQ(2.53)
 
 AM_CONFIG_HEADER(config.h)
-AM_INIT_AUTOMAKE(ayatana-indicator-application, 0.5.2)
+AM_INIT_AUTOMAKE(ayatana-indicator-application, 0.5.3)
 
 AM_MAINTAINER_MODE
 

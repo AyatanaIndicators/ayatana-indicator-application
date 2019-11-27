@@ -1,6 +1,7 @@
-ayatana-indicator-application (0.5.2.99-1) UNRELEASED; urgency=medium
+ayatana-indicator-application (0.5.3-0) unstable; urgency=medium
 
-  * Continue development...
+  * Upstream-provided Debian package for ayatana-indicator-application.
+    See upstream ChangeLog for recent changes.
 
  -- Mike Gabriel <mike.gabriel@das-netzwerkteam.de>  Mon, 04 Dec 2017 10:16:30 +0100
 

@@ -1,12 +1,49 @@
-2017-10-06 11:34:04 +0200 Mike Gabriel (2401b05)
+2019-11-27 10:13:11 +0000 Mike Gabriel
 
-	* release 0.5.2 (HEAD -> master)
+	* release 0.5.3 (HEAD -> master, tag: 0.5.3)
+
+2019-11-27 10:11:25 +0000 Mike Gabriel (8b967ee)
+
+	*  Avoid deprecated g_type_class_add_private.
+
+2017-12-04 10:16:41 +0100 Mike Gabriel (75ffda9)
+
+	* debian/changelog: Bump upstream to a development version.
+
+2017-12-04 10:16:28 +0100 Mike Gabriel (517180e)
+
+	* post-release fix debian/changelog for 0.5.1 and 0.5.2
+
+2017-10-26 19:30:19 +0200 Mike Gabriel (3589a31)
+
+	* autogen.sh: Adapt PKG_NAME autogen.sh to ayatana- namespace.
+
+2017-10-26 19:29:57 +0200 Mike Gabriel (7cf4fcf)
+
+	* configure.ac: White-space fix and beginning of file.
+
+2017-10-26 19:12:37 +0200 Mike Gabriel (3207212)
+
+	* {configure.ac,Makefile.am}: Drop distcheck features.
+
+2017-10-06 11:54:18 +0200 Mike Gabriel (1b6f7b2)
+
+	* debian/control: Modify B-D on systemd: only required on linux-any
+          hosts.
+
+2017-10-06 11:53:45 +0200 Mike Gabriel (2c6c3ad)
+
+	* Make systemd optional. If systemd is not available at build-time,
+          the creation of the .service file is omitted.
+
+2017-10-06 11:34:04 +0200 Mike Gabriel (c21840e)
+
+	* release 0.5.2 (tag: 0.5.2)
 
 2017-09-26 09:13:03 +0200 Mike Gabriel (1fb04e5)
 
 	* data/ayatana-indicator-application.desktop.in: Add Budgie as
           candidate for launching ayatana-indicator-application.
-          (origin/master)
 
 2017-09-26 09:10:35 +0200 Mike Gabriel (6f0baea)
 
@@ -37,7 +74,7 @@
 
 2017-05-29 11:36:24 +0200 Mike Gabriel (21a3517)
 
-	* release 0.5.1 (tag: 0.5.1, origin/release-builds, release-builds)
+	* release 0.5.1 (tag: 0.5.1)
 
 2017-05-26 01:30:59 +0200 Mike Gabriel (af351b0)
 
@@ -89,8 +126,6 @@
 2015-01-28 21:13:37 +0000 CI Train Bot (6935795)
 
 	* Releasing 12.10.1+15.04.20150128-0ubuntu1
-          (refs/bzr/origin/tags/12.10.1+15.04.20150128-0ubuntu1,
-          refs/bzr/origin/heads/master)
 
 2015-01-28 21:13:25 +0000 Ted Gould (61f83a5)
 
@@ -108,7 +143,6 @@
 2014-04-07 13:39:46 +0000 CI bot (f08a10d)
 
 	* Releasing 12.10.1+14.04.20140407-0ubuntu1
-          (refs/bzr/origin/tags/12.10.1+14.04.20140407-0ubuntu1)
 
 2014-04-07 13:39:36 +0000 Ted Gould (72e1242)
 
@@ -121,7 +155,6 @@
 2014-04-02 15:17:39 +0000 CI bot (b3b0fc8)
 
 	* Releasing 12.10.1+14.04.20140402-0ubuntu1
-          (refs/bzr/origin/tags/12.10.1+14.04.20140402-0ubuntu1)
 
 2014-04-02 15:17:28 +0000 Sebastien Bacher (343963f)
 
@@ -139,7 +172,6 @@
 2014-03-24 10:07:59 +0000 CI bot (4b29e70)
 
 	* Releasing 12.10.1+14.04.20140324-0ubuntu1
-          (refs/bzr/origin/tags/12.10.1+14.04.20140324-0ubuntu1)
 
 2014-03-24 10:07:51 +0000 Sebastien Bacher (2906f8d)
 
@@ -201,7 +233,6 @@
 
 	* Releasing 12.10.1+14.04.20140117-0ubuntu1 (revision 244 from
           lp:indicator-application).
-          (refs/bzr/origin/tags/12.10.1+14.04.20140117-0ubuntu1)
 
 2014-01-17 17:43:55 +0000 Automatic PS uploader (bd2e50e)
 
@@ -408,7 +439,7 @@
 
 2012-08-21 23:34:39 -0500 Charles Kerr (90e5ec8)
 
-	* 12.10.0 (refs/bzr/origin/tags/12.10.0)
+	* 12.10.0
 
 2012-06-22 14:01:30 +0000 Charles Kerr (f2ace01)
 
@@ -449,7 +480,7 @@
 
 2012-04-11 12:15:43 -0500 Charles Kerr (ab3fc0e)
 
-	* 0.5.0 (tag: 0.5.0, refs/bzr/origin/tags/0.5.0)
+	* 0.5.0 (tag: 0.5.0)
 
 2012-04-11 12:11:36 -0500 Charles Kerr (3a3e89e)
 
@@ -526,7 +557,7 @@
 
 2012-03-21 16:24:53 -0500 Ted Gould (daf30a3)
 
-	* 0.4.94 (tag: 0.4.94, refs/bzr/origin/tags/0.4.94)
+	* 0.4.94 (tag: 0.4.94)
 
 2012-03-20 18:39:34 -0500 Charles Kerr (54d6c14)
 
@@ -575,7 +606,7 @@
 
 2012-03-13 15:00:31 -0500 Charles Kerr (8e26e84)
 
-	* 0.4.93 (tag: 0.4.93, refs/bzr/origin/tags/0.4.93)
+	* 0.4.93 (tag: 0.4.93)
 
 2012-03-12 19:54:07 -0500 Charles Kerr (e6d8a51)
 
@@ -628,7 +659,7 @@
 
 2012-03-09 15:09:19 -0600 Ted Gould (29bf37b)
 
-	* 0.4.92 (tag: 0.4.92, refs/bzr/origin/tags/0.4.92)
+	* 0.4.92 (tag: 0.4.92)
 
 2012-03-05 15:14:00 -0600 Charles Kerr (d6769d5)
 
@@ -678,7 +709,7 @@
 
 2012-02-15 11:59:14 -0600 Ted Gould (9ea46ae)
 
-	* 0.4.91 (tag: 0.4.91, refs/bzr/origin/tags/0.4.91)
+	* 0.4.91 (tag: 0.4.91)
 
 2012-02-12 12:39:48 -0600 Ted Gould (e985113)
 
@@ -725,7 +756,7 @@
 
 2012-02-08 11:17:03 -0600 Ted Gould (8c0ecc8)
 
-	* 0.4.90 (tag: 0.4.90, refs/bzr/origin/tags/0.4.90)
+	* 0.4.90 (tag: 0.4.90)
 
 2012-02-08 11:03:52 -0600 Ted Gould (1652735)
 
@@ -868,7 +899,7 @@
 
 2011-09-28 08:49:10 -0500 Ted Gould (ec05da4)
 
-	* 0.4.0 (tag: 0.4.0, refs/bzr/origin/tags/0.4.0)
+	* 0.4.0 (tag: 0.4.0)
 
 2011-09-16 16:41:26 -0500 Ted Gould (ac5c445)
 
@@ -922,7 +953,7 @@
 
 2011-08-11 11:51:43 -0500 Ted Gould (3bb503c)
 
-	* 0.3.92 (tag: 0.3.92, refs/bzr/origin/tags/0.3.92)
+	* 0.3.92 (tag: 0.3.92)
 
 2011-07-22 15:35:19 -0500 Ted Gould (bc8e1d9)
 
@@ -994,7 +1025,7 @@
 
 2011-07-07 15:25:34 -0500 Ted Gould (75eadfd)
 
-	* 0.3.91 (tag: 0.3.91, refs/bzr/origin/tags/0.3.91)
+	* 0.3.91 (tag: 0.3.91)
 
 2011-07-07 15:25:23 -0500 Ted Gould (3d3beb6)
 
@@ -1059,7 +1090,7 @@
 
 2011-06-22 11:22:45 -0500 Ted Gould (58779f7)
 
-	* 0.3.90 (tag: 0.3.90, refs/bzr/origin/tags/0.3.90)
+	* 0.3.90 (tag: 0.3.90)
 
 2011-06-22 11:21:32 -0500 Ted Gould (1a9efdf)
 
@@ -1103,7 +1134,7 @@
 
 2011-04-14 14:25:12 -0500 Ted Gould (ba6c0b1)
 
-	* 0.3.2 (tag: 0.3.2, refs/bzr/origin/tags/0.3.2)
+	* 0.3.2 (tag: 0.3.2)
 
 2011-04-12 15:51:40 -0500 Ted Gould (36e1489)
 
@@ -1194,7 +1225,7 @@
 
 2011-04-07 13:30:06 -0500 Ted Gould (f17f35f)
 
-	* 0.3.1 (tag: 0.3.1, refs/bzr/origin/tags/0.3.1)
+	* 0.3.1 (tag: 0.3.1)
 
 2011-04-07 13:29:38 -0500 Ted Gould (e4e135f)
 
@@ -1230,7 +1261,7 @@
 
 2011-03-23 16:57:23 -0500 Ted Gould (2e52cac)
 
-	* 0.3.0 (tag: 0.3.0, refs/bzr/origin/tags/0.3.0)
+	* 0.3.0 (tag: 0.3.0)
 
 2011-03-16 16:28:48 -0400 Ken VanDine (e8ef564)
 
@@ -1257,7 +1288,7 @@
 
 2011-03-16 14:41:43 -0500 Ted Gould (4492990)
 
-	* 0.2.95 (tag: 0.2.95, refs/bzr/origin/tags/0.2.95)
+	* 0.2.95 (tag: 0.2.95)
 
 2011-03-16 09:58:20 -0500 Ted Gould (eb6a863)
 
@@ -1375,7 +1406,7 @@
 
 2011-02-24 22:09:18 -0600 Ted Gould (63807a0)
 
-	* 0.2.94 (tag: 0.2.94, refs/bzr/origin/tags/0.2.94)
+	* 0.2.94 (tag: 0.2.94)
 
 2011-02-24 22:03:10 -0600 Ted Gould (7357145)
 
@@ -1503,7 +1534,7 @@
 
 2011-02-03 14:53:45 -0600 Ted Gould (f780ca4)
 
-	* 0.2.93 (tag: 0.2.93, refs/bzr/origin/tags/0.2.93)
+	* 0.2.93 (tag: 0.2.93)
 
 2011-02-03 14:53:39 -0600 Ted Gould (2a36982)
 
@@ -1550,7 +1581,7 @@
 
 2011-01-27 15:55:37 -0600 Ted Gould (82c80cd)
 
-	* 0.2.92 (tag: 0.2.92, refs/bzr/origin/tags/0.2.92)
+	* 0.2.92 (tag: 0.2.92)
 
 2011-01-26 23:41:41 -0600 Ted Gould (40d7a61)
 
@@ -1601,8 +1632,7 @@
 
 2011-01-14 10:18:02 -0600 Ken VanDine (ada08ac)
 
-	* distcheck fixes, use notdir to wrap basename (tag: 0.2.91,
-          refs/bzr/origin/tags/0.2.91)
+	* distcheck fixes, use notdir to wrap basename (tag: 0.2.91)
 
 2011-01-14 10:17:47 -0600 Ken VanDine (d0fa7ae)
 
@@ -1769,7 +1799,7 @@
 
 2010-12-07 20:44:44 -0600 Ted Gould (12d94d3)
 
-	* 0.2.90 (tag: 0.2.90, refs/bzr/origin/tags/0.2.90)
+	* 0.2.90 (tag: 0.2.90)
 
 2010-12-07 16:55:03 -0600 Ted Gould (eef3316)
 
@@ -1969,7 +1999,7 @@
 
 2010-09-22 11:13:14 -0500 Ted Gould (fe08c86)
 
-	* 0.2.9 (tag: 0.2.9, refs/bzr/origin/tags/0.2.9)
+	* 0.2.9 (tag: 0.2.9)
 
 2010-09-21 17:02:21 -0500 Ted Gould (7a891ca)
 
@@ -2081,7 +2111,7 @@
 
 2010-09-15 14:41:06 -0500 Ted Gould (a4dc11a)
 
-	* 0.2.8 (tag: 0.2.8, refs/bzr/origin/tags/0.2.8)
+	* 0.2.8 (tag: 0.2.8)
 
 2010-09-15 14:38:44 -0500 Ted Gould (859281b)
 
@@ -2142,7 +2172,7 @@
 
 2010-09-09 12:52:35 -0500 Ted Gould (b39568d)
 
-	* 0.2.7 (tag: 0.2.7, refs/bzr/origin/tags/0.2.7)
+	* 0.2.7 (tag: 0.2.7)
 
 2010-09-09 12:50:35 -0500 Ted Gould (1f5808c)
 
@@ -2183,7 +2213,7 @@
 
 2010-08-26 14:49:40 -0500 Ted Gould (7b3e58b)
 
-	* 0.2.6 (tag: 0.2.6, refs/bzr/origin/tags/0.2.6)
+	* 0.2.6 (tag: 0.2.6)
 
 2010-08-25 13:33:43 -0500 Ted Gould (166096e)
 
@@ -2237,7 +2267,7 @@
 
 2010-08-19 13:56:53 -0500 Ted Gould (b51c1de)
 
-	* 0.2.5 (tag: 0.2.5, refs/bzr/origin/tags/0.2.5)
+	* 0.2.5 (tag: 0.2.5)
 
 2010-08-19 13:56:42 -0500 Ted Gould (ced1792)
 
@@ -2391,7 +2421,7 @@
 
 2010-08-12 13:40:00 -0500 Ted Gould (d81670c)
 
-	* 0.2.4 (tag: 0.2.4, refs/bzr/origin/tags/0.2.4)
+	* 0.2.4 (tag: 0.2.4)
 
 2010-08-12 09:48:11 -0500 Ted Gould (47aa858)
 
@@ -3144,7 +3174,7 @@
 
 2010-07-15 10:18:23 -0500 Ted Gould (17dea09)
 
-	* 0.2.3 (tag: 0.2.3, refs/bzr/origin/tags/0.2.3)
+	* 0.2.3 (tag: 0.2.3)
 
 2010-07-13 11:02:08 -0500 Ted Gould (76c177b)
 
@@ -3301,7 +3331,7 @@
 
 2010-07-08 10:08:02 -0500 Ted Gould (a627c07)
 
-	* 0.2.2 (tag: 0.2.2, refs/bzr/origin/tags/0.2.2)
+	* 0.2.2 (tag: 0.2.2)
 
 2010-07-07 14:23:37 -0500 Ted Gould (cf31f2f)
 
@@ -3370,7 +3400,7 @@
 
 2010-06-21 14:06:07 -0500 Ted Gould (20f0c1d)
 
-	* 0.2.1 (tag: 0.2.1, refs/bzr/origin/tags/0.2.1)
+	* 0.2.1 (tag: 0.2.1)
 
 2010-06-21 14:04:56 -0500 Ted Gould (458ad9a)
 
@@ -3732,7 +3762,7 @@
 
 2010-06-03 13:28:54 -0500 Ted Gould (27fe45b)
 
-	* 0.2.0 (tag: 0.2.0, refs/bzr/origin/tags/0.2.0)
+	* 0.2.0 (tag: 0.2.0)
 
 2010-06-01 11:10:26 -0500 Ted Gould (3651994)
 
@@ -3781,7 +3811,7 @@
 
 2010-05-20 21:54:21 -0500 Ted Gould (6fcbfe5)
 
-	* 0.0.21 (tag: 0.0.21, refs/bzr/origin/tags/0.0.21)
+	* 0.0.21 (tag: 0.0.21)
 
 2010-05-20 21:52:14 -0500 Ted Gould (38c5c10)
 
@@ -3808,7 +3838,7 @@
 
 2010-05-20 21:16:58 -0500 Ted Gould (cd4c6e0)
 
-	* 0.0.20 (tag: 0.0.20, refs/bzr/origin/tags/0.0.20)
+	* 0.0.20 (tag: 0.0.20)
 
 2010-05-20 20:22:24 -0500 Ted Gould (20a976b)
 
@@ -4009,7 +4039,7 @@
 
 2010-04-01 15:46:22 -0500 Ted Gould (1fbc5af)
 
-	* 0.0.19 (tag: 0.0.19, refs/bzr/origin/tags/0.0.19)
+	* 0.0.19 (tag: 0.0.19)
 
 2010-04-01 15:23:58 -0500 Ted Gould (2ee85c2)
 
@@ -4071,8 +4101,7 @@
 
 2010-03-30 10:10:25 +0200 Sebastien Bacher (fd1ec3c)
 
-	* releasing version 0.0.18-0ubuntu1 (tag: 0.0.18-0ubuntu1,
-          refs/bzr/origin/tags/0.0.18-0ubuntu1)
+	* releasing version 0.0.18-0ubuntu1 (tag: 0.0.18-0ubuntu1)
 
 2010-03-29 22:14:04 -0400 Ken VanDine (64eef1a)
 
@@ -4113,9 +4142,7 @@
 
 2010-03-25 11:52:35 -0500 Ted Gould (9919c5e)
 
-	* 0.0.18 (tag: upstream-0.0.18, tag: 0.0.18,
-          refs/bzr/origin/tags/upstream-0.0.18,
-          refs/bzr/origin/tags/0.0.18)
+	* 0.0.18 (tag: upstream-0.0.18, tag: 0.0.18)
 
 2010-03-25 11:52:24 -0500 Ted Gould (b4e1960)
 
@@ -4158,8 +4185,7 @@
 
 2010-03-18 23:38:10 +0100 Sebastien Bacher (05da30c)
 
-	* releasing version 0.0.17-0ubuntu1 (tag: 0.0.17-0ubuntu1,
-          refs/bzr/origin/tags/0.0.17-0ubuntu1)
+	* releasing version 0.0.17-0ubuntu1 (tag: 0.0.17-0ubuntu1)
 
 2010-03-18 15:19:33 -0400 Ken VanDine (5581a39)
 
@@ -4187,7 +4213,7 @@
 
 2010-03-18 12:57:22 -0500 Ted Gould (42de500)
 
-	* 0.0.17 (tag: 0.0.17, refs/bzr/origin/tags/0.0.17)
+	* 0.0.17 (tag: 0.0.17)
 
 2010-03-17 10:18:48 -0500 Ted Gould (65febbd)
 
@@ -4210,8 +4236,7 @@
 
 2010-03-15 16:45:26 +0100 Sebastien Bacher (ddee75a)
 
-	* releasing version 0.0.16-0ubuntu2 (tag: 0.0.16-0ubuntu2,
-          refs/bzr/origin/tags/0.0.16-0ubuntu2)
+	* releasing version 0.0.16-0ubuntu2 (tag: 0.0.16-0ubuntu2)
 
 2010-03-15 09:37:40 -0500 Ted Gould (c88bf0b)
 
@@ -4224,8 +4249,7 @@
 
 2010-03-11 23:48:08 +0100 Sebastien Bacher (04fecf2)
 
-	* releasing version 0.0.16-0ubuntu1 (tag: 0.0.16-0ubuntu1,
-          refs/bzr/origin/tags/0.0.16-0ubuntu1)
+	* releasing version 0.0.16-0ubuntu1 (tag: 0.0.16-0ubuntu1)
 
 2010-03-11 16:22:08 -0600 Ted Gould (0be5c8b)
 
@@ -4248,7 +4272,7 @@
 
 2010-03-11 16:15:07 -0600 Ted Gould (bf1f152)
 
-	* 0.0.16 (tag: 0.0.16, refs/bzr/origin/tags/0.0.16)
+	* 0.0.16 (tag: 0.0.16)
 
 2010-03-11 16:13:48 -0600 Ted Gould (1720ce3)
 
@@ -4291,8 +4315,7 @@
 
 2010-03-04 23:49:51 +0100 Sebastien Bacher (8dcf6e3)
 
-	* releasing version 0.0.15-0ubuntu1 (tag: 0.0.15-0ubuntu1,
-          refs/bzr/origin/tags/0.0.15-0ubuntu1)
+	* releasing version 0.0.15-0ubuntu1 (tag: 0.0.15-0ubuntu1)
 
 2010-03-04 11:42:42 -0600 Ted Gould (3174368)
 
@@ -4306,7 +4329,7 @@
 
 2010-03-04 11:38:08 -0600 Ted Gould (fa72360)
 
-	* 0.0.15 (tag: 0.0.15, refs/bzr/origin/tags/0.0.15)
+	* 0.0.15 (tag: 0.0.15)
 
 2010-03-02 14:31:37 -0600 Ted Gould (588e856)
 
@@ -4336,8 +4359,7 @@
 
 2010-02-25 23:06:25 +0100 Sebastien Bacher (55be444)
 
-	* releasing version 0.0.14-0ubuntu1 (tag: 0.0.14-0ubuntu1,
-          refs/bzr/origin/tags/0.0.14-0ubuntu1)
+	* releasing version 0.0.14-0ubuntu1 (tag: 0.0.14-0ubuntu1)
 
 2010-02-25 17:02:28 -0500 Ken VanDine (089972e)
 
@@ -4377,7 +4399,7 @@
 
 2010-02-25 15:06:06 -0600 Ted Gould (bc5b940)
 
-	* 0.0.14 (tag: 0.0.14, refs/bzr/origin/tags/0.0.14)
+	* 0.0.14 (tag: 0.0.14)
 
 2010-02-25 15:03:58 -0600 Ted Gould (ddbb7c0)
 
@@ -4418,8 +4440,7 @@
 
 2010-02-23 17:52:35 +0100 Sebastien Bacher (b42f475)
 
-	* releasing version 0.0.13-0ubuntu8 (tag: 0.0.13-0ubuntu8,
-          refs/bzr/origin/tags/0.0.13-0ubuntu8)
+	* releasing version 0.0.13-0ubuntu8 (tag: 0.0.13-0ubuntu8)
 
 2010-02-23 10:30:30 -0600 Ted Gould (1d1afe2)
 
@@ -4522,8 +4543,7 @@
 
 2010-02-22 17:50:42 +0100 Sebastien Bacher (d0087bc)
 
-	* releasing version 0.0.13-0ubuntu7 (tag: 0.0.13-0ubuntu7,
-          refs/bzr/origin/tags/0.0.13-0ubuntu7)
+	* releasing version 0.0.13-0ubuntu7 (tag: 0.0.13-0ubuntu7)
 
 2010-02-22 10:25:37 -0600 Ted Gould (e5612de)
 
@@ -4555,8 +4575,7 @@
 
 2010-02-19 18:52:46 +0100 Martin Pitt (05db164)
 
-	* releasing version 0.0.13-0ubuntu6 (tag: 0.0.13-0ubuntu6,
-          refs/bzr/origin/tags/0.0.13-0ubuntu6)
+	* releasing version 0.0.13-0ubuntu6 (tag: 0.0.13-0ubuntu6)
 
 2010-02-19 12:26:04 -0500 Ken VanDine (5308b54)
 
@@ -4579,8 +4598,7 @@
 
 2010-02-19 17:55:41 +0100 Martin Pitt (494d1b1)
 
-	* releasing version 0.0.13-0ubuntu5 (tag: 0.0.13-0ubuntu5,
-          refs/bzr/origin/tags/0.0.13-0ubuntu5)
+	* releasing version 0.0.13-0ubuntu5 (tag: 0.0.13-0ubuntu5)
 
 2010-02-19 11:53:37 -0500 Ken VanDine (d90b4c3)
 
@@ -4609,8 +4627,7 @@
 
 2010-02-17 23:18:23 +0100 Sebastien Bacher (2ac7533)
 
-	* releasing version 0.0.13-0ubuntu4 (tag: 0.0.13-0ubuntu4,
-          refs/bzr/origin/tags/0.0.13-0ubuntu4)
+	* releasing version 0.0.13-0ubuntu4 (tag: 0.0.13-0ubuntu4)
 
 2010-02-17 16:04:09 -0600 Cody Russell (715d752)
 
@@ -4638,8 +4655,7 @@
 
 2010-02-16 16:23:53 +0100 Sebastien Bacher (60b206c)
 
-	* releasing version 0.0.13-0ubuntu3 (tag: 0.0.13-0ubuntu3,
-          refs/bzr/origin/tags/0.0.13-0ubuntu3)
+	* releasing version 0.0.13-0ubuntu3 (tag: 0.0.13-0ubuntu3)
 
 2010-02-12 16:10:26 -0600 Ted Gould (2cc377b)
 
@@ -4683,8 +4699,7 @@
 
 2010-02-12 17:17:08 +0100 Sebastien Bacher (be1ce77)
 
-	* releasing version 0.0.13-0ubuntu2 (tag: 0.0.13-0ubuntu2,
-          refs/bzr/origin/tags/0.0.13-0ubuntu2)
+	* releasing version 0.0.13-0ubuntu2 (tag: 0.0.13-0ubuntu2)
 
 2010-02-11 23:12:57 -0600 Ted Gould (a98fd45)
 
@@ -4696,8 +4711,7 @@
 
 2010-02-11 14:44:24 -0500 Ken VanDine (4102c4d)
 
-	* releasing version 0.0.13-0ubuntu1 (tag: 0.0.13-0ubuntu1,
-          refs/bzr/origin/tags/0.0.13-0ubuntu1)
+	* releasing version 0.0.13-0ubuntu1 (tag: 0.0.13-0ubuntu1)
 
 2010-02-11 10:41:56 -0600 Ted Gould (f7b909c)
 
@@ -4715,7 +4729,7 @@
 
 2010-02-11 10:19:50 -0600 Ted Gould (14abe9a)
 
-	* 0.0.13 (tag: 0.0.13, refs/bzr/origin/tags/0.0.13)
+	* 0.0.13 (tag: 0.0.13)
 
 2010-02-11 08:41:13 -0600 Ted Gould (0e783eb)
 
@@ -4771,8 +4785,7 @@
 
 2010-02-08 19:25:26 -0500 Ken VanDine (c9d339f)
 
-	* releasing version 0.0.12-0ubuntu1 (tag: 0.0.12-0ubuntu1,
-          refs/bzr/origin/tags/0.0.12-0ubuntu1)
+	* releasing version 0.0.12-0ubuntu1 (tag: 0.0.12-0ubuntu1)
 
 2010-02-08 10:01:46 -0600 Ted Gould (b881da9)
 
@@ -4788,7 +4801,7 @@
 
 2010-02-08 09:51:25 -0600 Ted Gould (fb4952b)
 
-	* 0.0.12 (tag: 0.0.12, refs/bzr/origin/tags/0.0.12)
+	* 0.0.12 (tag: 0.0.12)
 
 2010-02-08 09:35:16 -0600 Ted Gould (c21b71a)
 
@@ -4934,8 +4947,7 @@
 
 2010-02-04 17:45:52 -0800 Sebastien Bacher (b8830e1)
 
-	* releasing version 0.0.11-0ubuntu1 (tag: 0.0.11-0ubuntu1,
-          refs/bzr/origin/tags/0.0.11-0ubuntu1)
+	* releasing version 0.0.11-0ubuntu1 (tag: 0.0.11-0ubuntu1)
 
 2010-02-04 16:47:49 -0800 Ted Gould (5bd2875)
 
@@ -4953,7 +4965,7 @@
 
 2010-02-04 16:27:28 -0800 Ted Gould (f8ab455)
 
-	* 0.0.11 (tag: 0.0.11, refs/bzr/origin/tags/0.0.11)
+	* 0.0.11 (tag: 0.0.11)
 
 2010-02-04 16:24:28 -0800 Ted Gould (8808bcb)
 
@@ -5056,13 +5068,11 @@
 
 2010-01-21 16:38:43 -0500 Ken VanDine (10c9c76)
 
-	* releasing version 0.0.10-0ubuntu2 (tag: 0.0.10-0ubuntu2,
-          refs/bzr/origin/tags/0.0.10-0ubuntu2)
+	* releasing version 0.0.10-0ubuntu2 (tag: 0.0.10-0ubuntu2)
 
 2010-01-21 16:07:55 -0500 Ken VanDine (6ac376a)
 
-	* releasing version 0.0.10-0ubuntu1 (tag: 0.0.10-0ubuntu1,
-          refs/bzr/origin/tags/0.0.10-0ubuntu1)
+	* releasing version 0.0.10-0ubuntu1 (tag: 0.0.10-0ubuntu1)
 
 2010-01-21 14:21:04 -0600 Ted Gould (f25e2f0)
 
@@ -5097,7 +5107,7 @@
 
 2010-01-21 14:08:59 -0600 Ted Gould (bb106d1)
 
-	* 0.0.10 (tag: 0.0.10, refs/bzr/origin/tags/0.0.10)
+	* 0.0.10 (tag: 0.0.10)
 
 2010-01-21 14:01:10 -0600 Ted Gould (2377df3)
 
@@ -5255,13 +5265,11 @@
 
 2010-01-19 22:57:32 +0100 Sebastien Bacher (6b648fd)
 
-	* releasing version 0.0.9-0ubuntu3 (tag: 0.0.9-0ubuntu3,
-          refs/bzr/origin/tags/0.0.9-0ubuntu3)
+	* releasing version 0.0.9-0ubuntu3 (tag: 0.0.9-0ubuntu3)
 
 2010-01-19 20:53:16 +0100 Sebastien Bacher (92c127a)
 
-	* releasing version 0.0.9-0ubuntu2 (tag: 0.0.9-0ubuntu2,
-          refs/bzr/origin/tags/0.0.9-0ubuntu2)
+	* releasing version 0.0.9-0ubuntu2 (tag: 0.0.9-0ubuntu2)
 
 2010-01-19 13:38:27 -0600 Ted Gould (f8da1e7)
 
@@ -5399,7 +5407,7 @@
 
 2010-01-14 10:36:02 -0600 Ted Gould (f0104e1)
 
-	* 0.0.9 (tag: 0.0.9, refs/bzr/origin/tags/0.0.9)
+	* 0.0.9 (tag: 0.0.9)
 
 2010-01-14 10:31:26 -0600 Ted Gould (e43ee66)
 
@@ -5629,7 +5637,7 @@
 
 2010-01-12 09:00:07 -0600 Ted Gould (abd41dd)
 
-	* 0.0.8 (tag: 0.0.8, refs/bzr/origin/tags/0.0.8)
+	* 0.0.8 (tag: 0.0.8)
 
 2010-01-12 08:56:42 -0600 Cody Russell (6fe9571)
 
@@ -5806,7 +5814,7 @@
 
 2010-01-08 15:57:53 -0600 Ted Gould (5787ec0)
 
-	* 0.0.7 (tag: 0.0.7, refs/bzr/origin/tags/0.0.7)
+	* 0.0.7 (tag: 0.0.7)
 
 2010-01-08 15:54:43 -0600 Ted Gould (a7e0e79)
 
@@ -6211,7 +6219,7 @@
 
 2009-12-17 14:42:30 -0600 Ted Gould (7eb8f46)
 
-	* 0.0.6 (tag: 0.0.6, refs/bzr/origin/tags/0.0.6)
+	* 0.0.6 (tag: 0.0.6)
 
 2009-12-17 14:40:34 -0600 Ted Gould (f789e13)
 
@@ -6250,7 +6258,7 @@
 
 2009-12-17 13:13:28 -0600 Ted Gould (6d8c312)
 
-	* 0.0.5 (tag: 0.0.5, refs/bzr/origin/tags/0.0.5)
+	* 0.0.5 (tag: 0.0.5)
 
 2009-12-17 13:07:50 -0600 Ken VanDine (6a7f7db)
 
@@ -6449,8 +6457,7 @@
 
 2009-12-14 22:47:42 +0100 Sebastien Bacher (add48dd)
 
-	* releasing version 0.0.4-0ubuntu1 (tag: 0.0.4-0ubuntu1,
-          refs/bzr/origin/tags/0.0.4-0ubuntu1)
+	* releasing version 0.0.4-0ubuntu1 (tag: 0.0.4-0ubuntu1)
 
 2009-12-14 11:25:49 -0600 Ted Gould (0d66efa)
 
@@ -6569,7 +6576,7 @@
 
 2009-12-11 10:34:49 -0600 Ted Gould (d303893)
 
-	* 0.0.4 (tag: 0.0.4, refs/bzr/origin/tags/0.0.4)
+	* 0.0.4 (tag: 0.0.4)
 
 2009-12-11 10:32:56 -0600 Cody Russell (5fe114e)
 
@@ -6638,8 +6645,7 @@
 
 2009-12-10 23:48:32 +0100 Sebastien Bacher (c5ceaf1)
 
-	* releasing version 0.0.3-0ubuntu1 (tag: 0.0.3-0ubuntu1,
-          refs/bzr/origin/tags/0.0.3-0ubuntu1)
+	* releasing version 0.0.3-0ubuntu1 (tag: 0.0.3-0ubuntu1)
 
 2009-12-10 17:31:13 -0500 Ken VanDine (4358884)
 
@@ -6708,7 +6714,7 @@
 
 2009-12-10 13:18:44 -0600 Ted Gould (6b3e25f)
 
-	* 0.0.3 (tag: 0.0.3, refs/bzr/origin/tags/0.0.3)
+	* 0.0.3 (tag: 0.0.3)
 
 2009-12-10 09:57:32 -0600 Ken Vandine (dc31293)
 
@@ -6906,8 +6912,7 @@
 
 2009-12-04 14:46:17 -0600 Ted Gould (2906ee4)
 
-	* Increasing to version 0.0.2 (tag: 0.0.2,
-          refs/bzr/origin/tags/0.0.2)
+	* Increasing to version 0.0.2 (tag: 0.0.2)
 
 2009-12-04 13:04:33 -0600 Ted Gould (fe16a24)
 
@@ -7385,8 +7390,7 @@
 
 2009-11-02 21:41:22 -0600 Ted Gould (88be27c)
 
-	* releasing version 0.0.1-0ubuntu2 (tag: 0.0.1-0ubuntu2,
-          refs/bzr/origin/tags/0.0.1-0ubuntu2)
+	* releasing version 0.0.1-0ubuntu2 (tag: 0.0.1-0ubuntu2)
 
 2009-11-02 21:39:38 -0600 Ted Gould (9d043e6)
 
