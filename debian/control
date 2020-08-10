@@ -4,6 +4,7 @@ Priority: optional
 Maintainer: Mike Gabriel <mike.gabriel@das-netzwerkteam.de>
 Build-Depends: debhelper (>= 9.0),
                dh-autoreconf | debhelper (>= 9.20160403~),
+               dh-systemd | debhelper (>= 10.2~),
                dbus-test-runner,
                mate-common,
                xvfb,
