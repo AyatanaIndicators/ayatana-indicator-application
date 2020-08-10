@@ -100,7 +100,6 @@ AC_OUTPUT([
 Makefile
 src/Makefile
 data/Makefile
-data/upstart/Makefile
 tests/Makefile
 ])
 
