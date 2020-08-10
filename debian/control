@@ -3,7 +3,7 @@ Section: gnome
 Priority: optional
 Maintainer: Mike Gabriel <mike.gabriel@das-netzwerkteam.de>
 Build-Depends: debhelper (>= 9.0),
-               dh-autoreconf,
+               dh-autoreconf | debhelper (>= 9.20160403~),
                dbus-test-runner,
                mate-common,
                xvfb,
