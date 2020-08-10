@@ -1,8 +1,0 @@
-[Desktop Entry]
-Type=Application
-Name=Ayatana Indicator Application
-Exec=@pkglibexecdir@/ayatana-indicator-application-service
-StartupNotify=false
-Terminal=false
-OnlyShowIn=Unity;
-Hidden=true
