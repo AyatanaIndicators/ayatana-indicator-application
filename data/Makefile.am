@@ -1,11 +1,4 @@
-
-SUBDIRS = upstart
-
-upstart_jobsdir = $(datadir)/upstart/sessions/
-upstart_jobs_DATA = ayatana-indicator-application.conf
-
-%.conf: %.conf.in
-	$(AM_V_GEN) sed -e "s|\@pkglibexecdir\@|$(pkglibexecdir)|" $< > $@
+NULL =
 
 xdg_autostartdir = /etc/xdg/autostart
 xdg_autostart_DATA = ayatana-indicator-application.desktop
@@ -24,17 +17,13 @@ systemddir = $(SYSTEMD_USERDIR)
 systemd_DATA = ayatana-indicator-application.service
 #endif
 
-upstartsystemdoverridedir = $(datadir)/upstart/systemd-session/upstart
-upstartsystemdoverride_DATA = ayatana-indicator-application.override
-
 EXTRA_DIST = \
 	ayatana-indicator-application.desktop.in \
-	ayatana-indicator-application.conf.in \
 	ayatana-indicator-application.service.in \
-	ayatana-indicator-application.override \
-	ordering-override.keyfile
+	ordering-override.keyfile \
+	$(NULL)
 
 CLEANFILES = \
-	ayatana-indicator-application.conf \
 	ayatana-indicator-application.desktop \
-	ayatana-indicator-application.service
+	ayatana-indicator-application.service \
+	$(NULL)
