@@ -1,0 +1,38 @@
+Overview of changes in ayatana-indicator-application 0.8.0
+
+  - Version bump to bring all system indicators (and the
+    renderer libraries to the same version level).
+  - Start the indicator with the ayatana-indicators.target.
+  - Drop upstart support.
+
+Overview of changes in ayatana-indicator-application 0.5.3
+
+  - Avoid deprecated g_type_class_add_private.
+  - autogen.sh: Adapt PKG_NAME autogen.sh to ayatana- namespace.
+  - {configure.ac,Makefile.am}: Drop distcheck features.
+  - Make systemd optional. If systemd is not available at build-time,
+    the creation of the .service file is omitted.
+
+Overview of changes in ayatana-indicator-application 0.5.2
+
+  - data/ayatana-indicator-application.desktop.in: Add Budgie as
+    candidate for launching ayatana-indicator-application.
+  - data/ayatana-indicator-application.desktop.in: Add XFCE as candidate
+    for launching ayatana-indicator-application.
+  - data/ayatana-indicator-application.desktop.in: Drop AutostartCondition,
+    drop GNOME from OnlyShowIn.
+  - XDG-autostart this indicator in MATE, too.
+
+Overview of changes in ayatana-indicator-application 0.5.1
+
+  - src/application-service-watcher.c: Comment out upstart specific code
+    for now. We can reintroduce it once we know if our session is
+    upstart-managed (or systemd-managed).
+  - upstart service files: Fix namespace overlapping with the project we
+    forked from.
+  - Work inside a snap by prefixing hard coded paths with.
+  - Hide 'Indicator Application' from Startup Applications.
+  - Adding a systemd user unit.
+  - build system: Switch to mate-common.
+  - dbus-shared.h: Use org.ayatana namespace for the DBus service object.
+  - Fork from Ubuntu's indicator-application code project.

@@ -1,6 +1,56 @@
-2019-11-27 10:13:11 +0000 Mike Gabriel
+2020-08-17 22:50:19 +0200 Mike Gabriel
 
-	* release 0.5.3 (HEAD -> master, tag: 0.5.3)
+	* release 0.8.0 (HEAD -> master, tag: 0.8.0)
+
+2020-08-10 21:58:16 +0200 Mike Gabriel (a95fa57)
+
+	* configure.ac: Drop data/upstart/Makefile from AC_OUTPUT. Regresion
+          fix for 172e6823.
+
+2020-08-10 17:01:24 +0200 Robert Tari (c6909fa)
+
+	* Merge branch 'sunweaver-pr/drop-upstart-support' Attributes GH PR
+          #4:
+          https://github.com/AyatanaIndicators/ayatana-indicator-application/pull/4
+
+2020-08-10 16:59:48 +0200 Robert Tari (c7c7c61)
+
+	* Merge branch 'pr/drop-upstart-support' of
+          https://github.com/sunweaver/ayatana-indicator-application
+          into sunweaver-pr/drop-upstart-support Attributes GH PR
+          #4:
+          https://github.com/AyatanaIndicators/ayatana-indicator-application/pull/4
+
+2020-08-10 16:34:58 +0200 Robert Tari (9e09aaa)
+
+	* Merge branch 'sunweaver-pr/fix-systemd' Attributes GH PR #3:
+          https://github.com/AyatanaIndicators/ayatana-indicator-application/pull/3
+
+2020-08-10 12:14:43 +0200 Mike Gabriel (172e682)
+
+	* Drop all references to upstart.
+
+2020-08-10 12:06:04 +0200 Mike Gabriel (ac816c0)
+
+	* debian/*: Install systemd user service file correctly into DEB
+          package.
+
+2020-08-10 12:05:40 +0200 Mike Gabriel (bcd0095)
+
+	* Start indicator in systemd when ayatana-indicators.target is
+          started.
+
+2020-08-10 12:02:35 +0200 Mike Gabriel (05e0a70)
+
+	* debian/control: Improve dh-autoreconf build-dependency.
+
+2019-11-27 11:26:34 +0100 Mike Gabriel (1aa5f07)
+
+	* Drop release/build cruft file src/ChangeLog.
+
+2019-11-27 11:13:37 +0100 Mike Gabriel (e86b005)
+
+	* release 0.5.3 (tag: 0.5.3)
 
 2019-11-27 10:11:25 +0000 Mike Gabriel (8b967ee)
 
