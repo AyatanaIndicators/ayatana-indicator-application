@@ -1,7 +1,0 @@
-
-check_PROGRAMS =
-
-TESTS =
-DISTCLEANFILES = $(TESTS)
-
-EXTRA_DIST = run-xvfb.sh
