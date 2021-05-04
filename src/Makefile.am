@@ -21,7 +21,7 @@ libayatana_application_la_CFLAGS = $(INDICATOR_CFLAGS) \
 	-Wl,-Bsymbolic-functions \
 	-Wl,-z,defs \
 	-Wl,--as-needed \
-	-Werror -Wno-error=deprecated-declarations \
+	-Wno-error=deprecated-declarations \
 	-DG_LOG_DOMAIN=\"Ayatana-Indicator-Application\"
 libayatana_application_la_LIBADD = $(INDICATOR_LIBS) 
 libayatana_application_la_LDFLAGS = $(COVERAGE_LDFLAGS) \
@@ -55,7 +55,7 @@ ayatana_indicator_application_service_CFLAGS = \
 	$(APPINDICATOR_CFLAGS) \
 	$(COVERAGE_CFLAGS) \
 	-DDATADIR="\"$(pkgdatadir)\"" \
-	-Wall -Werror -Wno-error=deprecated-declarations \
+	-Wall -Wno-error=deprecated-declarations \
 	-DG_LOG_DOMAIN=\"ayatana-indicator-application-service\"
 
 ayatana_indicator_application_service_LDADD = \
