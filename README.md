@@ -35,7 +35,7 @@ https://ayatana-indicators.org
 ## About this Software Component
 
 The -application Ayatana System Indicator is an application menu indicator
-for Unity7, MATE and Lomiri (optionally for others, e.g. XFCE, LXDE). The
+for Unity7 and optionally for others, e.g. MATE, XFCE, LXDE). The
 indicator takes menus from applications and places them into the panel.
 
 Its behavior and features are listed at
