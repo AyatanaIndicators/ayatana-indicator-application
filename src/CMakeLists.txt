@@ -88,7 +88,7 @@ target_include_directories("ayatana-application" PUBLIC ${PROJECT_DEPS_INCLUDE_D
 target_include_directories("ayatana-application" PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
 target_link_libraries("ayatana-application" ${PROJECT_DEPS_LIBRARIES})
 add_dependencies("ayatana-application" "src-generated")
-install(FILES "${CMAKE_CURRENT_BINARY_DIR}/libayatana-application.so" DESTINATION "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}/ayatana-indicators3/7")
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/libayatana-application.so" DESTINATION "${CMAKE_INSTALL_FULL_LIBDIR}/ayatana-indicators3/7")
 
 # ayatana-indicator-application-service
 
@@ -103,10 +103,10 @@ set(SOURCES
 
 set_source_files_properties(${SOURCES} PROPERTIES COMPILE_FLAGS ${COMPILE_FLAGS})
 add_executable("ayatana-indicator-application-service" ${SOURCES})
-target_compile_definitions("ayatana-indicator-application-service" PUBLIC DATADIR="${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_DATADIR}/ayatana-indicator-application")
+target_compile_definitions("ayatana-indicator-application-service" PUBLIC DATADIR="${CMAKE_INSTALL_FULL_DATADIR}/ayatana-indicator-application")
 target_compile_definitions("ayatana-indicator-application-service" PUBLIC G_LOG_DOMAIN="ayatana-indicator-application-service")
 target_include_directories("ayatana-indicator-application-service" PUBLIC ${PROJECT_DEPS_INCLUDE_DIRS})
 target_include_directories("ayatana-indicator-application-service" PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
 target_link_libraries("ayatana-indicator-application-service" ${PROJECT_DEPS_LIBRARIES})
 add_dependencies("ayatana-indicator-application-service" "ayatana-application")
-install(FILES "${CMAKE_CURRENT_BINARY_DIR}/ayatana-indicator-application-service" DESTINATION "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBEXECDIR}/ayatana-indicator-application")
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/ayatana-indicator-application-service" DESTINATION "${CMAKE_INSTALL_FULL_LIBEXECDIR}/ayatana-indicator-application")

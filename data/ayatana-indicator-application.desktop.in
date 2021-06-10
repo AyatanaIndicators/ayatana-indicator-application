@@ -1,7 +1,7 @@
 [Desktop Entry]
 Type=Application
 Name=Ayatana Indicator Application
-Exec=@CMAKE_INSTALL_PREFIX@/@CMAKE_INSTALL_LIBEXECDIR@/ayatana-indicator-application/ayatana-indicator-application-service
+Exec=@CMAKE_INSTALL_FULL_LIBEXECDIR@/ayatana-indicator-application/ayatana-indicator-application-service
 StartupNotify=false
 Terminal=false
 OnlyShowIn=Unity;MATE;XFCE;Budgie;
