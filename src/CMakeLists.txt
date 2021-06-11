@@ -109,4 +109,4 @@ target_include_directories("ayatana-indicator-application-service" PUBLIC ${PROJ
 target_include_directories("ayatana-indicator-application-service" PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
 target_link_libraries("ayatana-indicator-application-service" ${PROJECT_DEPS_LIBRARIES})
 add_dependencies("ayatana-indicator-application-service" "ayatana-application")
-install(FILES "${CMAKE_CURRENT_BINARY_DIR}/ayatana-indicator-application-service" DESTINATION "${CMAKE_INSTALL_FULL_LIBEXECDIR}/ayatana-indicator-application")
+install(TARGETS "ayatana-indicator-application-service" RUNTIME DESTINATION "${CMAKE_INSTALL_FULL_LIBEXECDIR}/ayatana-indicator-application")
