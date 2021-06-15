@@ -19,11 +19,10 @@ requires:
     - dbus-glib
     - json-glib
     - intltool
-    - libayatana-appindicator
-    - libayatana-indicator
     - libdbusmenu-glib
     - libdbusmenu-gtk3
     - systemd
+    - vala
 
   debian:
     # Useful URL: https://salsa.debian.org/debian-ayatana-team/ayatana-indicator-application
@@ -36,17 +35,30 @@ requires:
     - cmake
     - cmake-extras
     - mate-common
+    - cli-common-dev
     - intltool
+    - libdbus-1-dev
     - libdbus-glib-1-dev
-    - libayatana-appindicator3-dev
-    - libayatana-indicator3-dev
     - libdbusmenu-glib-dev
     - libdbusmenu-gtk3-dev
     - libglib2.0-dev
     - libgtk-3-dev
+    - gtk-sharp3-gapi
+    - libgtk3.0-cil-dev
     - libjson-glib-dev
+    - libnunit-cil-dev
+    - libxml2-utils
+    - mono-devel
     - systemd
+    - gobject-introspection
+    - gtk-doc-tools
+    - libgirepository1.0-dev
+    - libgtest-dev
+    - libx11-dev
+    - libxi-dev
+    - valac
     - dbus-test-runner
+    - xauth
     - xvfb
 
   ubuntu:
@@ -58,17 +70,30 @@ requires:
     - cmake
     - cmake-extras
     - mate-common
+    - cli-common-dev
     - intltool
+    - libdbus-1-dev
     - libdbus-glib-1-dev
-    - libayatana-appindicator3-dev
-    - libayatana-indicator3-dev
     - libdbusmenu-glib-dev
     - libdbusmenu-gtk3-dev
     - libglib2.0-dev
     - libgtk-3-dev
+    - gtk-sharp3-gapi
+    - libgtk3.0-cil-dev
     - libjson-glib-dev
+    - libnunit-cil-dev
+    - libxml2-utils
+    - mono-devel
     - systemd
+    - gobject-introspection
+    - gtk-doc-tools
+    - libgirepository1.0-dev
+    - libgtest-dev
+    - libx11-dev
+    - libxi-dev
+    - valac
     - dbus-test-runner
+    - xauth
     - xvfb
 
 variables:
@@ -91,10 +116,28 @@ variables:
 
 before_scripts:
   - cd ${START_DIR}
-  - if [ ! -d libayatana-common-build ]; then
-  -     git clone --depth 1  https://github.com/AyatanaIndicators/libayatana-common.git libayatana-common-build
+  - if [ ! -d ayatana-ido-build ]; then
+  -     git clone --depth 1 https://github.com/AyatanaIndicators/ayatana-ido.git ayatana-ido-build
   - fi
-  - cd libayatana-common-build
+  - cd ayatana-ido-build
+  - cmake . -DCMAKE_INSTALL_PREFIX=/usr
+  - make
+  - make install
+  -
+  - cd ${START_DIR}
+  - if [ ! -d libayatana-indicator-build ]; then
+  -     git clone --depth 1 https://github.com/AyatanaIndicators/libayatana-indicator.git libayatana-indicator-build
+  - fi
+  - cd libayatana-indicator-build
+  - cmake . -DCMAKE_INSTALL_PREFIX=/usr
+  - make
+  - make install
+  -
+  - cd ${START_DIR}
+  - if [ ! -d libayatana-appindicator-build ]; then
+  -     git clone --depth 1 https://github.com/AyatanaIndicators/libayatana-appindicator.git libayatana-appindicator-build
+  - fi
+  - cd libayatana-appindicator-build
   - cmake . -DCMAKE_INSTALL_PREFIX=/usr
   - make
   - make install
