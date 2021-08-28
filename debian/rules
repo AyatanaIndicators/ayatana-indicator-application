@@ -2,8 +2,16 @@
 
 export DPKG_GENSYMBOLS_CHECK_LEVEL=4
 
+DEB_CMAKE_EXTRA_FLAGS = \
+    -DENABLE_TESTS=ON \
+    -DENABLE_COVERAGE=OFF \
+    $(NULL)
+
 %:
 	dh $@ --with systemd
+
+override_dh_auto_configure:
+	dh_auto_configure -- $(DEB_CMAKE_EXTRA_FLAGS)
 
 override_dh_install:
 	find debian/ayatana-indicator-application/usr/lib -name *.la -delete
