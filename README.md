@@ -1,4 +1,4 @@
-# ayatana-indicator-application -  Ayatana Indicator Application Service  [![Build Status](https://travis-ci.com/AyatanaIndicators/ayatana-indicator-application.svg)](https://travis-ci.com/AyatanaIndicators/ayatana-indicator-application)
+# ayatana-indicator-application -  Ayatana Indicator Application Service  [![Build Status](https://api.travis-ci.com/AyatanaIndicators/ayatana-indicator-application.svg)](https://travis-ci.com/github/AyatanaIndicators/ayatana-indicator-application)
 
 ## About Ayatana Indicators
 
