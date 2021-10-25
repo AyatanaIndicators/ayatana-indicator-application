@@ -118,6 +118,8 @@ before_scripts:
   - cmake . -DCMAKE_INSTALL_PREFIX=/usr
   - make
   - make install
+  - cd -
+  - rm -Rf ayatana-ido-build/
   -
   - cd ${START_DIR}
   - if [ ! -d libayatana-indicator-build ]; then
@@ -127,6 +129,8 @@ before_scripts:
   - cmake . -DCMAKE_INSTALL_PREFIX=/usr
   - make
   - make install
+  - cd -
+  - rm -Rf libayatana-indicator-build/
   -
   - cd ${START_DIR}
   - if [ ! -d libayatana-appindicator-build ]; then
@@ -136,6 +140,7 @@ before_scripts:
   - cmake . -DCMAKE_INSTALL_PREFIX=/usr
   - make
   - make install
+  - rm -Rf libayatana-appindicator-build/
 
 build_scripts:
   - if [ ${DISTRO_NAME} == "debian" ];then
