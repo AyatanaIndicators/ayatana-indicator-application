@@ -12,7 +12,6 @@ requires:
     - which
     - cmake
     - cmake-extras
-    - mate-common
     - xorg-server-xvfb
     - glib2
     - gtk3
@@ -26,7 +25,6 @@ requires:
 
   debian:
     # Useful URL: https://salsa.debian.org/debian-ayatana-team/ayatana-indicator-application
-    - autopoint
     - clang
     - clang-tools
     - g++
@@ -34,7 +32,6 @@ requires:
     - git
     - cmake
     - cmake-extras
-    - mate-common
     - cli-common-dev
     - intltool
     - libdbus-1-dev
@@ -62,14 +59,12 @@ requires:
     - xvfb
 
   ubuntu:
-    - autopoint
     - clang
     - clang-tools
     - g++
     - git
     - cmake
     - cmake-extras
-    - mate-common
     - cli-common-dev
     - intltool
     - libdbus-1-dev
@@ -123,6 +118,8 @@ before_scripts:
   - cmake . -DCMAKE_INSTALL_PREFIX=/usr
   - make
   - make install
+  - cd -
+  - rm -Rf ayatana-ido-build/
   -
   - cd ${START_DIR}
   - if [ ! -d libayatana-indicator-build ]; then
@@ -132,6 +129,8 @@ before_scripts:
   - cmake . -DCMAKE_INSTALL_PREFIX=/usr
   - make
   - make install
+  - cd -
+  - rm -Rf libayatana-indicator-build/
   -
   - cd ${START_DIR}
   - if [ ! -d libayatana-appindicator-build ]; then
@@ -141,6 +140,7 @@ before_scripts:
   - cmake . -DCMAKE_INSTALL_PREFIX=/usr
   - make
   - make install
+  - rm -Rf libayatana-appindicator-build/
 
 build_scripts:
   - if [ ${DISTRO_NAME} == "debian" ];then
@@ -148,10 +148,7 @@ build_scripts:
   -     cppcheck --enable=warning,style,performance,portability,information,missingInclude .
   - fi
   -
-  - if [ -e ./autogen.sh ]; then
-  -     NOCONFIGURE=1 ./autogen.sh
-  -     scan-build $CHECKERS ./configure --prefix=/usr --enable-gtk-doc --enable-compile-warnings=maximum
-  - elif [ -e ./CMakeLists.txt ]; then
+  - if [ -e ./CMakeLists.txt ]; then
   -     if [ ${DISTRO_NAME} == "debian" ];then
   -         scan-build $CHECKERS cmake . -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_VERBOSE_MAKEFILE=ON -DENABLE_TESTS=ON
   -     else
@@ -174,15 +171,9 @@ build_scripts:
   -     fi
   -     scan-build $CHECKERS --keep-cc -o html-report make
   - fi
-
-after_scripts:
-  - if [ ${BUILD_TYPE} == "scripts" ];then
-  -     XVFB_RUN="$(which xvfb-run || true)"
-  -     if [ ${DISTRO_NAME} == "debian" ];then
-  -         if [ -e ./autogen.sh ]; then
-  -             ${XVFB_RUN} make check
-  -         elif [ -e ./CMakeLists.txt ]; then
-  -             ${XVFB_RUN} env CTEST_OUTPUT_ON_FAILURE=1 make test
-  -         fi
-  -     fi
-  - fi
+#  - XVFB_RUN="$(which xvfb-run || true)"
+#  - if [ ${DISTRO_NAME} == "debian" ];then
+#  -     if [ -e ./CMakeLists.txt ]; then
+#  -         ${XVFB_RUN} env CTEST_OUTPUT_ON_FAILURE=1 make test
+#  -     fi
+#  - fi
