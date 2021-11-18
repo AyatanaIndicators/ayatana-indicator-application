@@ -1,3 +1,10 @@
+ayatana-indicator-application (0.8.90-0) unstable; urgency=medium
+
+  * Upstream-provided Debian package for ayatana-indicator-application.
+    See upstream ChangeLog for recent changes.
+
+ -- Mike Gabriel <mike.gabriel@das-netzwerkteam.de>  Thu, 18 Nov 2021 10:39:20 +0100
+
 ayatana-indicator-application (0.8.0-0) unstable; urgency=medium
 
   * Upstream-provided Debian package for ayatana-indicator-application.

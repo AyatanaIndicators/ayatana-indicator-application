@@ -1,3 +1,8 @@
+Overview of changes in ayatana-indicator-application 0.8.90
+
+  - Add documentation and install instructions.
+  - Port to CMake.
+
 Overview of changes in ayatana-indicator-application 0.8.0
 
   - Version bump to bring all system indicators (and the
