@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.13)
-project(ayatana-appindicator-application C)
+project(ayatana-indicator-application C)
 
 if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
     SET(CMAKE_INSTALL_PREFIX "/usr" CACHE PATH "..." FORCE)
@@ -33,7 +33,7 @@ pkg_check_modules(PROJECT_DEPS REQUIRED glib-2.0>=2.58 ayatana-indicator3-0.4>=0
 
 include(GNUInstallDirs)
 set(PROJECT_VERSION "0.8.90")
-set(PROJECT_NAME "ayatana-appindicator-application")
+set(PROJECT_NAME "ayatana-indicator-application")
 
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
 
