@@ -88,7 +88,8 @@ target_include_directories("ayatana-application" PUBLIC ${PROJECT_DEPS_INCLUDE_D
 target_include_directories("ayatana-application" PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
 target_link_libraries("ayatana-application" ${PROJECT_DEPS_LIBRARIES})
 add_dependencies("ayatana-application" "src-generated")
-install(FILES "${CMAKE_CURRENT_BINARY_DIR}/libayatana-application.so" DESTINATION "${CMAKE_INSTALL_FULL_LIBDIR}/ayatana-indicators3/7")
+pkg_get_variable(indicatordir "ayatana-indicator3-0.4" "indicatordir")
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/libayatana-application.so" DESTINATION "${indicatordir}")
 
 # ayatana-indicator-application-service
 
