@@ -32,7 +32,7 @@ pkg_check_modules(PROJECT_DEPS REQUIRED glib-2.0>=2.58 ayatana-indicator3-0.4>=0
 # Set global variables
 
 include(GNUInstallDirs)
-set(PROJECT_VERSION "0.8.90")
+set(PROJECT_VERSION "0.8.91")
 set(PROJECT_NAME "ayatana-indicator-application")
 
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")

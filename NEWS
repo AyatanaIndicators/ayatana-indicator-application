@@ -1,3 +1,10 @@
+Overview of changes in ayatana-indicator-application 0.8.91
+
+  - CMake: Update systemd unit target dir detection.
+  - CMake: Install .so file to indicator dir as provided by
+    pkg-config file ayatana-indicator3-0.4.pc.
+  - Fix project name in CMakeLists.txt.
+
 Overview of changes in ayatana-indicator-application 0.8.90
 
   - Add documentation and install instructions.
