@@ -16,7 +16,6 @@ if (${SYSTEMD_FOUND})
   set (SYSTEMD_USER_FILE_IN "${CMAKE_CURRENT_SOURCE_DIR}/${SYSTEMD_USER_NAME}.in")
 
   # build it
-  set (pkglibexecdir "${CMAKE_INSTALL_FULL_PKGLIBEXECDIR}")
   configure_file ("${SYSTEMD_USER_FILE_IN}" "${SYSTEMD_USER_FILE}")
 
   # install it
