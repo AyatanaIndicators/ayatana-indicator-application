@@ -1,3 +1,12 @@
+Overview of changes in ayatana-indicator-application 22.2.0
+
+  - Upstream version bump to new release versioning scheme:
+    <year>.<month>.<revision>, where <year>.<month> will be
+    bumped in Ayatana Indicators bundle releases and <revision>
+    gets incremented with minor changeset releases.
+  - Clean up compilation flags.
+  - data/CMakeLists.txt: Drop unused CMAKE_INSTALL_FULL_PKGLIBEXECDIR.
+
 Overview of changes in ayatana-indicator-application 0.8.91
 
   - CMake: Update systemd unit target dir detection.
