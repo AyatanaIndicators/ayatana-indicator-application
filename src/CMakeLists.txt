@@ -81,7 +81,6 @@ set(SOURCES
     indicator-application.c
 )
 
-set_source_files_properties(${SOURCES} PROPERTIES COMPILE_FLAGS ${COMPILE_FLAGS})
 add_library("ayatana-application" SHARED ${SOURCES})
 target_compile_definitions("ayatana-application" PUBLIC G_LOG_DOMAIN="Ayatana-Indicator-Application")
 target_include_directories("ayatana-application" PUBLIC ${PROJECT_DEPS_INCLUDE_DIRS})
@@ -102,7 +101,6 @@ set(SOURCES
     generate-id.c
 )
 
-set_source_files_properties(${SOURCES} PROPERTIES COMPILE_FLAGS ${COMPILE_FLAGS})
 add_executable("ayatana-indicator-application-service" ${SOURCES})
 target_compile_definitions("ayatana-indicator-application-service" PUBLIC DATADIR="${CMAKE_INSTALL_FULL_DATADIR}/ayatana-indicator-application")
 target_compile_definitions("ayatana-indicator-application-service" PUBLIC G_LOG_DOMAIN="ayatana-indicator-application-service")
