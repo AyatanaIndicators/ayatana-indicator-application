@@ -3,9 +3,11 @@ An object that stores the registration of all the application
 indicators.  It also communicates this to the indicator visualization.
 
 Copyright 2009 Canonical Ltd.
+Copyright 2024-2025 Robert Tari
 
 Authors:
     Ted Gould <ted@canonical.com>
+    Robert Tari <robert@tari.in>
 
 This program is free software: you can redistribute it and/or modify it
 under the terms of the GNU General Public License version 3, as published
@@ -25,8 +27,8 @@ with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endif
 
 #include <libayatana-indicator/indicator-object.h>
-#include <libayatana-appindicator/app-indicator.h>
-#include <libayatana-appindicator/app-indicator-enum-types.h>
+#include <libayatana-appindicator-glib/ayatana-appindicator.h>
+#include <libayatana-appindicator-glib/ayatana-appindicator-enum-types.h>
 #include "application-service-appstore.h"
 #include "ayatana-application-service-marshal.h"
 #include "dbus-shared.h"
