@@ -4,9 +4,11 @@ given by the service and turns it into real-world pixels that users can
 actually use.  Well, GTK does that, but this asks nicely.
 
 Copyright 2009 Canonical Ltd.
+Copyright 2024 Robert Tari
 
 Authors:
     Ted Gould <ted@canonical.com>
+    Robert Tari <robert@tari.in>
 
 This program is free software: you can redistribute it and/or modify it
 under the terms of the GNU General Public License version 3, as published
@@ -81,6 +83,7 @@ typedef struct {
     guint disconnect_kill;
     GCancellable * get_apps_cancel;
     guint watch;
+    GDBusConnection *pConnection;
 } IndicatorApplicationPrivate;
 
 typedef struct _ApplicationEntry ApplicationEntry;
@@ -92,6 +95,9 @@ struct _ApplicationEntry {
     gchar * dbusaddress;
     gchar * guide;
     gchar * longname;
+    gint nPosition;
+    GMenuModel *pModel;
+    GActionGroup *pActions;
 };
 
 static void indicator_application_class_init (IndicatorApplicationClass *klass);
@@ -160,7 +166,7 @@ indicator_application_init (IndicatorApplication *self)
         NULL);
 
     priv->applications = NULL;
-
+    priv->pConnection = g_bus_get_sync (G_BUS_TYPE_SESSION, NULL, NULL);
     priv->theme_dirs = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
 
     priv->get_apps_cancel = NULL;
@@ -214,6 +220,8 @@ indicator_application_dispose (GObject *object)
         g_bus_unwatch_name(priv->watch);
         priv->watch = 0;
     }
+
+    g_clear_object (&priv->pConnection);
 
     G_OBJECT_CLASS (indicator_application_parent_class)->dispose (object);
     return;
@@ -484,6 +492,30 @@ guess_label_size (ApplicationEntry * app)
     return;
 }
 
+static void applicationAddedFinish (ApplicationEntry *pEntry)
+{
+    /* Keep copies of these for ourself, just in case. */
+    g_object_ref (pEntry->entry.image);
+    g_object_ref (pEntry->entry.menu);
+
+    gtk_widget_show (GTK_WIDGET (pEntry->entry.image));
+    IndicatorApplicationPrivate * pPrivate = indicator_application_get_instance_private (INDICATOR_APPLICATION (pEntry->entry.parent_object));
+    pPrivate->applications = g_list_insert (pPrivate->applications, pEntry, pEntry->nPosition);
+    g_signal_emit (G_OBJECT (pEntry->entry.parent_object), INDICATOR_OBJECT_SIGNAL_ENTRY_ADDED_ID, 0, &(pEntry->entry), TRUE);
+}
+
+static void onMenuModelChanged (GMenuModel *pModel, gint nPosition, gint nRemoved, gint nAdded, gpointer pData)
+{
+    ApplicationEntry *pEntry = (ApplicationEntry*) pData;
+    g_signal_handlers_disconnect_by_data (pEntry->pModel, pEntry);
+    pEntry->entry.menu = GTK_MENU (gtk_menu_new_from_model (G_MENU_MODEL (pModel)));
+    gtk_menu_shell_bind_model (GTK_MENU_SHELL (pEntry->entry.menu), pModel, NULL, TRUE);
+    IndicatorApplicationPrivate *pPrivate = indicator_application_get_instance_private (INDICATOR_APPLICATION (pEntry->entry.parent_object));
+    pEntry->pActions = G_ACTION_GROUP (g_dbus_action_group_get (pPrivate->pConnection, pEntry->dbusaddress, pEntry->dbusobject));
+    gtk_widget_insert_action_group (GTK_WIDGET (pEntry->entry.menu), "indicator", pEntry->pActions);
+    applicationAddedFinish (pEntry);
+}
+
 /* Here we respond to new applications by building up the
    ApplicationEntry and signaling the indicator host that
    we've got a new indicator. */
@@ -492,11 +524,10 @@ application_added (IndicatorApplication * application, const gchar * iconname, g
 {
     g_return_if_fail(IS_INDICATOR_APPLICATION(application));
     g_debug("Building new application entry: %s  with icon: %s at position %i", dbusaddress, iconname, position);
-    IndicatorApplicationPrivate * priv = indicator_application_get_instance_private(application);
-
     ApplicationEntry * app = g_new0(ApplicationEntry, 1);
 
     app->entry.parent_object = INDICATOR_OBJECT(application);
+    app->nPosition = position;
     app->old_service = FALSE;
     app->icon_theme_path = NULL;
     if (icon_theme_path != NULL && icon_theme_path[0] != '\0') {
@@ -550,18 +581,24 @@ application_added (IndicatorApplication * application, const gchar * iconname, g
         app->entry.name_hint = g_strdup(hint);
     }
 
-    app->entry.menu = GTK_MENU(dbusmenu_gtkmenu_new((gchar *)dbusaddress, (gchar *)dbusobject));
+    gboolean bGLibMenu = g_str_has_prefix (dbusobject, "/org/ayatana/appindicator/");
 
-    /* Keep copies of these for ourself, just in case. */
-    g_object_ref(app->entry.image);
-    g_object_ref(app->entry.menu);
+    if (bGLibMenu)
+    {
+        IndicatorApplicationPrivate * pPrivate = indicator_application_get_instance_private (application);
+        app->pModel = G_MENU_MODEL (g_dbus_menu_model_get (pPrivate->pConnection, dbusaddress, dbusobject));
+        g_signal_connect (app->pModel, "items-changed", G_CALLBACK (onMenuModelChanged), app);
 
-    gtk_widget_show(GTK_WIDGET(app->entry.image));
-
-    priv->applications = g_list_insert(priv->applications, app, position);
-
-    g_signal_emit(G_OBJECT(application), INDICATOR_OBJECT_SIGNAL_ENTRY_ADDED_ID, 0, &(app->entry), TRUE);
-    return;
+        if (g_menu_model_get_n_items (app->pModel))
+        {
+            onMenuModelChanged (app->pModel, 0, 0, 1, app);
+        }
+    }
+    else
+    {
+        app->entry.menu = GTK_MENU (dbusmenu_gtkmenu_new ((gchar*) dbusaddress, (gchar*) dbusobject));
+        applicationAddedFinish (app);
+    }
 }
 
 /* This removes the application from the list and free's all
@@ -612,6 +649,9 @@ application_removed (IndicatorApplication * application, gint position)
     if (app->entry.name_hint != NULL) {
         g_free((gchar *)app->entry.name_hint);
     }
+
+    g_clear_object (&app->pModel);
+    g_clear_object (&app->pActions);
     g_free(app);
 
     return;

@@ -2,9 +2,11 @@
 Quick litte lack to generate the ordering ID.
 
 Copyright 2010 Canonical Ltd.
+Copyright 2025 Robert Tari
 
 Authors:
     Ted Gould <ted@canonical.com>
+    Robert Tari <robert@tari.in>
 
 This program is free software: you can redistribute it and/or modify it
 under the terms of the GNU General Public License version 3, as published
@@ -23,7 +25,7 @@ with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define __GENERATE_ID_H__
 
 #include <glib.h>
-#include "libayatana-appindicator/app-indicator.h"
+#include "libayatana-appindicator-glib/ayatana-appindicator.h"
 
 guint32 generate_id (const AppIndicatorCategory category, const gchar * id);
 
