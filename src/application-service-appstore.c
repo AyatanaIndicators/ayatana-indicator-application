@@ -54,6 +54,7 @@ static void props_cb (GObject * object, GAsyncResult * res, gpointer user_data);
 #define NOTIFICATION_ITEM_PROP_LABEL_GUIDE           "XAyatanaLabelGuide"
 #define NOTIFICATION_ITEM_PROP_TITLE                 "Title"
 #define NOTIFICATION_ITEM_PROP_ORDERING_INDEX        "XAyatanaOrderingIndex"
+#define NOTIFICATION_ITEM_PROP_TOOLTIP               "ToolTip"
 
 #define NOTIFICATION_ITEM_SIG_NEW_ICON               "NewIcon"
 #define NOTIFICATION_ITEM_SIG_NEW_AICON              "NewAttentionIcon"
@@ -61,6 +62,7 @@ static void props_cb (GObject * object, GAsyncResult * res, gpointer user_data);
 #define NOTIFICATION_ITEM_SIG_NEW_LABEL              "XAyatanaNewLabel"
 #define NOTIFICATION_ITEM_SIG_NEW_ICON_THEME_PATH    "NewIconThemePath"
 #define NOTIFICATION_ITEM_SIG_NEW_TITLE              "NewTitle"
+#define NOTIFICATION_ITEM_SIG_NEW_TOOLTIP            "NewToolTip"
 
 #define OVERRIDE_GROUP_NAME                          "Ordering Index Overrides"
 #define OVERRIDE_FILE_NAME                           "ordering-override.keyfile"
@@ -108,6 +110,9 @@ struct _Application {
     guint ordering_index;
     visible_state_t visible_state;
     guint name_watcher;
+    gchar *sTooltipIcon;
+    gchar *sTooltipTitle;
+    gchar *sTooltipDescription;
 };
 
 /* GDBus Stuff */
@@ -427,6 +432,7 @@ got_all_properties (GObject * source_object, GAsyncResult * res,
              * icon_desc = NULL, * aicon_desc = NULL,
              * icon_theme_path = NULL, * index = NULL, * label = NULL,
              * guide = NULL, * title = NULL;
+    GVariant *pTooltip = NULL;
 
     GVariant * properties = g_dbus_proxy_call_finish(G_DBUS_PROXY(source_object), res, &error);
 
@@ -482,7 +488,12 @@ got_all_properties (GObject * source_object, GAsyncResult * res,
             guide = g_variant_ref(value);
         } else if (g_strcmp0(name, NOTIFICATION_ITEM_PROP_TITLE) == 0) {
             title = g_variant_ref(value);
-        } /* else ignore */
+        }
+        else if (g_strcmp0 (name, NOTIFICATION_ITEM_PROP_TOOLTIP) == 0)
+        {
+            pTooltip = g_variant_ref (value);
+        }
+        /* else ignore */
     }
     g_variant_iter_free (iter);
     g_variant_unref(properties);
@@ -576,6 +587,21 @@ got_all_properties (GObject * source_object, GAsyncResult * res,
             app->title = g_strdup("");
         }
 
+        g_free (app->sTooltipIcon);
+        g_free (app->sTooltipTitle);
+        g_free (app->sTooltipDescription);
+
+        if (pTooltip != NULL)
+        {
+            g_variant_get (pTooltip, "(sa(iiay)ss)", &app->sTooltipIcon, NULL, &app->sTooltipTitle, &app->sTooltipDescription);
+        }
+        else
+        {
+            app->sTooltipIcon = g_strdup ("");
+            app->sTooltipTitle = g_strdup ("");
+            app->sTooltipDescription = g_strdup ("");
+        }
+
         apply_status(app);
 
         if (app->queued_props) {
@@ -597,6 +623,11 @@ got_all_properties (GObject * source_object, GAsyncResult * res,
     if (label)           g_variant_unref (label);
     if (guide)           g_variant_unref (guide);
     if (title)           g_variant_unref (title);
+
+    if (pTooltip)
+    {
+        g_variant_unref (pTooltip);
+    }
 
     return;
 }
@@ -774,6 +805,9 @@ application_free (Application * app)
         g_free(app->title);
     }
 
+    g_free (app->sTooltipIcon);
+    g_free (app->sTooltipTitle);
+    g_free (app->sTooltipDescription);
     g_free(app);
     return;
 }
@@ -886,12 +920,12 @@ apply_status (Application * app)
         if (app->visible_state == VISIBLE_STATE_HIDDEN) {
             /* Put on panel */
             emit_signal (appstore, "ApplicationAdded",
-                     g_variant_new ("(sisossssss)", newicon,
+                     g_variant_new ("(sisosssssssss)", newicon,
                                         get_position(app),
                                         app->dbus_name, app->menu,
                                         app->icon_theme_path,
                                         app->label, app->guide,
-                                        newdesc, app->id, app->title));
+                                        newdesc, app->id, app->title, app->sTooltipIcon != NULL ? app->sTooltipIcon : "", app->sTooltipTitle != NULL ? app->sTooltipTitle : "", app->sTooltipDescription != NULL ? app->sTooltipDescription : ""));
         } else {
             /* Icon update */
             gint position = get_position(app);
@@ -906,6 +940,9 @@ apply_status (Application * app)
             emit_signal (appstore, "ApplicationTitleChanged",
                      g_variant_new ("(is)", position,
                                             app->title != NULL ? app->title : ""));
+
+            GVariant *pParams = g_variant_new ("(isss)", position, app->sTooltipIcon != NULL ? app->sTooltipIcon : "", app->sTooltipTitle != NULL ? app->sTooltipTitle : "", app->sTooltipDescription != NULL ? app->sTooltipDescription : "");
+            emit_signal (appstore, "ApplicationTooltipChanged", pParams);
         }
     }
 
@@ -1030,6 +1067,9 @@ application_service_appstore_application_add (ApplicationServiceAppstore * appst
     app->props_cancel = NULL;
     app->props = NULL;
     app->queued_props = FALSE;
+    app->sTooltipIcon = NULL;
+    app->sTooltipTitle = NULL;
+    app->sTooltipDescription = NULL;
 
     /* Get the DBus proxy for the NotificationItem interface */
     app->dbus_proxy_cancel = g_cancellable_new();
@@ -1206,8 +1246,11 @@ app_receive_signal (GDBusProxy * proxy, gchar * sender_name, gchar * signal_name
         g_free(label);
         g_free(guide);
     }
-
-    return;
+    else if (g_strcmp0 (signal_name, NOTIFICATION_ITEM_SIG_NEW_TOOLTIP) == 0)
+    {
+        // The tooltip data isn't provided by the signal, so look it up
+        get_all_properties (app);
+    }
 }
 
 /* Looks for an application in the list of applications */
@@ -1312,7 +1355,7 @@ get_applications (ApplicationServiceAppstore * appstore)
         GList * listpntr;
         gint position = 0;
 
-        g_variant_builder_init(&builder, G_VARIANT_TYPE ("a(sisossssss)"));
+        g_variant_builder_init(&builder, G_VARIANT_TYPE ("a(sisosssssssss)"));
 
         for (listpntr = priv->applications; listpntr != NULL; listpntr = g_list_next(listpntr)) {
             Application * app = (Application *)listpntr->data;
@@ -1320,20 +1363,20 @@ get_applications (ApplicationServiceAppstore * appstore)
                 continue;
             }
 
-            g_variant_builder_add (&builder, "(sisossssss)", app->icon,
+            g_variant_builder_add (&builder, "(sisosssssssss)", app->icon,
                                    position++, app->dbus_name, app->menu,
                                    app->icon_theme_path, app->label,
                                    app->guide,
                                    (app->icon_desc != NULL) ? app->icon_desc : "",
-                                   app->id, app->title);
+                                   app->id, app->title, app->sTooltipIcon != NULL ? app->sTooltipIcon : "", app->sTooltipTitle != NULL ? app->sTooltipTitle : "", app->sTooltipDescription != NULL ? app->sTooltipDescription : "");
         }
 
         out = g_variant_builder_end(&builder);
     } else {
         GError * error = NULL;
-        out = g_variant_parse(g_variant_type_new("a(sisossssss)"), "[]", NULL, NULL, &error);
+        out = g_variant_parse(g_variant_type_new("a(sisosssssssss)"), "[]", NULL, NULL, &error);
         if (error != NULL) {
-            g_warning("Unable to parse '[]' as a 'a(sisossssss)': %s", error->message);
+            g_warning("Unable to parse '[]' as a 'a(sisosssssssss)': %s", error->message);
             out = NULL;
             g_error_free(error);
         }
