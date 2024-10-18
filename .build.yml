@@ -134,7 +134,7 @@ before_scripts:
   -
   - cd ${START_DIR}
   - if [ ! -d libayatana-appindicator-build ]; then
-  -     git clone --depth 1 https://github.com/AyatanaIndicators/libayatana-appindicator.git libayatana-appindicator-build
+  -     git clone --depth 1 https://github.com/AyatanaIndicators/libayatana-appindicator-glib.git libayatana-appindicator-build
   - fi
   - cd libayatana-appindicator-build
   - cmake . -DCMAKE_INSTALL_PREFIX=/usr

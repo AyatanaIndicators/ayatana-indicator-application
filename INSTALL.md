@@ -7,7 +7,7 @@
  - glib-2.0 (>= 2.58)
  - ayatana-indicator3-0.4 (>= 0.6.2)
  - gtk+-3.0 (>= 3.24)
- - ayatana-appindicator3-0.1 (>= 0.5.5)
+ - ayatana-appindicator-glib
  - dbus-glib-1 (>=0.110)
  - dbusmenu-gtk3-0.4
  - systemd

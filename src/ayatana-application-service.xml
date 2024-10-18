@@ -4,10 +4,12 @@ An interface for communication between the service and indicator.
 
 Copyright 2009 Canonical Ltd.
 Copyright 2015 Arctica Project
+Copyright 2024 Robert Tari
 
 Authors:
     Ted Gould <ted@canonical.com>
     Mike Gabriel <mike.gabriel@das-netzwerkteam.de>
+    Robert Tari <robert@tari.in>
 
 This program is free software: you can redistribute it and/or modify it
 under the terms of the GNU General Public License version 3, as published
@@ -28,7 +30,7 @@ with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 <!-- Methods -->
         <method name="GetApplications">
-            <arg type="a(sisossssss)" name="applications" direction="out" />
+            <arg type="a(sisosssssssss)" name="applications" direction="out" />
         </method>
         <method name="ApplicationScrollEvent">
             <arg type="s" name="dbusaddress" direction="in" />
@@ -54,6 +56,9 @@ with this program.  If not, see <http://www.gnu.org/licenses/>.
             <arg type="s" name="accessibledesc" direction="out" />
             <arg type="s" name="hint" direction="out" />
             <arg type="s" name="title" direction="out" />
+            <arg type="s" name="tooltipicon" direction="out" />
+            <arg type="s" name="tooltiptitle" direction="out" />
+            <arg type="s" name="tooltipdescription" direction="out" />
         </signal>
         <signal name="ApplicationRemoved">
             <arg type="i" name="position" direction="out" />
@@ -75,6 +80,12 @@ with this program.  If not, see <http://www.gnu.org/licenses/>.
         <signal name="ApplicationTitleChanged">
             <arg type="i" name="position" direction="out" />
             <arg type="s" name="title" direction="out" />
+        </signal>
+        <signal name="ApplicationTooltipChanged">
+            <arg type="i" name="position" direction="out" />
+            <arg type="s" name="icon" direction="out" />
+            <arg type="s" name="title" direction="out" />
+            <arg type="s" name="description" direction="out" />
         </signal>
     </interface>
 </node>

@@ -4,7 +4,7 @@ given by the service and turns it into real-world pixels that users can
 actually use.  Well, GTK does that, but this asks nicely.
 
 Copyright 2009 Canonical Ltd.
-Copyright 2024 Robert Tari
+Copyright 2024-2025 Robert Tari
 
 Authors:
     Ted Gould <ted@canonical.com>
@@ -98,6 +98,9 @@ struct _ApplicationEntry {
     gint nPosition;
     GMenuModel *pModel;
     GActionGroup *pActions;
+    gboolean bMenuShown;
+    gchar *sTooltipIcon;
+    gchar *sTooltipMarkup;
 };
 
 static void indicator_application_class_init (IndicatorApplicationClass *klass);
@@ -113,7 +116,7 @@ static void disconnected (GDBusConnection * con, const gchar * name, gpointer us
 static void disconnected_helper (gpointer data, gpointer user_data);
 static gboolean disconnected_kill (gpointer user_data);
 static void disconnected_kill_helper (gpointer data, gpointer user_data);
-static void application_added (IndicatorApplication * application, const gchar * iconname, gint position, const gchar * dbusaddress, const gchar * dbusobject, const gchar * icon_theme_path, const gchar * label, const gchar * guide, const gchar * accessible_desc, const gchar * hint);
+static void application_added (IndicatorApplication * application, const gchar * iconname, gint position, const gchar * dbusaddress, const gchar * dbusobject, const gchar * icon_theme_path, const gchar * label, const gchar * guide, const gchar * accessible_desc, const gchar * hint, const gchar *sTooltipIcon, const gchar *sTooltipTitle, const gchar *sTooltipDescription);
 static void application_removed (IndicatorApplication * application, gint position);
 static void application_label_changed (IndicatorApplication * application, gint position, const gchar * label, const gchar * guide);
 static void application_icon_changed (IndicatorApplication * application, gint position, const gchar * iconname, const gchar * icondesc);
@@ -492,6 +495,56 @@ guess_label_size (ApplicationEntry * app)
     return;
 }
 
+static void onMenuPoppedUp (GtkWidget *pWidget, gpointer pFlippedRect, gpointer pFinalRect, gboolean bFlippedX, gboolean bFlippedY, gpointer pData)
+{
+    ApplicationEntry *pEntry = (ApplicationEntry*) pData;
+    pEntry->bMenuShown = TRUE;
+}
+
+static void onMenuHide (GtkWidget *pWidget, gpointer pData)
+{
+    ApplicationEntry *pEntry = (ApplicationEntry*) pData;
+    pEntry->bMenuShown = FALSE;
+}
+
+static gboolean onQueryTooltip (GtkWidget *pWidget, gint nX, gint nY, gboolean bKeyboardMode, GtkTooltip *pTooltip, gpointer pData)
+{
+    ApplicationEntry *pEntry = (ApplicationEntry*) pData;
+
+    if (!pEntry->bMenuShown && pEntry->sTooltipMarkup)
+    {
+        gtk_tooltip_set_markup (pTooltip, pEntry->sTooltipMarkup);
+
+        if (pEntry->sTooltipIcon)
+        {
+            gtk_tooltip_set_icon_from_icon_name (pTooltip, pEntry->sTooltipIcon, GTK_ICON_SIZE_LARGE_TOOLBAR);
+        }
+
+        return TRUE;
+    }
+
+    return FALSE;
+}
+
+static gboolean onTooltipConnect (gpointer pData)
+{
+    ApplicationEntry *pEntry = (ApplicationEntry*) pData;
+
+    if (pEntry->entry.label)
+    {
+        gtk_widget_set_has_tooltip (GTK_WIDGET (pEntry->entry.label), TRUE);
+        g_signal_connect (pEntry->entry.label, "query-tooltip", G_CALLBACK (onQueryTooltip), pEntry);
+    }
+
+    if (pEntry->entry.image)
+    {
+        gtk_widget_set_has_tooltip (GTK_WIDGET (pEntry->entry.image), TRUE);
+        g_signal_connect (pEntry->entry.image, "query-tooltip", G_CALLBACK (onQueryTooltip), pEntry);
+    }
+
+    return G_SOURCE_REMOVE;
+}
+
 static void applicationAddedFinish (ApplicationEntry *pEntry)
 {
     /* Keep copies of these for ourself, just in case. */
@@ -499,9 +552,15 @@ static void applicationAddedFinish (ApplicationEntry *pEntry)
     g_object_ref (pEntry->entry.menu);
 
     gtk_widget_show (GTK_WIDGET (pEntry->entry.image));
+    gtk_widget_hide (GTK_WIDGET (pEntry->entry.menu));
     IndicatorApplicationPrivate * pPrivate = indicator_application_get_instance_private (INDICATOR_APPLICATION (pEntry->entry.parent_object));
     pPrivate->applications = g_list_insert (pPrivate->applications, pEntry, pEntry->nPosition);
     g_signal_emit (G_OBJECT (pEntry->entry.parent_object), INDICATOR_OBJECT_SIGNAL_ENTRY_ADDED_ID, 0, &(pEntry->entry), TRUE);
+    g_signal_connect (pEntry->entry.menu, "popped-up", G_CALLBACK (onMenuPoppedUp), pEntry);
+    g_signal_connect (pEntry->entry.menu, "hide", G_CALLBACK (onMenuHide), pEntry);
+
+    // Make sure our widgets are constructed and displayed
+    g_timeout_add_seconds (2, onTooltipConnect, pEntry);
 }
 
 static void onMenuModelChanged (GMenuModel *pModel, gint nPosition, gint nRemoved, gint nAdded, gpointer pData)
@@ -516,16 +575,43 @@ static void onMenuModelChanged (GMenuModel *pModel, gint nPosition, gint nRemove
     applicationAddedFinish (pEntry);
 }
 
+static void setTooltip (ApplicationEntry *pEntry, const gchar *sTooltipIcon, const gchar *sTooltipTitle, const gchar *sTooltipDescription)
+{
+    g_free (pEntry->sTooltipIcon);
+    pEntry->sTooltipIcon = NULL;
+    g_free (pEntry->sTooltipMarkup);
+    pEntry->sTooltipMarkup = NULL;
+
+    if (sTooltipTitle && sTooltipTitle[0] != '\0' && sTooltipDescription && sTooltipDescription[0] != '\0')
+    {
+        pEntry->sTooltipMarkup = g_strdup_printf ("<b>%s</b>\n\n%s", sTooltipTitle, sTooltipDescription);
+    }
+    else if (sTooltipTitle && sTooltipTitle[0] != '\0')
+    {
+        pEntry->sTooltipMarkup = g_strdup (sTooltipTitle);
+    }
+    else if (sTooltipDescription && sTooltipDescription[0] != '\0')
+    {
+        pEntry->sTooltipMarkup = g_strdup (sTooltipDescription);
+    }
+
+    if (sTooltipIcon && sTooltipIcon[0] != '\0')
+    {
+        pEntry->sTooltipIcon = g_strdup (sTooltipIcon);
+    }
+}
+
 /* Here we respond to new applications by building up the
    ApplicationEntry and signaling the indicator host that
    we've got a new indicator. */
 static void
-application_added (IndicatorApplication * application, const gchar * iconname, gint position, const gchar * dbusaddress, const gchar * dbusobject, const gchar * icon_theme_path, const gchar * label, const gchar * guide, const gchar * accessible_desc, const gchar * hint)
+application_added (IndicatorApplication * application, const gchar * iconname, gint position, const gchar * dbusaddress, const gchar * dbusobject, const gchar * icon_theme_path, const gchar * label, const gchar * guide, const gchar * accessible_desc, const gchar * hint, const gchar *sTooltipIcon, const gchar *sTooltipTitle, const gchar *sTooltipDescription)
 {
     g_return_if_fail(IS_INDICATOR_APPLICATION(application));
     g_debug("Building new application entry: %s  with icon: %s at position %i", dbusaddress, iconname, position);
     ApplicationEntry * app = g_new0(ApplicationEntry, 1);
 
+    app->bMenuShown = FALSE;
     app->entry.parent_object = INDICATOR_OBJECT(application);
     app->nPosition = position;
     app->old_service = FALSE;
@@ -581,6 +667,7 @@ application_added (IndicatorApplication * application, const gchar * iconname, g
         app->entry.name_hint = g_strdup(hint);
     }
 
+    setTooltip (app, sTooltipIcon, sTooltipTitle, sTooltipDescription);
     gboolean bGLibMenu = g_str_has_prefix (dbusobject, "/org/ayatana/appindicator/");
 
     if (bGLibMenu)
@@ -650,6 +737,8 @@ application_removed (IndicatorApplication * application, gint position)
         g_free((gchar *)app->entry.name_hint);
     }
 
+    g_free (app->sTooltipIcon);
+    g_free (app->sTooltipMarkup);
     g_clear_object (&app->pModel);
     g_clear_object (&app->pActions);
     g_free(app);
@@ -686,6 +775,8 @@ application_label_changed (IndicatorApplication * application, gint position, co
             gtk_label_set_text(app->entry.label, label);
         } else {
             app->entry.label = GTK_LABEL(gtk_label_new(label));
+            gtk_widget_set_has_tooltip (GTK_WIDGET (app->entry.label), TRUE);
+            g_signal_connect (app->entry.label, "query-tooltip", G_CALLBACK (onQueryTooltip), app);
             g_object_ref(G_OBJECT(app->entry.label));
             gtk_widget_show(GTK_WIDGET(app->entry.label));
 
@@ -849,13 +940,17 @@ receive_signal (GDBusProxy * proxy, gchar * sender_name, gchar * signal_name,
         gchar * accessible_desc = NULL;
         gchar * hint = NULL;
         gchar * title = NULL;
-        g_variant_get (parameters, "(sisossssss)", &iconname,
+        gchar *sTooltipIcon = NULL;
+        gchar *sTooltipTitle = NULL;
+        gchar *sTooltipDescription = NULL;
+        g_variant_get (parameters, "(sisosssssssss)", &iconname,
                        &position, &dbusaddress, &dbusobject,
                        &icon_theme_path, &label, &guide,
-                       &accessible_desc, &hint, &title);
+                       &accessible_desc, &hint, &title, &sTooltipIcon, &sTooltipTitle, &sTooltipDescription);
+
         application_added(self, iconname, position, dbusaddress,
                           dbusobject, icon_theme_path, label, guide,
-                          accessible_desc, hint);
+                          accessible_desc, hint, sTooltipIcon, sTooltipTitle, sTooltipDescription);
         g_free(iconname);
         g_free(dbusaddress);
         g_free(dbusobject);
@@ -865,6 +960,9 @@ receive_signal (GDBusProxy * proxy, gchar * sender_name, gchar * signal_name,
         g_free(accessible_desc);
         g_free(hint);
         g_free(title);
+        g_free (sTooltipIcon);
+        g_free (sTooltipTitle);
+        g_free (sTooltipDescription);
     }
     else if (g_strcmp0(signal_name, "ApplicationRemoved") == 0) {
         gint position;
@@ -895,6 +993,19 @@ receive_signal (GDBusProxy * proxy, gchar * sender_name, gchar * signal_name,
         application_label_changed(self, position, label, guide);
         g_free(label);
         g_free(guide);
+    }
+    else if (g_strcmp0 (signal_name, "ApplicationTooltipChanged") == 0)
+    {
+        gint nPosition = 0;
+        gchar *sIcon = NULL;
+        gchar *sTitle = NULL;
+        gchar *sDescription = NULL;
+        g_variant_get (parameters, "(isss)", &nPosition, &sIcon, &sTitle, &sDescription);
+        ApplicationEntry *pEntry = (ApplicationEntry*) g_list_nth_data (priv->applications, nPosition);
+        setTooltip (pEntry, sIcon, sTitle, sDescription);
+        g_free (sIcon);
+        g_free (sTitle);
+        g_free (sDescription);
     }
 
     return;
@@ -936,7 +1047,7 @@ get_applications (GObject * obj, GAsyncResult * res, gpointer user_data)
     }
 
     /* Get our new applications that we got in the request */
-    g_variant_get(result, "(a(sisossssss))", &iter);
+    g_variant_get(result, "(a(sisosssssssss))", &iter);
     while ((child = g_variant_iter_next_value (iter))) {
         get_applications_helper(self, child);
         g_variant_unref(child);
@@ -962,11 +1073,14 @@ get_applications_helper (IndicatorApplication * self, GVariant * variant)
     gchar * accessible_desc = NULL;
     gchar * hint = NULL;
     gchar * title = NULL;
-    g_variant_get(variant, "(sisossssss)", &icon_name, &position,
+    gchar *sTooltipIcon = NULL;
+    gchar *sTooltipTitle = NULL;
+    gchar *sTooltipDescription = NULL;
+    g_variant_get(variant, "(sisosssssssss)", &icon_name, &position,
                   &dbus_address, &dbus_object, &icon_theme_path, &label,
-                  &guide, &accessible_desc, &hint, &title);
+                  &guide, &accessible_desc, &hint, &title, &sTooltipIcon, &sTooltipTitle, &sTooltipDescription);
 
-    application_added(self, icon_name, position, dbus_address, dbus_object, icon_theme_path, label, guide, accessible_desc, hint);
+    application_added(self, icon_name, position, dbus_address, dbus_object, icon_theme_path, label, guide, accessible_desc, hint, sTooltipIcon, sTooltipTitle, sTooltipDescription);
 
     g_free(icon_name);
     g_free(dbus_address);
@@ -977,6 +1091,9 @@ get_applications_helper (IndicatorApplication * self, GVariant * variant)
     g_free(accessible_desc);
     g_free(hint);
     g_free(title);
+    g_free (sTooltipIcon);
+    g_free (sTooltipTitle);
+    g_free (sTooltipDescription);
 
     return;
 }
