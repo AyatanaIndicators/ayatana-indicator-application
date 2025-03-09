@@ -458,11 +458,19 @@ static void entry_scrolled (IndicatorObject * io, IndicatorObjectEntry * entry, 
 /* Does a quick meausre of how big the string is in
    pixels with a Pango layout */
 static gint
-measure_string (GtkStyle * style, PangoContext * context, const gchar * string)
+measure_string (GtkStyleContext *pContext, PangoContext * context, const gchar * string)
 {
     PangoLayout * layout = pango_layout_new(context);
     pango_layout_set_text(layout, string, -1);
-    pango_layout_set_font_description(layout, style->font_desc);
+    PangoFontDescription *pDescription = NULL;
+    GtkStateFlags nFlags = gtk_style_context_get_state (pContext);
+    gtk_style_context_get (pContext, nFlags, GTK_STYLE_PROPERTY_FONT, &pDescription, NULL);
+
+    if (pDescription)
+    {
+        pango_layout_set_font_description(layout, pDescription);
+        pango_font_description_free (pDescription);
+    }
 
     gint width;
     pango_layout_get_pixel_size(layout, &width, NULL);
@@ -478,13 +486,13 @@ guess_label_size (ApplicationEntry * app)
     /* This is during startup. */
     if (app->entry.label == NULL) return;
 
-    GtkStyle * style = gtk_widget_get_style(GTK_WIDGET(app->entry.label));
+    GtkStyleContext *pContext = gtk_widget_get_style_context (GTK_WIDGET (app->entry.label));
     PangoContext * context = gtk_widget_get_pango_context(GTK_WIDGET(app->entry.label));
 
-    gint length = measure_string(style, context, gtk_label_get_text(app->entry.label));
+    gint length = measure_string(pContext, context, gtk_label_get_text(app->entry.label));
 
     if (app->guide != NULL) {
-        gint guidelen = measure_string(style, context, app->guide);
+        gint guidelen = measure_string(pContext, context, app->guide);
         if (guidelen > length) {
             length = guidelen;
         }
