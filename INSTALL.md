@@ -9,7 +9,6 @@
  - gtk+-3.0 (>= 3.24)
  - ayatana-appindicator3-0.1 (>= 0.5.5)
  - dbus-glib-1 (>=0.110)
- - dbusmenu-gtk3-0.4
  - systemd
  - intltool
  - gtest (>= 1.6.0)
