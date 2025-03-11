@@ -32,7 +32,7 @@ endif()
 
 set(CMAKE_BUILD_TYPE "Release")
 find_package(PkgConfig REQUIRED)
-pkg_check_modules(PROJECT_DEPS REQUIRED glib-2.0>=2.58 ayatana-indicator3-0.4>=0.6.2 gtk+-3.0>=3.24 ayatana-appindicator3-0.1>=0.5.3 dbus-glib-1>=0.110 dbusmenu-gtk3-0.4)
+pkg_check_modules(PROJECT_DEPS REQUIRED glib-2.0>=2.58 ayatana-indicator3-0.4>=0.6.2 gtk+-3.0>=3.24 ayatana-appindicator3-0.1>=0.5.3 dbus-glib-1>=0.110)
 
 # Set global variables
 
