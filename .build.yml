@@ -18,8 +18,6 @@ requires:
     - dbus-glib
     - json-glib
     - intltool
-    - libdbusmenu-glib
-    - libdbusmenu-gtk3
     - systemd
     - vala
 
@@ -36,8 +34,6 @@ requires:
     - intltool
     - libdbus-1-dev
     - libdbus-glib-1-dev
-    - libdbusmenu-glib-dev
-    - libdbusmenu-gtk3-dev
     - libglib2.0-dev
     - libgtk-3-dev
     - gtk-sharp3-gapi
@@ -69,8 +65,6 @@ requires:
     - intltool
     - libdbus-1-dev
     - libdbus-glib-1-dev
-    - libdbusmenu-glib-dev
-    - libdbusmenu-gtk3-dev
     - libglib2.0-dev
     - libgtk-3-dev
     - gtk-sharp3-gapi
@@ -134,7 +128,7 @@ before_scripts:
   -
   - cd ${START_DIR}
   - if [ ! -d libayatana-appindicator-build ]; then
-  -     git clone --depth 1 https://github.com/AyatanaIndicators/libayatana-appindicator.git libayatana-appindicator-build
+  -     git clone --depth 1 https://github.com/AyatanaIndicators/libayatana-appindicator-glib.git libayatana-appindicator-build
   - fi
   - cd libayatana-appindicator-build
   - cmake . -DCMAKE_INSTALL_PREFIX=/usr
