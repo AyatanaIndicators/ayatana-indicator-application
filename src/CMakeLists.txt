@@ -77,6 +77,20 @@ add_custom_target("src-generated" DEPENDS "ayatana-notification-watcher-client.h
 # libayatana-application.so
 
 set(SOURCES
+    dbusmenu/gtk/menu.c
+    dbusmenu/gtk/client.c
+    dbusmenu/gtk/menuitem.c
+    dbusmenu/gtk/genericmenuitem.c
+    dbusmenu/gtk/genericmenuitem-enum-types.c
+    dbusmenu/glib/client.c
+    dbusmenu/glib/menuitem.c
+    dbusmenu/glib/client-menuitem.c
+    dbusmenu/glib/server-marshal.c
+    dbusmenu/glib/client-marshal.c
+    dbusmenu/glib/dbus-menu-clean.xml.c
+    dbusmenu/glib/enum-types.c
+    dbusmenu/glib/menuitem-marshal.c
+    dbusmenu/glib/defaults.c
     ayatana-application-service-marshal.c
     indicator-application.c
 )
