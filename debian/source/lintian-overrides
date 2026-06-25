@@ -1,0 +1,2 @@
+# Debian UBports Team intentionally uses get-orig-source
+source: debian-rules-contains-unnecessary-get-orig-source-target [debian/rules]

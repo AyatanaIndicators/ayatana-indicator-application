@@ -1,22 +1,18 @@
 #!/usr/bin/make -f
 
-export DPKG_GENSYMBOLS_CHECK_LEVEL=4
-
-DEB_CMAKE_EXTRA_FLAGS = \
-    -DENABLE_TESTS=ON \
-    -DENABLE_COVERAGE=OFF \
-    $(NULL)
+export DEB_BUILD_MAINT_OPTIONS = hardening=+all
 
 %:
-	dh $@ --with systemd
+	dh $@
 
 override_dh_auto_configure:
-	dh_auto_configure -- $(DEB_CMAKE_EXTRA_FLAGS)
+	dh_auto_configure -- \
+		-DENABLE_TESTS=$(if $(filter nocheck,$(DEB_BUILD_OPTIONS)),OFF,ON) \
+		-DENABLE_COVERAGE=OFF \
 
-override_dh_install:
+execute_after_dh_install:
 	find debian/ayatana-indicator-application/usr/lib -name *.la -delete
 	find debian/ayatana-indicator-application/usr/lib -name *.a -delete
-	dh_install --fail-missing
 
 get-orig-source:
 	uscan --noconf --force-download --rename --download-current-version --destdir=..

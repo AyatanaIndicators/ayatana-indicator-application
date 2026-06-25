@@ -1,10 +1,69 @@
-Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
-Upstream-Name: indicator-application
-Source: http://launchpad.net/indicator-application
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Source: https://github.com/AyatanaIndicators/ayatana-indicator-appliction
+Upstream-Name: Aytana Indicator Application
 
-Files: *
-Copyright: 2009-2012, Canonical Ltd.
+Files: .build.yml
+ .travis.yml
+ AUTHORS
+ ChangeLog
+ CMakeLists.txt
+ INSTALL.md
+ README.md
+ NEWS
+ data/CMakeLists.txt
+ data/ayatana-indicator-application.desktop.in
+ data/ayatana-indicator-application.service.in
+ data/ordering-override.keyfile
+ src/CMakeLists.txt
+ src/ayatana-notification-watcher.xml
+Copyright: 2009-2010, Canonical Ltd.
+  2021, Robert Tari <robert@tari.in>
 License: GPL-3
+Comment:
+ Assuming copyright holdership and license from rest of the
+ code files.
+ .
+ CMake transition was done by Robert Tari in 2021, so adding him
+ as copyright holder.
+
+Files: src/application-service-appstore.h
+ src/application-service-watcher.c
+ src/application-service-watcher.h
+ src/application-service.c
+ src/dbus-shared.h
+ src/generate-id.c
+Copyright: 2009, Canonical Ltd.
+  2010, Canonical Ltd.
+License: GPL-3
+
+Files: src/application-service-appstore.c
+ src/ayatana-application-service-marshal.list
+ src/generate-id.h
+ src/indicator-application.c
+Copyright: Copyright: 2009, Canonical Ltd.
+  2010, Canonical Ltd.
+  2024-2025, Robert Tari
+  2025, Robert Tari
+License: GPL-3
+
+Files: src/app-indicator-enum-types.c.in
+ src/app-indicator-enum-types.h.in
+Copyright: 2009, Canonical Ltd.
+License: LGPL-2.1 or LGPL-3
+
+Files: src/ayatana-application-service.xml
+Copyright: 2009, Canonical Ltd.
+  2015, Arctica Project
+License: GPL-3
+
+Files: debian/*
+Copyright: 2009-2012, Canonical Ltd.
+  2015-2017, Mike Gabriel <mike.gabriel@das-netzwerkteam.de>
+License: GPL-3
+
+Files: debian/patches/*
+Copyright: 2015-2017, Mike Gabriel <mike.gabriel@das-netzwerkteam.de>
+License: GPL-3 or LGPL-2.1 or LGPL-3
 
 License: GPL-3
  This package is free software; you can redistribute it and/or modify
@@ -22,3 +81,36 @@ License: GPL-3
  On Debian systems, the complete text of the GNU General
  Public License version 3 can be found in "/usr/share/common-licenses/GPL-3".
 
+License: LGPL-2.1
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Library General Public
+ License as published by the Free Software Foundation; version 2.1
+ of the License.
+ .
+ This library is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Library General Public License for more details.
+ .
+ You should have received a copy of the GNU Library General Public
+ License along with this library; if not, write to the Free Software
+ Foundation, Inc., 31 Milk Street, # 960789, Boston, MA 02196  USA
+ .
+ See /usr/share/common-licenses/LGPL-2.1 for the full license text.
+
+License: LGPL-3
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Library General Public
+ License as published by the Free Software Foundation; version 3
+ of the License.
+ .
+ This library is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Library General Public License for more details.
+ .
+ You should have received a copy of the GNU Library General Public
+ License along with this library; if not, write to the Free Software
+ Foundation, Inc., 31 Milk Street, # 960789, Boston, MA 02196  USA
+ .
+ See /usr/share/common-licenses/LGPL-3 for the full license text.

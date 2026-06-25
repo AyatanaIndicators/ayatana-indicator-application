@@ -1,30 +1,50 @@
 Source: ayatana-indicator-application
-Section: gnome
-Priority: optional
-Maintainer: Mike Gabriel <mike.gabriel@das-netzwerkteam.de>
-Build-Depends: debhelper (>= 9.0),
-               cmake (>= 3.13),
-               cmake-extras,
-               dh-systemd | debhelper (>= 10.2~),
-               libglib2.0-dev (>= 2.35.4),
-               libgtk-3-dev (>= 2.91),
-               libdbus-glib-1-dev (>= 0.82),
-               libjson-glib-dev,
-               intltool,
-               libayatana-appindicator-glib-dev,
-               libayatana-indicator3-dev (>= 0.6.0~),
-               libdbusmenu-glib-dev (>= 0.5.90),
-               libdbusmenu-gtk3-dev (>= 0.5.90),
-               systemd [linux-any],
-Standards-Version: 3.9.6
-Homepage: https://github.com/ArcticaProject/ayatana-indicator-application
-Vcs-Git: git://cgit.arctica-project.org/ayatana/ayatana-indicator-application.git
-Vcs-Browser: https://cgit.arctica-project.org/ayatana/ayatana-indicator-application.git/
+Standards-Version: 4.7.4
+Maintainer: Ayatana Packagers <pkg-ayatana-devel@lists.alioth.debian.org>
+Uploaders:
+ Mike Gabriel <sunweaver@debian.org>,
+ Debian UBports Team <team+ubports@tracker.debian.org>,
+Section: x11
+Build-Depends:
+ cmake,
+ cmake-extras,
+ debhelper-compat (= 13),
+ libglib2.0-dev,
+ libgtk-3-dev,
+ libdbus-glib-1-dev,
+ libjson-glib-dev,
+ intltool,
+ libayatana-appindicator3-dev,
+ libayatana-indicator3-dev,
+ libayatana-appindicator-glib-dev,
+ libdbusmenu-glib-dev,
+ libdbusmenu-gtk3-dev,
+ systemd-dev [linux-any],
+Vcs-Browser: https://github.com/AyatanaIndicators/ayatana-indicator-application
+Vcs-Git: https://github.com/AyatanaIndicators/ayatana-indicator-application
+Homepage: https://github.com/AyatanaIndicators/ayatana-indicator-application
 
 Package: ayatana-indicator-application
 Architecture: any
-Depends: ${shlibs:Depends}, 
-         ${misc:Depends},
-         ayatana-indicator-common,
-Description: Ayatana Application Indicators
- An indicator to take menus from applications and place them in the panel.
+Depends:
+ ${shlibs:Depends},
+ ${misc:Depends},
+ ayatana-indicator-common,
+Description: Ayatana Applications Indicator (SNI provider)
+ This Ayatana System Indicator takes menus from external applications and
+ place them in the panel / designated indicator area.
+ .
+ An application supporting indicator based panel applets provides its
+ menu tree via the DBus bus org.kde.StatusNotifierWatcher (SNI). An
+ application providing such an indicator item is called an AppIndicator.
+ .
+ This package provides an SNI AppIndicator service that proxies panel
+ menu items from AppIndicator application to a renderer supporting the
+ Ayatana System Indicators implementation. It accepts connections from
+ any application built against either of the available appindicator
+ libraries: Ayatana AppIndicators, Ubuntu AppIndicators, or Qt's
+ QSystemTrayIcon API.
+ .
+ Ayatana Indicators are only available on desktop environments that
+ provide a renderer for system indicators (such as MATE, Xfce, Lomiri,
+ etc.).
